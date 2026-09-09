@@ -17,3 +17,6 @@ artifacts
 .grok/og-pending
 .grok/*.tmp
 .grok/*.jpg
+
+!docs/screenshots/
+!docs/screenshots/**

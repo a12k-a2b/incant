@@ -21,7 +21,7 @@ export function Echoes({ images, active, onSelect }: Props) {
             onClick={() => onSelect(i)}
             aria-label={`Visage ${MARKS[i] ?? i + 1}`}
             className={cn(
-              "overflow-hidden border bg-parchment-deep transition-transform duration-150 ease-out",
+              "echo-frame overflow-hidden border bg-parchment-deep transition-transform duration-150 ease-out",
               "active:scale-[0.96]",
               selected
                 ? "h-16 w-12 border-ink"

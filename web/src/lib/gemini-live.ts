@@ -1,9 +1,29 @@
 const WS_URL =
   "wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent";
+const WS_CONSTRAINED =
+  "wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained";
 
 const MODEL = "models/gemini-3.5-transcribe-live";
 
 type TranscriptHandler = (text: string, final: boolean) => void;
+
+function liveUrl(credential: string): string {
+  const cred = credential.trim();
+  if (cred.startsWith("auth_tokens/")) {
+    return `${WS_CONSTRAINED}?access_token=${encodeURIComponent(cred)}`;
+  }
+  return `${WS_URL}?key=${encodeURIComponent(cred)}`;
+}
+
+async function decodeWsData(data: unknown): Promise<string> {
+  if (typeof data === "string") return data;
+  if (data instanceof ArrayBuffer) return new TextDecoder().decode(data);
+  if (ArrayBuffer.isView(data)) {
+    return new TextDecoder().decode(data);
+  }
+  if (typeof Blob !== "undefined" && data instanceof Blob) return data.text();
+  return String(data ?? "");
+}
 
 function bytesToBase64(bytes: Uint8Array): string {
   const chunk = 0x8000;
@@ -22,6 +42,9 @@ export class GeminiLiveTranscribe {
   private finals: string[] = [];
   private interim = "";
   private turnActive = false;
+  private setupResolve: (() => void) | null = null;
+  private setupReject: ((err: Error) => void) | null = null;
+  private setupTimer = 0;
 
   get connected() {
     return this.ws?.readyState === WebSocket.OPEN && this.setupDone;
@@ -34,14 +57,19 @@ export class GeminiLiveTranscribe {
     this.disconnect();
 
     await new Promise<void>((resolve, reject) => {
-      const url = `${WS_URL}?key=${encodeURIComponent(apiKey.trim())}`;
+      const url = liveUrl(apiKey);
       const ws = new WebSocket(url);
+      ws.binaryType = "arraybuffer";
       this.ws = ws;
       this.ready = false;
       this.setupDone = false;
+      this.setupResolve = resolve;
+      this.setupReject = reject;
 
-      const timeout = window.setTimeout(() => {
-        reject(new Error("The transcribe circle did not open in time."));
+      this.setupTimer = window.setTimeout(() => {
+        this.setupReject?.(new Error("The transcribe circle did not open in time."));
+        this.setupReject = null;
+        this.setupResolve = null;
         ws.close();
       }, 12000);
 
@@ -76,26 +104,13 @@ export class GeminiLiveTranscribe {
 
       ws.onmessage = (event) => {
         void this.handleMessage(event.data);
-        if (!this.setupDone) {
-          try {
-            const msg = JSON.parse(String(event.data)) as {
-              setupComplete?: unknown;
-            };
-            if (msg.setupComplete) {
-              this.setupDone = true;
-              this.ready = true;
-              window.clearTimeout(timeout);
-              resolve();
-            }
-          } catch {
-            /* ignore parse of non-setup frames */
-          }
-        }
       };
 
       ws.onerror = () => {
-        window.clearTimeout(timeout);
-        reject(new Error("Could not reach Gemini Live Transcribe."));
+        window.clearTimeout(this.setupTimer);
+        this.setupReject?.(new Error("Could not reach Gemini Live Transcribe."));
+        this.setupReject = null;
+        this.setupResolve = null;
       };
 
       ws.onclose = () => {
@@ -165,14 +180,7 @@ export class GeminiLiveTranscribe {
   }
 
   private async handleMessage(data: unknown) {
-    let text = "";
-    if (typeof data === "string") text = data;
-    else if (data instanceof Blob) text = await data.text();
-    else if (data instanceof ArrayBuffer) {
-      text = new TextDecoder().decode(data);
-    } else {
-      return;
-    }
+    const text = await decodeWsData(data);
 
     let msg: {
       setupComplete?: unknown;
@@ -185,6 +193,15 @@ export class GeminiLiveTranscribe {
       msg = JSON.parse(text);
     } catch {
       return;
+    }
+
+    if (msg.setupComplete && !this.setupDone) {
+      this.setupDone = true;
+      this.ready = true;
+      window.clearTimeout(this.setupTimer);
+      this.setupResolve?.();
+      this.setupResolve = null;
+      this.setupReject = null;
     }
 
     const content = msg.serverContent;

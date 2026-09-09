@@ -19,7 +19,7 @@ export function Wand({
   onHoldEnd,
 }: Props) {
   return (
-    <div className="relative flex flex-col items-center">
+    <div className="wand-socket relative flex flex-col items-center">
       <p className="mb-2 font-display text-[0.68rem] uppercase tracking-[0.22em] text-ash">
         {label}
       </p>

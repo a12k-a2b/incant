@@ -12,6 +12,7 @@ export type IncantSettings = {
   geminiKey: string;
   fourfold: boolean;
   livePaper: boolean;
+  chamber: boolean;
   quality: ImageQuality;
   model: ImageModel;
 };
@@ -21,6 +22,7 @@ export const DEFAULT_SETTINGS: IncantSettings = {
   geminiKey: "",
   fourfold: false,
   livePaper: true,
+  chamber: true,
   quality: "medium",
   model: "gpt-image-2.5-flare",
 };
@@ -46,6 +48,7 @@ export function loadSettings(): IncantSettings {
       geminiKey: typeof parsed.geminiKey === "string" ? parsed.geminiKey : "",
       fourfold: Boolean(parsed.fourfold),
       livePaper: parsed.livePaper !== false,
+      chamber: parsed.chamber !== false,
     };
   } catch {
     return { ...DEFAULT_SETTINGS };

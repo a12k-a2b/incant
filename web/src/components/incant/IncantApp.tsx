@@ -16,11 +16,14 @@ import {
   type IncantSettings,
 } from "@/lib/settings";
 import { cn } from "@/lib/utils";
+import { ChamberShell, WellFittings } from "./Chamber";
 import { Echoes } from "./Echoes";
 import { Grimoire } from "./Grimoire";
+import { OwlPost } from "./OwlPost";
 import { SketchCanvas, type SketchCanvasHandle, type Tool } from "./SketchCanvas";
 import { SpellOverlay, type SpellPhase } from "./SpellOverlay";
 import { Wand } from "./Wand";
+import { sendByOwl } from "@/lib/owl-post";
 
 type CastOk = { ok: true; imageBase64: string; mime: string };
 type CastFail = { ok: false; error: string };
@@ -28,6 +31,19 @@ type CastFail = { ok: false; error: string };
 function toSrc(imageBase64: string, mime = "image/png") {
   if (imageBase64.startsWith("data:")) return imageBase64;
   return `data:${mime};base64,${imageBase64}`;
+}
+
+async function mintGeminiToken(geminiKey?: string): Promise<string> {
+  const res = await fetch("/api/gemini-token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ geminiKey: geminiKey ?? "" }),
+  });
+  const body = (await res.json()) as { ok: boolean; token?: string; error?: string };
+  if (!body.ok || !body.token) {
+    throw new Error(body.error || "The wand could not open a listening circle.");
+  }
+  return body.token;
 }
 
 async function requestCast(payload: {
@@ -65,6 +81,8 @@ export function IncantApp() {
   const [images, setImages] = useState<string[]>([]);
   const [active, setActive] = useState(0);
   const [error, setError] = useState("");
+  const [owlNote, setOwlNote] = useState("");
+  const [owlFlying, setOwlFlying] = useState(false);
   const [grimoire, setGrimoire] = useState(false);
   const [help, setHelp] = useState(true);
   const [tick, setTick] = useState(0);
@@ -196,9 +214,6 @@ export function IncantApp() {
       throw new Error("Speak or write an incantation before you cast.");
     }
     const incantation = fromReroll ? lastIncantation.current || words : words;
-    if (!fromReroll && !settings.openaiKey.trim()) {
-      throw new Error("Open the Grimoire and enter an OpenAI key to transfigure.");
-    }
 
     if (!fromReroll) {
       setImages([]);
@@ -235,12 +250,9 @@ export function IncantApp() {
       /* keep image until they actually cast */
     }
 
-    if (!settings.geminiKey.trim()) {
-      return;
-    }
-
     try {
-      await transcribe.current.connect(settings.geminiKey, (text) => {
+      const token = await mintGeminiToken(settings.geminiKey);
+      await transcribe.current.connect(token, (text) => {
         setTranscript(text);
       });
       transcribe.current.startTurn();
@@ -266,7 +278,7 @@ export function IncantApp() {
 
     let spoken = transcript;
     try {
-      if (settings.geminiKey.trim() && transcribe.current.connected) {
+      if (transcribe.current.connected) {
         spoken = await transcribe.current.endTurn();
         if (spoken) setTranscript(spoken);
       }
@@ -312,6 +324,27 @@ export function IncantApp() {
     setFlicking(false);
   };
 
+  const dispatchOwl = async () => {
+    const src = images[active] ?? images[0];
+    if (!src || busy) return;
+    setOwlFlying(true);
+    window.setTimeout(() => setOwlFlying(false), 560);
+    setOwlNote("");
+    try {
+      const flight = await sendByOwl({
+        imageSrc: src,
+        incantation: lastIncantation.current || transcript || draft,
+      });
+      if (flight === "shared") {
+        setOwlNote("The owl is away.");
+      } else if (flight === "mailed") {
+        setOwlNote("Missive opened. Attach the visage if the owl dropped it.");
+      }
+    } catch {
+      setOwlNote("The owl refused the letter. Try again.");
+    }
+  };
+
   const newParchment = () => {
     sketchRef.current?.clear();
     setImages([]);
@@ -319,6 +352,7 @@ export function IncantApp() {
     setTranscript("");
     setDraft("");
     setError("");
+    setOwlNote("");
     setPhase("idle");
     lastIncantation.current = "";
     lastSketch.current = "";
@@ -348,44 +382,67 @@ export function IncantApp() {
 
   if (help) {
     return (
-      <div className="incant-stage paper-grain flex flex-col justify-between bg-parchment px-7 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] text-ink">
+      <div
+        className={cn(
+          "incant-stage flex flex-col justify-between overflow-y-auto",
+          settings.chamber ? "is-chamber chamber-help text-parchment" : "paper-grain bg-parchment text-ink",
+        )}
+      >
+        {settings.chamber ? <ChamberShell /> : null}
+        <div className="chamber-body justify-between px-7 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))]">
         <div>
-          <p className="font-display text-[0.7rem] uppercase tracking-[0.28em] text-ink">
-            Incant
-          </p>
-          <p className="mt-1 font-body text-base italic text-ash">
-            A wizard's canvas
-          </p>
+          <div className={settings.chamber ? "chamber-plate" : undefined}>
+            <p className={cn("font-display text-[0.7rem] uppercase tracking-[0.28em]", settings.chamber ? "text-oak-deep" : "text-ink")}>
+              Incant
+            </p>
+            <p className={cn("mt-1 font-body text-base italic", settings.chamber ? "text-oak" : "text-ash")}>
+              A wizard's canvas
+            </p>
+          </div>
           <div className="engraved-rule my-5" />
-          <p className="font-display text-[0.7rem] uppercase tracking-[0.24em] text-ash">
+          <p className={cn("font-display text-[0.7rem] uppercase tracking-[0.24em]", settings.chamber ? "text-brass-bright" : "text-ash")}>
             How to weave
           </p>
-          <ol className="mt-4 space-y-3 font-body text-lg leading-snug text-ink">
+          <ol className={cn("mt-4 space-y-3 font-body text-lg leading-snug", settings.chamber ? "text-parchment" : "text-ink")}>
             <li>Draw with the stylus. Palms rest; they are ignored.</li>
             <li>Hold the wand and speak what the sketch should become.</li>
             <li>Release. The spell hits the page and transfigures it.</li>
             <li>If the visage is wrong, tap Another for a new reading.</li>
+            <li>Tap the owl to send it by post — email, or wherever owls go.</li>
           </ol>
         </div>
         <button
           type="button"
           onClick={dismissHelp}
-          className="h-12 w-full rounded-sm bg-ink font-display text-[0.72rem] uppercase tracking-[0.2em] text-parchment transition-transform duration-150 active:scale-[0.96]"
+          className={cn(
+            "h-12 w-full rounded-sm bg-ink font-display text-[0.72rem] uppercase tracking-[0.2em] text-parchment transition-transform duration-150 active:scale-[0.96]",
+            settings.chamber && "help-open",
+          )}
         >
-          Open the parchment
+          {settings.chamber ? "Open the cabinet" : "Open the parchment"}
         </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="incant-stage paper-grain flex flex-col text-ink">
+    <div
+      className={cn(
+        "incant-stage flex flex-col text-ink",
+        settings.chamber ? "is-chamber" : "paper-grain",
+      )}
+    >
+      {settings.chamber ? <ChamberShell /> : null}
+      <div className="chamber-body">
       <header className="flex items-center justify-between px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <div>
+        <div className={settings.chamber ? "chamber-plate" : undefined}>
           <p className="font-display text-[0.7rem] uppercase tracking-[0.28em]">
             Incant
           </p>
-          <p className="font-body text-sm italic text-ash">A wizard's canvas</p>
+          <p className={cn("font-body text-sm italic", settings.chamber ? "text-oak" : "text-ash")}>
+            A wizard's canvas
+          </p>
         </div>
         <div className="flex items-center gap-1">
           <IconBtn label="Undo" onClick={() => { sketchRef.current?.undo(); bump(); }}>
@@ -401,7 +458,13 @@ export function IncantApp() {
       </header>
       <div className="engraved-rule mx-6" />
 
-      <section className="relative mx-3 mt-3 min-h-0 flex-1 overflow-hidden rounded-sm border border-ink/20">
+      <section
+        className={cn(
+          "relative mx-3 mt-3 min-h-0 flex-1 overflow-hidden",
+          settings.chamber ? "chamber-well" : "rounded-sm border border-ink/20",
+        )}
+      >
+        {settings.chamber ? <WellFittings /> : null}
         <SketchCanvas
           ref={sketchRef}
           tool={tool}
@@ -440,7 +503,9 @@ export function IncantApp() {
           disabled={busy}
         />
         {error && phase !== "fizzled" ? (
-          <p className="mt-1 font-body text-sm italic text-ink">{error}</p>
+          <p className={cn("mt-1 font-body text-sm italic", settings.chamber ? "text-brass-bright" : "text-ink")}>{error}</p>
+        ) : owlNote ? (
+          <p className={cn("mt-1 font-body text-sm italic", settings.chamber ? "text-brass-bright" : "text-ash")}>{owlNote}</p>
         ) : null}
       </div>
 
@@ -476,7 +541,7 @@ export function IncantApp() {
           onHoldEnd={endHold}
         />
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col items-end gap-2">
           <IconBtn
             label="Another visage"
             onClick={() => void reroll()}
@@ -484,6 +549,11 @@ export function IncantApp() {
           >
             <RotateCcw className="size-5" strokeWidth={1.5} />
           </IconBtn>
+          <OwlPost
+            disabled={!images.length || busy}
+            flying={owlFlying}
+            onClick={() => void dispatchOwl()}
+          />
           <button
             type="button"
             onClick={backToSketch}
@@ -503,6 +573,7 @@ export function IncantApp() {
       />
 
       <span className="sr-only">{tick}</span>
+      </div>
     </div>
   );
 }

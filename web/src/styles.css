@@ -10,6 +10,13 @@
   --color-rule: #c9c2b3;
   --color-seal: #111110;
   --color-fog: #d8d2c4;
+  --color-oak: #3a3228;
+  --color-oak-deep: #1c1712;
+  --color-oak-lit: #5a4e40;
+  --color-brass: #b7a888;
+  --color-brass-bright: #e2d4b4;
+  --color-brass-dark: #6e624c;
+  --color-leather: #2a241c;
 
   --font-display: "Palatino Linotype", Palatino, "Book Antiqua", "Iowan Old Style", Georgia, serif;
   --font-body: Palatino, "Palatino Linotype", "Book Antiqua", "Iowan Old Style", Georgia, serif;
@@ -215,6 +222,16 @@
   animation: gather-runes 1.8s ease-in-out infinite;
 }
 
+.owl-away {
+  animation: owl-away 520ms var(--ease-smooth-out) both;
+}
+
+@keyframes owl-away {
+  0% { transform: scale(1) rotate(0deg); }
+  40% { transform: scale(1.08) rotate(-12deg) translateY(-4px); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rune-ring,
   .wand-flick,
@@ -223,7 +240,368 @@
   .manifest-in,
   .dissolve-out,
   .pulse-hold,
-  .gather-runes {
+  .gather-runes,
+  .owl-away {
+    animation: none;
+  }
+}
+
+/* --- Cabinet / ornate skeuomorph --------------------------------------- */
+
+html:has(.is-chamber),
+body:has(.is-chamber) {
+  background: var(--color-oak-deep);
+}
+
+.is-chamber.incant-stage {
+  background: transparent;
+  overflow: hidden;
+}
+
+.chamber-shell {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.chamber-wood {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-oak);
+  background-image:
+    linear-gradient(180deg, rgba(226, 212, 180, 0.16), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.45)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.35), transparent 8%, transparent 92%, rgba(0, 0, 0, 0.4)),
+    repeating-linear-gradient(
+      92deg,
+      rgba(0, 0, 0, 0.07) 0 2px,
+      transparent 2px 9px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(226, 212, 180, 0.04) 0 1px,
+      transparent 1px 17px
+    );
+  box-shadow:
+    inset 0 2px 0 rgba(226, 212, 180, 0.28),
+    inset 0 -10px 24px rgba(0, 0, 0, 0.45),
+    inset 8px 0 18px rgba(0, 0, 0, 0.28);
+}
+
+.chamber-spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 18px;
+  background:
+    linear-gradient(90deg, #120e0b 0%, #3a3228 35%, #1a1510 38%, #4a4034 70%, #1c1712 100%);
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.35);
+}
+
+.chamber-sconce {
+  position: absolute;
+  top: 18px;
+  width: 18px;
+  height: 54px;
+}
+
+.chamber-sconce-left { left: 26px; }
+.chamber-sconce-right { right: 10px; }
+
+.chamber-cup {
+  position: absolute;
+  bottom: 0;
+  left: 3px;
+  width: 12px;
+  height: 14px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(180deg, var(--color-brass-bright), var(--color-brass-dark));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 2px 2px rgba(0, 0, 0, 0.4);
+}
+
+.chamber-flame {
+  position: absolute;
+  left: 5px;
+  bottom: 12px;
+  width: 8px;
+  height: 16px;
+  border-radius: 50% 50% 40% 40%;
+  background: radial-gradient(circle at 50% 70%, #f4efe4 0 30%, #b7a888 70%, transparent 80%);
+  box-shadow: 0 0 10px rgba(226, 212, 180, 0.55);
+  animation: chamber-flicker 1.8s ease-in-out infinite;
+}
+
+.chamber-sconce-right .chamber-flame {
+  animation-delay: -0.7s;
+}
+
+.chamber-crest {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  transform: translateX(-50%);
+  color: var(--color-brass-bright);
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.5));
+  opacity: 0.9;
+}
+
+.is-chamber .chamber-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.is-chamber > header {
+  padding-left: 2.1rem;
+  padding-right: 0.9rem;
+}
+
+.is-chamber .chamber-plate {
+  display: inline-block;
+  padding: 0.35rem 0.7rem 0.4rem;
+  background: linear-gradient(180deg, var(--color-brass-bright), var(--color-brass) 46%, var(--color-brass-dark) 52%, var(--color-brass) 100%);
+  color: var(--color-oak-deep);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 2px 0 var(--color-oak-deep),
+    0 3px 6px rgba(0, 0, 0, 0.35);
+}
+
+.is-chamber .chamber-plate p:last-child {
+  color: var(--color-oak);
+}
+
+.chamber-well {
+  margin-left: 1.6rem;
+  margin-right: 0.7rem;
+  border-radius: 6px;
+  border: 3px solid var(--color-brass-dark);
+  box-shadow:
+    inset 0 8px 18px rgba(0, 0, 0, 0.45),
+    inset 0 -1px 0 rgba(226, 212, 180, 0.25),
+    0 1px 0 var(--color-brass-bright),
+    0 6px 0 var(--color-oak-deep),
+    0 10px 18px rgba(0, 0, 0, 0.4);
+  background: var(--color-parchment);
+}
+
+.well-fittings {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.well-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: var(--color-brass-bright);
+  border-style: solid;
+  border-width: 0;
+  filter: drop-shadow(0 1px 0 var(--color-brass-dark));
+}
+
+.well-tl { top: 6px; left: 6px; border-top-width: 3px; border-left-width: 3px; }
+.well-tr { top: 6px; right: 6px; border-top-width: 3px; border-right-width: 3px; }
+.well-bl { bottom: 6px; left: 6px; border-bottom-width: 3px; border-left-width: 3px; }
+.well-br { bottom: 6px; right: 6px; border-bottom-width: 3px; border-right-width: 3px; }
+
+.well-rivet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--color-brass-bright), var(--color-brass-dark));
+  box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.5), 0 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+.well-r1 { top: 4px; left: 50%; margin-left: -4px; }
+.well-r2 { bottom: 4px; left: 50%; margin-left: -4px; }
+.well-r3 { left: 4px; top: 50%; margin-top: -4px; }
+.well-r4 { right: 4px; top: 50%; margin-top: -4px; }
+
+.is-chamber .engraved-rule {
+  margin-left: 2.2rem;
+  margin-right: 1rem;
+  height: 3px;
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--color-brass-dark), var(--color-brass-bright), var(--color-brass-dark), transparent);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.is-chamber header button,
+.is-chamber footer button[aria-label] {
+  background: linear-gradient(180deg, var(--color-oak-lit), var(--color-oak) 48%, var(--color-oak-deep));
+  color: var(--color-brass-bright);
+  border: 1px solid var(--color-oak-deep);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 1px 0 rgba(226, 212, 180, 0.28),
+    0 3px 0 var(--color-oak-deep),
+    0 5px 8px rgba(0, 0, 0, 0.35);
+}
+
+.is-chamber header button:active,
+.is-chamber footer button[aria-label]:active {
+  transform: translateY(3px) scale(1);
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.45),
+    0 0 0 var(--color-oak-deep);
+}
+
+.is-chamber header button[aria-pressed="true"],
+.is-chamber footer button[aria-pressed="true"] {
+  background: linear-gradient(180deg, var(--color-oak-deep), var(--color-oak));
+  color: var(--color-parchment);
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.is-chamber footer button[aria-label="Send by owl"] {
+  background: radial-gradient(circle at 35% 30%, var(--color-brass-bright), var(--color-brass-dark));
+  color: var(--color-oak-deep);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 3px 0 var(--color-oak-deep),
+    0 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+.is-chamber .wand-socket {
+  padding: 0.45rem 0.55rem 0.2rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 45%, #2a241c, #120e0b 72%);
+  box-shadow:
+    inset 0 6px 10px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(226, 212, 180, 0.18);
+}
+
+.is-chamber .wand-press {
+  background:
+    radial-gradient(circle at 32% 28%, var(--color-brass-bright), var(--color-brass) 38%, var(--color-brass-dark) 62%, #2a241c 100%);
+  border: 2px solid var(--color-oak-deep);
+  color: var(--color-oak-deep);
+  box-shadow:
+    inset 0 3px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -8px 16px rgba(0, 0, 0, 0.45),
+    0 8px 0 #120e0b,
+    0 14px 20px rgba(0, 0, 0, 0.45);
+}
+
+.is-chamber .wand-press:active,
+.is-chamber .wand-press.pulse-hold {
+  transform: translateY(6px);
+  box-shadow:
+    inset 0 8px 16px rgba(0, 0, 0, 0.5),
+    0 2px 0 #120e0b;
+}
+
+.is-chamber .wand-press svg {
+  color: var(--color-oak-deep);
+}
+
+.is-chamber footer p,
+.is-chamber .wand-press + p,
+.is-chamber footer .font-display {
+  color: var(--color-brass-bright);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+}
+
+.is-chamber footer button:not([aria-label]) {
+  color: var(--color-brass-bright);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+}
+
+.is-chamber #incantation {
+  margin-left: 0.4rem;
+  padding: 0 0.75rem;
+  height: 2.6rem;
+  border: 0;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #1a1510, #2a241c 40%, #241e18);
+  color: var(--color-brass-bright);
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(226, 212, 180, 0.15);
+}
+
+.is-chamber #incantation::placeholder {
+  color: var(--color-brass-dark);
+}
+
+.is-chamber .echo-frame {
+  border: 2px solid var(--color-brass-dark);
+  box-shadow:
+    inset 0 1px 0 var(--color-brass-bright),
+    0 3px 0 var(--color-oak-deep);
+  background: var(--color-oak-deep);
+}
+
+.is-chamber [role="dialog"] {
+  background-color: var(--color-oak);
+  background-image:
+    linear-gradient(180deg, rgba(226, 212, 180, 0.12), transparent 20%),
+    repeating-linear-gradient(92deg, rgba(0, 0, 0, 0.07) 0 2px, transparent 2px 9px);
+  border-top: 4px solid var(--color-brass-dark);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
+  color: var(--color-parchment);
+}
+
+.is-chamber [role="dialog"] p.font-display,
+.is-chamber [role="dialog"] p.font-body,
+.is-chamber [role="dialog"] h2,
+.is-chamber [role="dialog"] button {
+  color: var(--color-brass-bright);
+}
+
+.is-chamber [role="dialog"] input {
+  background: var(--color-oak-deep);
+  border-color: var(--color-brass-dark);
+  color: var(--color-brass-bright);
+}
+
+.is-chamber [role="dialog"] .bg-ink {
+  background: linear-gradient(180deg, var(--color-brass-bright), var(--color-brass-dark));
+  color: var(--color-oak-deep);
+}
+
+.chamber-help {
+  position: relative;
+}
+
+.chamber-help .help-open {
+  background: linear-gradient(180deg, var(--color-brass-bright), var(--color-brass) 45%, var(--color-brass-dark));
+  color: var(--color-oak-deep);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 4px 0 var(--color-oak-deep),
+    0 8px 14px rgba(0, 0, 0, 0.4);
+}
+
+.chamber-help .help-open:active {
+  transform: translateY(3px);
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes chamber-flicker {
+  0%, 100% { opacity: 0.75; transform: scaleY(1) translateY(0); }
+  40% { opacity: 1; transform: scaleY(1.08) translateY(-1px); }
+  70% { opacity: 0.65; transform: scaleY(0.94) translateY(1px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chamber-flame {
     animation: none;
   }
 }

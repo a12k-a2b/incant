@@ -1,8 +1,11 @@
 package app.incant.dc1
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -46,6 +49,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -53,6 +57,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -93,6 +99,7 @@ private fun IncantScreen(
 ) {
     val settings by store.settings.collectAsState(initial = IncantSettings())
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     var sketchView by remember { mutableStateOf<SketchView?>(null) }
     var phase by remember { mutableStateOf(Phase.Idle) }
     var held by remember { mutableStateOf(false) }
@@ -322,6 +329,10 @@ private fun IncantScreen(
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     TextBtn("Another") { if (visages.isNotEmpty()) cast(true) }
+                    TextBtn("Owl") {
+                        val bytes = visages.getOrNull(active)
+                        if (bytes != null) shareByOwl(context, bytes, lastSpell.ifBlank { transcript })
+                    }
                     TextBtn("Sketch") { phase = Phase.Idle }
                 }
             }
@@ -402,4 +413,52 @@ private fun LabelField(label: String, value: String, onChange: (String) -> Unit)
             .border(1.dp, Ink.copy(alpha = 0.25f))
             .padding(10.dp),
     )
+}
+
+private fun shareByOwl(context: Context, bytes: ByteArray, spell: String) {
+    val file = File(context.cacheDir, "incant-visage.png")
+    file.writeBytes(bytes)
+    val uri: Uri = FileProvider.getUriForFile(context, "app.incant.dc1.files", file)
+    val send = Intent(Intent.ACTION_SEND).apply {
+        type = "image/png"
+        putExtra(Intent.EXTRA_STREAM, uri)
+        putExtra(Intent.EXTRA_SUBJECT, owlSubject(spell))
+        putExtra(Intent.EXTRA_TEXT, owlBody(spell))
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    context.startActivity(Intent.createChooser(send, "Send by owl"))
+}
+
+private fun owlSubject(spell: String): String {
+    val seed = spell.ifBlank { "an unnamed mutter" }
+    val subjects = arrayOf(
+        "Owl post: one (1) captured enchantment",
+        "A visage, still faintly humming",
+        "Do not be alarmed — I have transfigured something",
+        "From the parchment, with only mild recklessness",
+        "Enclosed: a spell that actually worked (rare)",
+        "Kindly receive this unauthorized miracle",
+    )
+    var h = -2128831035
+    for (c in seed) {
+        h = h xor c.code
+        h *= 16777619
+    }
+    return subjects[kotlin.math.abs(h) % subjects.size]
+}
+
+private fun owlBody(spell: String): String {
+    val words = spell.trim().ifBlank { "an unnamed mutter I now slightly regret" }
+    return """
+I drew a rather ordinary scribble and then, as one does, shouted a spell at it.
+
+The incantation was:
+« $words »
+
+The parchment, against several laws of taste and at least one of physics, obliged. Enclosed is the resulting visage. It may still smell of ozone and tea.
+
+If the owl looks smug, that is not my fault. Feed it a biscuit anyway.
+
+— dispatched from Incant, a wizard's canvas
+    """.trimIndent()
 }

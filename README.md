@@ -4,6 +4,46 @@ A wizard’s canvas for the [Daylight DC-1](https://daylightcomputer.com). Draw 
 
 **Draw. Speak. Transfigure.**
 
+## Screenshots
+
+Ornate cabinet is on by default — carved oak, brass, candles, the parchment in a sunken well. Grimoire → **Ornate cabinet** turns it off for the flat folio.
+
+### Cabinet
+
+<p>
+<img src="docs/screenshots/01-cabinet-help.png" alt="Cabinet help — how to weave" width="280" />
+<img src="docs/screenshots/02-cabinet-canvas.png" alt="Empty cabinet canvas with wand" width="280" />
+<img src="docs/screenshots/03-cabinet-sketch.png" alt="Ink sketch in the cabinet well" width="280" />
+</p>
+
+<p>
+<img src="docs/screenshots/04-cabinet-grimoire.png" alt="Grimoire settings drawer" width="280" />
+<img src="docs/screenshots/08-cabinet-manifested.png" alt="Transfigured visage in the cabinet" width="280" />
+</p>
+
+### Folio
+
+<p>
+<img src="docs/screenshots/05-folio-help.png" alt="Flat folio help overlay" width="280" />
+<img src="docs/screenshots/06-folio-canvas.png" alt="Flat folio empty parchment" width="280" />
+</p>
+
+### Sketch → visage
+
+A quill sketch of a cottage, then the same composition after the spell:
+
+<p>
+<img src="docs/screenshots/12-sketch-cottage.png" alt="Ink sketch of a cottage and moon" width="280" />
+<img src="docs/screenshots/10-visage-cottage.png" alt="Watercolor cottage under a harvest moon" width="280" />
+</p>
+
+A mountain trail:
+
+<p>
+<img src="docs/screenshots/13-sketch-mountain.png" alt="Ink sketch of mountain peaks" width="280" />
+<img src="docs/screenshots/11-visage-mountain.png" alt="Oil painting of a mountain trail at dawn" width="280" />
+</p>
+
 ## How Sketch actually works
 
 ChatGPT **Sketch** (`@Sketch`) is a ChatGPT product surface, not a separate developer API. There is no dedicated “sketch mode” endpoint.
@@ -36,6 +76,7 @@ Open `android/` in Android Studio, let Gradle sync, run on the DC-1.
 
 ## Product choices
 
+- **Ornate cabinet** (on by default) is the cereal-box relic: oak, brass, depth. Off is the flat folio, better if you want a quieter page.
 - **One visage first.** Casting generates one image so it returns quickly. **Another** weaves a new interpretation of the same sketch + spell. Previous results collect as **echoes** along the bottom.
 - **Fourfold visages** (Grimoire toggle, off by default) fires four in parallel. The first to return becomes the large image; the rest fill in as echoes. Four tiny thumbnails of similar images are hard to tell apart on Live Paper, so the large image stays primary.
 - **Compose for Live Paper** (on by default) asks the model for strong value contrast so the result still reads in grayscale.

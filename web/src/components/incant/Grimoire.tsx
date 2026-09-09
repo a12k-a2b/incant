@@ -59,7 +59,7 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
         <div className="flex flex-col gap-5">
           <Field
             label="OpenAI key"
-            hint="Used for GPT-Image-2.5. Kept on this device."
+            hint="A key is already on the canvas. Leave this blank unless you want to override it."
           >
             <input
               id="openai-key"
@@ -68,7 +68,7 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
               spellCheck={false}
               value={settings.openaiKey}
               onChange={(e) => set("openaiKey", e.target.value)}
-              placeholder="sk-…"
+              placeholder="already on the canvas"
               aria-label="OpenAI key"
               className="h-11 rounded-sm border border-ink/25 bg-parchment px-3 font-body text-base text-ink outline-none focus:border-ink"
             />
@@ -76,7 +76,7 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
 
           <Field
             label="Gemini key"
-            hint="Used for Gemini 3.5 Live Transcribe while you hold the wand."
+            hint="A key is already on the canvas. Leave this blank unless you want to override it."
           >
             <input
               id="gemini-key"
@@ -85,7 +85,7 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
               spellCheck={false}
               value={settings.geminiKey}
               onChange={(e) => set("geminiKey", e.target.value)}
-              placeholder="AIza…"
+              placeholder="already on the canvas"
               aria-label="Gemini key"
               className="h-11 rounded-sm border border-ink/25 bg-parchment px-3 font-body text-base text-ink outline-none focus:border-ink"
             />
@@ -143,6 +143,13 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
               ))}
             </div>
           </Field>
+
+          <Toggle
+            label="Ornate cabinet"
+            hint="Carved oak, brass fittings, and depth — the cereal-box relic. Off is the flat folio."
+            on={settings.chamber}
+            onToggle={() => set("chamber", !settings.chamber)}
+          />
 
           <Toggle
             label="Fourfold visages"
