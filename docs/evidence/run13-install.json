@@ -19,6 +19,6 @@
     1370
   ],
   "websiteAssociation": "PASS: HTTPS assetlinks endpoint 200 and verified Chrome fullscreen",
-  "deployment": "8cda0a44-5a49-49a0-91ac-95d2fc7a902a",
-  "deploymentImageDigest": "sha256:0dff60352ed6fdee6ca1c8fe7494a4fc55f25823f04c3a414aacf1f58fcd2a89"
+  "deployment": "19df3fce-0fa1-449e-820e-392bd5973418",
+  "deploymentImageDigest": "sha256:fca116388b457578e467057b2021a03c643fc7240bcc5975720b273b2398c33a"
 }
