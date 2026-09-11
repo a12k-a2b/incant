@@ -21,9 +21,21 @@ import {
   type SketchCanvasHandle,
   type Tool,
 } from "./SketchCanvas";
+import {
+  archiveExisting,
+  archiveSketch,
+  archiveImage,
+  archiveFolderReady,
+  chooseArchiveFolder,
+  directorySupported,
+  downloadArchive,
+  endPage,
+  syncArchive,
+} from "@/lib/archive";
 import { Grimoire } from "./Grimoire";
 import { Sigil } from "./DeskArt";
-type Phase = "idle" | "connecting" | "listening" | "finishing" | "casting";
+type Phase =
+  "idle" | "connecting" | "listening" | "finishing" | "casting" | "renewing";
 type Voice = {
   live: GeminiLiveTranscribe;
   controller: AbortController;
@@ -50,18 +62,49 @@ export function IncantApp({
   imageReady?: boolean;
   voiceReady?: boolean;
 }) {
-  const immersiveMode = new URLSearchParams(window.location.search).get("mode") !== "desk";
+  const archiveDialog = useRef<HTMLDialogElement>(null);
+  const [archiveError, setArchiveError] = useState("");
+  const [archiveWorking, setArchiveWorking] = useState(false);
+  const [turning, setTurning] = useState(false);
+  const renewal = useRef(false);
+  const draftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const turnTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const immersiveMode =
+    new URLSearchParams(window.location.search).get("mode") !== "desk";
+  const [frame] = useState(() => {
+    const requested = new URLSearchParams(window.location.search).get("frame");
+    if (requested === "big" || requested === "balanced") {
+      try {
+        localStorage.setItem("incant-frame", requested);
+      } catch {}
+      return requested;
+    }
+    try {
+      return localStorage.getItem("incant-frame") === "big"
+        ? "big"
+        : "balanced";
+    } catch {
+      return "balanced";
+    }
+  });
   const [panel, setPanel] = useState(false);
   const panelRef = useRef<HTMLDialogElement>(null);
   const typeDialog = useRef<HTMLDialogElement>(null);
   const typeField = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     const viewport = window.visualViewport;
-    const fitKeyboard = () => typeDialog.current?.style.setProperty("--keyboard-inset", `${Math.max(0, window.innerHeight - (viewport?.height ?? window.innerHeight) - (viewport?.offsetTop ?? 0))}px`);
+    const fitKeyboard = () =>
+      typeDialog.current?.style.setProperty(
+        "--keyboard-inset",
+        `${Math.max(0, window.innerHeight - (viewport?.height ?? window.innerHeight) - (viewport?.offsetTop ?? 0))}px`,
+      );
     fitKeyboard();
     viewport?.addEventListener("resize", fitKeyboard);
     viewport?.addEventListener("scroll", fitKeyboard);
-    return () => { viewport?.removeEventListener("resize", fitKeyboard); viewport?.removeEventListener("scroll", fitKeyboard); };
+    return () => {
+      viewport?.removeEventListener("resize", fitKeyboard);
+      viewport?.removeEventListener("scroll", fitKeyboard);
+    };
   }, []);
   const [loadedImage, setLoadedImage] = useState<string | null>(null);
   const [revealing, setRevealing] = useState(false);
@@ -119,6 +162,27 @@ export function IncantApp({
       button.removeEventListener("selectstart", preventNativeHold);
     };
   }, []);
+  useEffect(() => {
+    if (draftTimer.current) clearTimeout(draftTimer.current);
+    if (!sketch.current || sketch.current.isEmpty() || renewal.current) return;
+    draftTimer.current = setTimeout(() => {
+      const png = sketch.current?.exportPng();
+      if (png)
+        void archiveSketch(png, words)
+          .then(async (pair) => {
+            if (await archiveFolderReady()) await syncArchive(pair.id);
+          })
+          .catch(() =>
+            setArchiveError(
+              "Your file archive needs attention. Tap the moon to reconnect it before starting a new page.",
+            ),
+          );
+    }, 500);
+    return () => {
+      if (draftTimer.current) clearTimeout(draftTimer.current);
+    };
+  }, [revision]);
+  useEffect(() => () => turnTimers.current.forEach(clearTimeout), []);
   const busy = phase !== "idle",
     empty = sketch.current?.isEmpty() ?? true;
   useEffect(() => {
@@ -140,6 +204,11 @@ export function IncantApp({
     void loadCreations()
       .then((x) => {
         if (alive) setCreations(x);
+        void archiveExisting(x).catch(() =>
+          setArchiveError(
+            "Previous spells could not be added to the file archive. They remain in your spellbook.",
+          ),
+        );
       })
       .catch(() => {
         if (alive)
@@ -220,6 +289,10 @@ export function IncantApp({
     const timer = setTimeout(() => control.abort(), 180000);
     let successes = 0;
     try {
+      if (draftTimer.current) clearTimeout(draftTimer.current);
+      const pair = await archiveSketch(png, text, true);
+      if (await archiveFolderReady()) await syncArchive(pair.id);
+      if (id !== serial.current) return;
       const count = again ? 1 : settings.fourfold ? 4 : 1;
       const results = await Promise.allSettled(
         Array.from({ length: count }, async (_, i) => {
@@ -243,6 +316,12 @@ export function IncantApp({
           if (successes === 1) setActive(item);
           setProgress(`${successes} of ${count} images ready`);
           try {
+            await archiveImage(pair.id!, {
+              id: item.id,
+              image: item.image,
+              spell: item.spell,
+            });
+            if (await archiveFolderReady()) await syncArchive(pair.id);
             await saveCreation(item);
           } catch {
             setNotice(
@@ -402,26 +481,54 @@ export function IncantApp({
       }
     }
   }
-  const newPage = () => {
-    if (busy) return;
-    if (
-      !empty &&
-      !window.confirm(
-        "Start a fresh parchment? Download your sketch first if you want to keep it. Saved images stay in the spellbook.",
-      )
-    )
-      return;
-    sketch.current?.clear();
-    setWords("");
-    setActive(null);
-    setLast(null);
-    setError("");
-    setNotice("");
-    setRevision((n) => n + 1);
+  const newPage = async (allowBrowserOnly = false) => {
+    if (busy || renewal.current) return;
+    renewal.current = true;
+    if (draftTimer.current) clearTimeout(draftTimer.current);
+    try {
+      const png = sketch.current?.exportPng();
+      if (png && !sketch.current?.isEmpty())
+        await archiveSketch(png, words, true);
+      if (!allowBrowserOnly && !(await archiveFolderReady())) {
+        archiveDialog.current?.showModal();
+        renewal.current = false;
+        return;
+      }
+      if (!allowBrowserOnly) await syncArchive();
+      await endPage();
+      setPanel(false);
+      archiveDialog.current?.close();
+      setPhase("renewing");
+      setTurning(true);
+      turnTimers.current.push(
+        setTimeout(() => {
+          sketch.current?.clear();
+          setWords("");
+          setActive(null);
+          setLast(null);
+          setError("");
+          setNotice("");
+          setRevealing(false);
+          setRevision((n) => n + 1);
+        }, 1100),
+      );
+      turnTimers.current.push(
+        setTimeout(() => {
+          setTurning(false);
+          setPhase("idle");
+          renewal.current = false;
+        }, 3200),
+      );
+    } catch (e) {
+      renewal.current = false;
+      setArchiveError("The sketch has not been cleared. " + describe(e));
+      archiveDialog.current?.showModal();
+    }
   };
   return (
     <main
-      className={`drawing-room immersive-room ${immersiveMode ? "immersive-mode" : ""} phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
+      data-frame={frame}
+      className={`drawing-room immersive-room ${turning ? "turning-moon" : ""} ${immersiveMode ? "immersive-mode" : ""} phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
     >
       <section className="desk" aria-label="Wizard's drawing desk">
         <div className="drawing-area">
@@ -464,6 +571,7 @@ export function IncantApp({
                   }}
                 />
               )}
+              {turning && <div className="day-cycle" aria-hidden="true" />}
               {(phase === "casting" ||
                 revealing ||
                 (!!active && loadedImage !== active.id)) && (
@@ -493,31 +601,56 @@ export function IncantApp({
             </svg>
           )}
         </div>
+        <button
+          className="moon-key"
+          aria-label="New spell — turn the moon"
+          disabled={busy || turning}
+          onClick={() => void newPage()}
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <span className="moon-orbit" aria-hidden="true" />
+        </button>
         <div className="wand-rest">
           <button
             ref={voiceButton}
             aria-label={
-              immersiveMode && (phase === "casting" || phase === "finishing") ? "Stop spell" : immersiveMode && active ? "Return to sketch" :
-              phase === "connecting"
-                ? handsFree
-                  ? "Connecting… tap to cancel"
-                  : "Connecting… keep holding"
-                : phase === "listening"
-                  ? handsFree
-                    ? "Listening… tap to cast"
-                    : "Listening… release to cast"
-                  : phase === "finishing"
-                    ? "Finishing your spell…"
-                    : "Tap or hold to speak"
+              immersiveMode && (phase === "casting" || phase === "finishing")
+                ? "Stop spell"
+                : immersiveMode && active
+                  ? "Return to sketch"
+                  : phase === "connecting"
+                    ? handsFree
+                      ? "Connecting… tap to cancel"
+                      : "Connecting… keep holding"
+                    : phase === "listening"
+                      ? handsFree
+                        ? "Listening… tap to cast"
+                        : "Listening… release to cast"
+                      : phase === "finishing"
+                        ? "Finishing your spell…"
+                        : "Tap or hold to speak"
             }
             aria-describedby="wand-status"
             className={`voice-wand ${phase === "listening" ? "listening" : ""}`}
-            disabled={!immersiveMode && (phase === "casting" || phase === "finishing")}
+            disabled={
+              phase === "renewing" ||
+              (!immersiveMode && (phase === "casting" || phase === "finishing"))
+            }
             onPointerDown={(e) => {
               if (voicePointer.current !== null || e.button !== 0) return;
               e.preventDefault();
-              if (immersiveMode && (phase === "casting" || phase === "finishing")) { cancel(); return; }
-              if (immersiveMode && active) { setActive(null); setRevealing(false); return; }
+              if (
+                immersiveMode &&
+                (phase === "casting" || phase === "finishing")
+              ) {
+                cancel();
+                return;
+              }
+              if (immersiveMode && active) {
+                setActive(null);
+                setRevealing(false);
+                return;
+              }
               voicePointer.current = e.pointerId;
               voicePress.current = {
                 started: performance.now(),
@@ -558,8 +691,18 @@ export function IncantApp({
               }
               if ((e.key === " " || e.key === "Enter") && !e.repeat) {
                 e.preventDefault();
-                if (immersiveMode && (phase === "casting" || phase === "finishing")) { cancel(); return; }
-                if (immersiveMode && active) { setActive(null); setRevealing(false); return; }
+                if (
+                  immersiveMode &&
+                  (phase === "casting" || phase === "finishing")
+                ) {
+                  cancel();
+                  return;
+                }
+                if (immersiveMode && active) {
+                  setActive(null);
+                  setRevealing(false);
+                  return;
+                }
                 void beginVoice();
               }
             }}
@@ -619,10 +762,17 @@ export function IncantApp({
         >
           <BookOpen size={24} />
         </button>
-        <button className="typewriter-key" aria-label="Type a spell" disabled={busy}
-          onContextMenu={e => e.preventDefault()}
-          onClick={() => { typeDialog.current?.showModal(); typeField.current?.focus(); }}>
-          <img src="/wizard-typewriter.png" alt="" draggable={false}/>
+        <button
+          className="typewriter-key"
+          aria-label="Type a spell"
+          disabled={busy}
+          onContextMenu={(e) => e.preventDefault()}
+          onClick={() => {
+            typeDialog.current?.showModal();
+            typeField.current?.focus();
+          }}
+        >
+          <img src="/wizard-typewriter.png" alt="" draggable={false} />
         </button>
         {(error || notice) && (
           <div className="room-message" role={error ? "alert" : "status"}>
@@ -653,7 +803,11 @@ export function IncantApp({
           </button>
         </div>
         <div className="drawer-links">
-          <button className="plain-button" onClick={newPage} disabled={busy}>
+          <button
+            className="plain-button"
+            onClick={() => void newPage()}
+            disabled={busy}
+          >
             <Plus size={18} />
             New page
           </button>
@@ -790,13 +944,104 @@ export function IncantApp({
           </section>
         )}
       </dialog>
-      <dialog ref={typeDialog} className="type-bubble" aria-label="Type a spell">
-        <form onSubmit={e => { e.preventDefault(); typeDialog.current?.close(); void cast(); }}>
+      <dialog
+        ref={typeDialog}
+        className="type-bubble"
+        aria-label="Type a spell"
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            typeDialog.current?.close();
+            void cast();
+          }}
+        >
           <label htmlFor="typed-spell">What shall it become?</label>
-          <button type="button" className="bubble-close" aria-label="Close typed spell" onClick={() => typeDialog.current?.close()}><X size={18}/></button>
-          <textarea ref={typeField} id="typed-spell" aria-label="Type your spell" rows={3} maxLength={4000} value={words} onChange={e => setWords(e.target.value)} placeholder="A tiny cottage beneath an enormous moon…" />
-          <button type="submit" className="bubble-cast" aria-label="Cast typed spell" disabled={busy || empty || !words.trim()}><Sparkles size={23}/></button>
+          <button
+            type="button"
+            className="bubble-close"
+            aria-label="Close typed spell"
+            onClick={() => typeDialog.current?.close()}
+          >
+            <X size={18} />
+          </button>
+          <textarea
+            ref={typeField}
+            id="typed-spell"
+            aria-label="Type your spell"
+            rows={3}
+            maxLength={4000}
+            value={words}
+            onChange={(e) => setWords(e.target.value)}
+            placeholder="A tiny cottage beneath an enormous moon…"
+          />
+          <button
+            type="submit"
+            className="bubble-cast"
+            aria-label="Cast typed spell"
+            disabled={busy || empty || !words.trim()}
+          >
+            <Sparkles size={23} />
+          </button>
         </form>
+      </dialog>
+      <dialog
+        ref={archiveDialog}
+        className="archive-dialog"
+        aria-label="Keep your spell pairs"
+      >
+        <h2>A home for your spells</h2>
+        <p>
+          Choose a folder once to keep numbered sketch and image pairs in Files.
+          Your current drawing will be saved before the moon turns.
+        </p>
+        {archiveError && <p role="alert">{archiveError}</p>}
+        {directorySupported() ? (
+          <button
+            disabled={archiveWorking}
+            onClick={async () => {
+              setArchiveWorking(true);
+              setArchiveError("");
+              try {
+                await chooseArchiveFolder();
+                await newPage();
+              } catch (e) {
+                setArchiveError(describe(e));
+              } finally {
+                setArchiveWorking(false);
+              }
+            }}
+          >
+            Choose folder &amp; turn the moon
+          </button>
+        ) : (
+          <p>
+            This browser cannot write directly into a folder. Download your
+            pairs as a ZIP, then unzip it in Files.
+          </p>
+        )}
+        <button
+          disabled={archiveWorking}
+          onClick={async () => {
+            setArchiveWorking(true);
+            try {
+              await downloadArchive();
+              await newPage(true);
+            } catch (e) {
+              setArchiveError(describe(e));
+            } finally {
+              setArchiveWorking(false);
+            }
+          }}
+        >
+          Download pairs &amp; turn the moon
+        </button>
+        <button
+          disabled={archiveWorking}
+          onClick={() => archiveDialog.current?.close()}
+        >
+          Keep drawing
+        </button>
       </dialog>
       <Grimoire
         imageReady={imageReady}

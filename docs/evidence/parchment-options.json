@@ -1,0 +1,36 @@
+{
+  "viewport": {
+    "width": 1184,
+    "height": 1584
+  },
+  "selected": "b-balanced",
+  "measurements": [
+    {
+      "variant": "a-rich-frame",
+      "canvas": {
+        "x": 165.75,
+        "y": 162.46875,
+        "width": 852.5,
+        "height": 1259.0625
+      }
+    },
+    {
+      "variant": "b-balanced",
+      "canvas": {
+        "x": 106.546875,
+        "y": 111.859375,
+        "width": 970.90625,
+        "height": 1312.765625
+      }
+    },
+    {
+      "variant": "c-open",
+      "canvas": {
+        "x": 71.03125,
+        "y": 83.125,
+        "width": 1041.9375,
+        "height": 1370.21875
+      }
+    }
+  ]
+}

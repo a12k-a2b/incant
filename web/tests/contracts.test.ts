@@ -74,13 +74,11 @@ it("image request dimensions follow the actual parchment PNG", async () => {
   Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]).copy(png);
   png.writeUInt32BE(1152, 16);
   png.writeUInt32BE(1536, 20);
-  const fetch = vi
-    .fn()
-    .mockResolvedValue(
-      new Response(JSON.stringify({ data: [{ b64_json: "synthetic" }] }), {
-        status: 200,
-      }),
-    );
+  const fetch = vi.fn().mockResolvedValue(
+    new Response(JSON.stringify({ data: [{ b64_json: "synthetic" }] }), {
+      status: 200,
+    }),
+  );
   vi.stubGlobal("fetch", fetch);
   const result = await editSketchToImage({
     ...DEFAULT_SETTINGS,
@@ -105,4 +103,28 @@ it("image request dimensions follow the actual parchment PNG", async () => {
     ).ok,
   ).toBe(false);
   expect(fetch).not.toHaveBeenCalled();
+});
+
+import { zipFiles, pairFiles } from "../src/lib/archive";
+it("pair ZIP uses matching names, valid stored bytes and standard CRC", async () => {
+  const files = pairFiles({
+    id: 7,
+    sketch: "data:image/png;base64,AQID",
+    spell: "moon",
+    sealed: true,
+    images: [{ id: "a", image: "data:image/png;base64,BAUG", spell: "moon" }],
+  });
+  expect(files.map((f) => f[0])).toEqual([
+    "pair-0007-sketch.png",
+    "pair-0007-image.png",
+    "pair-0007-spell.json",
+  ]);
+  const blob = zipFiles([["check.txt", new TextEncoder().encode("123456789")]]);
+  const bytes = new Uint8Array(await blob.arrayBuffer()),
+    v = new DataView(bytes.buffer);
+  expect(v.getUint32(0, true)).toBe(0x04034b50);
+  expect(v.getUint32(14, true)).toBe(0xcbf43926);
+  expect(new TextDecoder().decode(bytes.slice(39, 48))).toBe("123456789");
+  expect(v.getUint32(bytes.length - 22, true)).toBe(0x06054b50);
+  expect(v.getUint32(bytes.length - 6, true)).toBe(48);
 });

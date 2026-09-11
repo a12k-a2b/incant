@@ -1,0 +1,78 @@
+{
+  "counts": {
+    "BLOCKED": 0,
+    "FAIL": 0,
+    "PASS": 3,
+    "SKIP": 0
+  },
+  "generated_at": "2026-09-11T07:28:33Z",
+  "kind": "repository-checks",
+  "metadata": {
+    "dry_run": false,
+    "harness_version": "0.1.0",
+    "profile": "pr",
+    "revisions": {
+      "incant-web": "ab6fed749ab60deebf47a18573644add3f65659a"
+    }
+  },
+  "results": [
+    {
+      "check": "production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "incant/web",
+      "description": "TypeScript and production PWA build",
+      "duration_seconds": 7.705,
+      "exit_code": 0,
+      "id": "incant-web/production-build",
+      "log": "logs/incant-web_production-build.log",
+      "output_tail": "\n> incant@1.1.0 build\n> tsc --noEmit && vite build && node scripts/build-sw.mjs\n\nvite v7.3.6 building client environment for production...\ntransforming...\n\u2713 1592 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.70 kB \u2502 gzip:  0.42 kB\ndist/assets/index-Ds-Yccrz.css   43.25 kB \u2502 gzip: 10.37 kB\ndist/assets/index-CYygRjt1.js   296.75 kB \u2502 gzip: 93.91 kB\n\u2713 built in 2.26s",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-11T07:27:19Z",
+      "status": "PASS"
+    },
+    {
+      "check": "unit-contracts",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "incant/web",
+      "description": "Malformed image/network handling and room authentication negative controls",
+      "duration_seconds": 1.719,
+      "exit_code": 0,
+      "id": "incant-web/unit-contracts",
+      "log": "logs/incant-web_unit-contracts.log",
+      "output_tail": "\n> incant@1.1.0 test\n> vitest run\n\n\n RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web\n\n \u2713 tests/contracts.test.ts (7 tests) 14ms\n\n Test Files  1 passed (1)\n      Tests  7 passed (7)\n   Start at  00:27:27\n   Duration  700ms (transform 110ms, setup 0ms, collect 138ms, tests 14ms, environment 0ms, prepare 171ms)\n",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-11T07:27:26Z",
+      "status": "PASS"
+    },
+    {
+      "check": "browser-flows",
+      "command": [
+        "npm",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "incant/web",
+      "description": "Synthetic browser ink, recovery, cast, voice-race, dialog and responsive checks; requires local server on port5173",
+      "duration_seconds": 65.244,
+      "exit_code": 0,
+      "id": "incant-web/browser-flows",
+      "log": "logs/incant-web_browser-flows.log",
+      "output_tail": "  \u2713  13 tests/desk.e2e.ts:182:3 \u203a layout desktop (1.3s)\n  \u2713  14 tests/desk.e2e.ts:182:3 \u203a layout dc1-portrait (1.3s)\n  \u2713  15 tests/desk.e2e.ts:182:3 \u203a layout dc1-landscape (1.4s)\n  \u2713  16 tests/desk.e2e.ts:182:3 \u203a layout tablet-portrait (1.1s)\n  \u2713  17 tests/desk.e2e.ts:182:3 \u203a layout tablet-landscape (1.0s)\n  \u2713  18 tests/desk.e2e.ts:182:3 \u203a layout phone (870ms)\n  \u2713  19 tests/desk.e2e.ts:202:1 \u203a resize retains exact original drawing pixels (1.0s)\n  \u2713  20 tests/desk.e2e.ts:211:1 \u203a reduced motion disables fog motion and image reveal animation (1.0s)\n  \u2713  21 tests/desk.e2e.ts:237:3 \u203a voice keyboard uses final speech rather than the previous typed spell (4.5s)\n  \u2713  22 tests/desk.e2e.ts:237:3 \u203a voice touch-hold uses final speech rather than the previous typed spell (5.2s)\n  \u2713  23 tests/desk.e2e.ts:237:3 \u203a voice tap uses final speech rather than the previous typed spell (4.1s)\n  \u2713  24 tests/desk.e2e.ts:364:1 \u203a early voice release discards a late microphone grant (2.1s)\n  \u2713  25 tests/desk.e2e.ts:411:3 \u203a pixel eraser pen-button: partial line, undo, redo, reload, and draw again (1.2s)\n  \u2713  26 tests/desk.e2e.ts:411:3 \u203a pixel eraser pen-bitmask: partial line, undo, redo, reload, and draw again (1.3s)\n  \u2713  27 tests/desk.e2e.ts:411:3 \u203a pixel eraser toolbar: partial line, undo, redo, reload, and draw again (1.6s)\n  \u2713  28 tests/desk.e2e.ts:484:1 \u203a typewriter focuses the bubble, retains words, and casts once (1.2s)\n  \u2713  29 tests/desk.e2e.ts:505:1 \u203a typewriter bubble fits narrow keyboard-sized viewport (721ms)\n  \u2713  30 tests/desk.e2e.ts:515:1 \u203a immersive mode keeps the wand and illustrated typewriter, including while casting (4.7s)\n\n  30 passed (1.1m)",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-11T07:27:28Z",
+      "status": "PASS"
+    }
+  ],
+  "schema_version": 1,
+  "status": "PASS"
+}
