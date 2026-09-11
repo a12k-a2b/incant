@@ -9,3 +9,7 @@ The regression test observes the focus event trail and checks that the temporary
 First regression run caught that React's autoFocus prop did not provide the native dialog attribute needed here; the focus trace still contained both elements. The implementation now sets the native autofocus attribute immediately before showModal. Focused browser test PASS: exactly Type your spell, with the height lock released on dismissal. The initial failed profile is retained as qa-keyboard-entry; the final profile uses a separate directory.
 
 Final repository profile PASS: production build, seven unit contracts, 31 browser scenarios. Deployment cedce3a2-90d3-4069-8ad4-9d08f61ab23f SUCCESS. Native device feel remains a manual check.
+
+## Intermittent wand report, 2026-09-11
+
+Owner observed the wand returning to neutral after opening and dismissing the typewriter, with the typewriter flashing; a later attempt succeeded. Confirmed visual cause: global disabled-button opacity reduced the typewriter artwork to 35% during voice connection. Its opacity now stays unchanged. Closing the dialog removes its temporary autofocus, and pointer-down explicitly focuses the wand without scrolling. Synthetic hold/tap/keyboard voice tests now include opening and closing the typewriter first. The intermittent hardware interruption has not been reproduced; this change does not claim it is conclusively resolved.

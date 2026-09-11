@@ -302,6 +302,14 @@ for (const input of ["keyboard", "touch-hold", "tap"] as const) {
     await draw(page);
     await writeSpell(page, "An old typed cottage");
     await closeTools(page);
+    await page
+      .getByRole("button", { name: "Type a spell", exact: true })
+      .click();
+    await page.getByRole("button", { name: "Close typed spell" }).click();
+    await expect(page.getByLabel("Type your spell")).not.toHaveAttribute(
+      "autofocus",
+      "",
+    );
     const b = page.locator(".voice-wand");
     const session =
       input === "touch-hold" ? await page.context().newCDPSession(page) : null;
@@ -396,7 +404,9 @@ test("early voice release discards a late microphone grant", async ({
   const box = (await b.boundingBox())!;
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
-  await expect(page.getByRole("button", {name: /Connecting… keep holding/})).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /Connecting… keep holding/ }),
+  ).toBeVisible();
   await page.waitForTimeout(350);
   await page.mouse.up();
   await expect
@@ -481,73 +491,137 @@ for (const mode of ["pen-button", "pen-bitmask", "toolbar"] as const) {
   });
 }
 
-test('typewriter focuses the bubble, retains words, and casts once', async ({page}) => {
-  await page.goto('/'); await draw(page);
-  await page.getByRole('button',{name:'Type a spell',exact:true}).click();
-  const field=page.getByRole('textbox',{name:'Type your spell',exact:true});
+test("typewriter focuses the bubble, retains words, and casts once", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await draw(page);
+  await page.getByRole("button", { name: "Type a spell", exact: true }).click();
+  const field = page.getByRole("textbox", {
+    name: "Type your spell",
+    exact: true,
+  });
   await expect(field).toBeFocused();
-  await expect(page.getByRole('button',{name:'Cast typed spell',exact:true})).toBeDisabled();
-  await field.fill('A moonlit cottage');
-  await page.getByRole('button',{name:'Close typed spell',exact:true}).click();
-  await expect(page.locator('.type-bubble')).not.toBeVisible();
-  await page.getByRole('button',{name:'Type a spell',exact:true}).click();
-  await expect(field).toHaveValue('A moonlit cottage');
+  await expect(
+    page.getByRole("button", { name: "Cast typed spell", exact: true }),
+  ).toBeDisabled();
+  await field.fill("A moonlit cottage");
+  await page
+    .getByRole("button", { name: "Close typed spell", exact: true })
+    .click();
+  await expect(page.locator(".type-bubble")).not.toBeVisible();
+  await page.getByRole("button", { name: "Type a spell", exact: true }).click();
+  await expect(field).toHaveValue("A moonlit cottage");
   await page.reload();
-  await page.getByRole('button',{name:'Type a spell',exact:true}).click();
-  await expect(field).toHaveValue('A moonlit cottage');
-  let requests=0;
-  await page.route('**/api/cast',async r=>{requests++;expect(r.request().postDataJSON().incantation).toBe('A moonlit cottage');await r.fulfill({status:400,json:{ok:false,error:'Synthetic typed cast verified'}});});
-  await page.getByRole('button',{name:'Cast typed spell',exact:true}).click();
-  await expect(page.locator('.type-bubble')).not.toBeVisible();
-  await expect(page.getByRole('alert')).toContainText('Synthetic typed cast verified');
+  await page.getByRole("button", { name: "Type a spell", exact: true }).click();
+  await expect(field).toHaveValue("A moonlit cottage");
+  let requests = 0;
+  await page.route("**/api/cast", async (r) => {
+    requests++;
+    expect(r.request().postDataJSON().incantation).toBe("A moonlit cottage");
+    await r.fulfill({
+      status: 400,
+      json: { ok: false, error: "Synthetic typed cast verified" },
+    });
+  });
+  await page
+    .getByRole("button", { name: "Cast typed spell", exact: true })
+    .click();
+  await expect(page.locator(".type-bubble")).not.toBeVisible();
+  await expect(page.getByRole("alert")).toContainText(
+    "Synthetic typed cast verified",
+  );
   expect(requests).toBe(1);
 });
-test('typewriter bubble fits narrow keyboard-sized viewport',async({page})=>{
-  await page.setViewportSize({width:390,height:500});await page.goto('/');
-  await page.getByRole('button',{name:'Type a spell',exact:true}).click();
-  await expect(page.getByRole('textbox',{name:'Type your spell',exact:true})).toBeInViewport();
-  await expect(page.getByRole('button',{name:'Cast typed spell',exact:true})).toBeInViewport();
-  await page.screenshot({path:'../docs/evidence/typewriter-bubble-phone.png'});
-  await page.keyboard.press('Escape');await expect(page.locator('.type-bubble')).not.toBeVisible();
+test("typewriter bubble fits narrow keyboard-sized viewport", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 500 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Type a spell", exact: true }).click();
+  await expect(
+    page.getByRole("textbox", { name: "Type your spell", exact: true }),
+  ).toBeInViewport();
+  await expect(
+    page.getByRole("button", { name: "Cast typed spell", exact: true }),
+  ).toBeInViewport();
+  await page.screenshot({
+    path: "../docs/evidence/typewriter-bubble-phone.png",
+  });
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".type-bubble")).not.toBeVisible();
 });
 
-
-test('immersive mode keeps the wand and illustrated typewriter, including while casting', async ({page}) => {
- await page.goto('/');
- await expect(page.locator('.immersive-mode')).toBeVisible();
- await expect(page.getByRole('button')).toHaveCount(3);
- await expect(page.locator('.typewriter-key')).toBeVisible();
- await expect(page.locator('.desk-latch')).not.toBeVisible();
- await expect(page.locator('.empty-parchment')).not.toBeVisible();
- await draw(page);
- // Seed a typed spell through the preserved rollback view, then return to the default room.
- await page.goto('/?mode=desk'); await writeSpell(page,'A synthetic test'); await closeTools(page);
- await page.goto('/');
- await page.screenshot({path:'../docs/evidence/immersive-mode.png'});
- await expect(page.locator('canvas')).toBeVisible();
- const original=await png(page);
- await page.route('**/api/cast',async r=>{await new Promise(resolve=>setTimeout(resolve,1200));await r.fulfill({json:{ok:true,imageBase64:original.split(',')[1],mime:'image/png'}}).catch(()=>{});});
- // Set up casting independently of the separately tested speech adapter.
- await page.locator('.cast-button').evaluate((b:HTMLButtonElement)=>b.click());
- await expect(page.locator('.phase-casting')).toBeVisible();
- await expect(page.getByRole('button')).toHaveCount(3);
- await page.locator('.voice-wand').click();
- await expect(page.locator('.spell-fog')).toHaveCount(0);
- await page.waitForTimeout(1300);
- await expect(page.locator('.manifestation')).toHaveCount(0);
- await page.locator('.cast-button').evaluate((b:HTMLButtonElement)=>b.click());
- await expect(page.locator('.manifestation.image-ready')).toBeVisible();
- await expect(page.getByRole('button')).toHaveCount(3);
- await page.locator('.voice-wand').click();
- await expect(page.locator('.manifestation')).toHaveCount(0);
- expect(await png(page)).toBe(original);
+test("immersive mode keeps the wand and illustrated typewriter, including while casting", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".immersive-mode")).toBeVisible();
+  await expect(page.getByRole("button")).toHaveCount(4);
+  await expect(page.locator(".typewriter-key")).toBeVisible();
+  await expect(page.locator(".desk-latch")).not.toBeVisible();
+  await expect(page.locator(".empty-parchment")).not.toBeVisible();
+  await draw(page);
+  // Seed a typed spell through the preserved rollback view, then return to the default room.
+  await page.goto("/?mode=desk");
+  await writeSpell(page, "A synthetic test");
+  await closeTools(page);
+  await page.goto("/");
+  await page.screenshot({ path: "../docs/evidence/immersive-mode.png" });
+  await expect(page.locator("canvas")).toBeVisible();
+  const original = await png(page);
+  await page.route("**/api/cast", async (r) => {
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    await r
+      .fulfill({
+        json: {
+          ok: true,
+          imageBase64: original.split(",")[1],
+          mime: "image/png",
+        },
+      })
+      .catch(() => {});
+  });
+  // Set up casting independently of the separately tested speech adapter.
+  await page
+    .locator(".cast-button")
+    .evaluate((b: HTMLButtonElement) => b.click());
+  await expect(page.locator(".phase-casting")).toBeVisible();
+  await expect(page.getByRole("button")).toHaveCount(5);
+  await page.locator(".voice-wand").click();
+  await expect(page.locator(".spell-fog")).toHaveCount(0);
+  await page.waitForTimeout(1300);
+  await expect(page.locator(".manifestation")).toHaveCount(0);
+  await page
+    .locator(".cast-button")
+    .evaluate((b: HTMLButtonElement) => b.click());
+  await expect(page.locator(".manifestation.image-ready")).toBeVisible();
+  await expect(page.getByRole("button")).toHaveCount(4);
+  await page.locator(".voice-wand").click();
+  await expect(page.locator(".manifestation")).toHaveCount(0);
+  expect(await png(page)).toBe(original);
 });
 
-test('typewriter focuses only the writing field and releases its viewport lock on close',async({page})=>{
- await page.goto('/');
- await page.evaluate(()=>{(window as any).focusTrail=[];document.addEventListener('focusin',e=>{const t=e.target as HTMLElement;if(t.closest('.type-bubble'))(window as any).focusTrail.push(t.getAttribute('aria-label'));});});
- await page.getByRole('button',{name:'Type a spell',exact:true}).click();
- expect(await page.evaluate(()=>(window as any).focusTrail)).toEqual(['Type your spell']);
- const height=await page.locator('main').evaluate(e=>e.style.height);expect(height).not.toBe('');
- await page.getByRole('button',{name:'Close typed spell'}).click();await expect.poll(()=>page.locator('main').evaluate(e=>e.style.height)).toBe('');
+test("typewriter focuses only the writing field and releases its viewport lock on close", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.evaluate(() => {
+    (window as any).focusTrail = [];
+    document.addEventListener("focusin", (e) => {
+      const t = e.target as HTMLElement;
+      if (t.closest(".type-bubble"))
+        (window as any).focusTrail.push(t.getAttribute("aria-label"));
+    });
+  });
+  await page.getByRole("button", { name: "Type a spell", exact: true }).click();
+  expect(await page.evaluate(() => (window as any).focusTrail)).toEqual([
+    "Type your spell",
+  ]);
+  const height = await page.locator("main").evaluate((e) => e.style.height);
+  expect(height).not.toBe("");
+  await page.getByRole("button", { name: "Close typed spell" }).click();
+  await expect
+    .poll(() => page.locator("main").evaluate((e) => e.style.height))
+    .toBe("");
 });

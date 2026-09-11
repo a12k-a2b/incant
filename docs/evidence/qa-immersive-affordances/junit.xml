@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="4.506"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1595 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-BR3faiwa.css   47.65 kB │ gzip: 11.15 kB
+dist/assets/index-DLMvdayX.js   304.84 kB │ gzip: 96.62 kB
+✓ built in 1.87s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="1.349"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (7 tests) 12ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  01:01:13
+   Duration  530ms (transform 82ms, setup 0ms, collect 109ms, tests 12ms, environment 0ms, prepare 113ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="131.238"><failure message="command exited 1">         - retrying click action
+           - waiting 500ms
+
+
+      76 |     });
+      77 |   });
+    &gt; 78 |   await page.getByRole("button", { name: "Open saved spells" }).click();
+         |                                                                 ^
+      79 |   await expect(
+      80 |     page.getByRole("dialog", { name: "Your saved spells" }),
+      81 |   ).toBeVisible();
+        at /Users/anjan/Documents/SolOS/incant/web/tests/immersive-affordances.e2e.ts:78:65
+
+    Error Context: test-results/immersive-affordances.e2e.-c2a50-and-share-exact-image-bytes/error-context.md
+
+  3 failed
+    tests/archive.e2e.ts:197:1 › different spells reuse the exact sketch and archive both results ──
+    tests/immersive-affordances.e2e.ts:25:1 › peel compares exact saved source without changing drawing or result
+    tests/immersive-affordances.e2e.ts:58:1 › illustrated books expose saved creations and share exact image bytes
+  34 passed (2.2m)</failure><system-out>         - retrying click action
+           - waiting 500ms
+
+
+      76 |     });
+      77 |   });
+    &gt; 78 |   await page.getByRole("button", { name: "Open saved spells" }).click();
+         |                                                                 ^
+      79 |   await expect(
+      80 |     page.getByRole("dialog", { name: "Your saved spells" }),
+      81 |   ).toBeVisible();
+        at /Users/anjan/Documents/SolOS/incant/web/tests/immersive-affordances.e2e.ts:78:65
+
+    Error Context: test-results/immersive-affordances.e2e.-c2a50-and-share-exact-image-bytes/error-context.md
+
+  3 failed
+    tests/archive.e2e.ts:197:1 › different spells reuse the exact sketch and archive both results ──
+    tests/immersive-affordances.e2e.ts:25:1 › peel compares exact saved source without changing drawing or result
+    tests/immersive-affordances.e2e.ts:58:1 › illustrated books expose saved creations and share exact image bytes
+  34 passed (2.2m)</system-out></testcase></testsuite>

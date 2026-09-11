@@ -1,0 +1,79 @@
+{
+  "counts": {
+    "BLOCKED": 0,
+    "FAIL": 1,
+    "PASS": 2,
+    "SKIP": 0
+  },
+  "generated_at": "2026-09-11T08:03:25Z",
+  "kind": "repository-checks",
+  "metadata": {
+    "dry_run": false,
+    "harness_version": "0.1.0",
+    "profile": "pr",
+    "revisions": {
+      "incant-web": "c6173d41b60c8f6ef2ce9e6e0556d69c46657054"
+    }
+  },
+  "results": [
+    {
+      "check": "production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "incant/web",
+      "description": "TypeScript and production PWA build",
+      "duration_seconds": 4.506,
+      "exit_code": 0,
+      "id": "incant-web/production-build",
+      "log": "logs/incant-web_production-build.log",
+      "output_tail": "\n> incant@1.1.0 build\n> tsc --noEmit && vite build && node scripts/build-sw.mjs\n\nvite v7.3.6 building client environment for production...\ntransforming...\n\u2713 1595 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.70 kB \u2502 gzip:  0.42 kB\ndist/assets/index-BR3faiwa.css   47.65 kB \u2502 gzip: 11.15 kB\ndist/assets/index-DLMvdayX.js   304.84 kB \u2502 gzip: 96.62 kB\n\u2713 built in 1.87s",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-11T08:01:08Z",
+      "status": "PASS"
+    },
+    {
+      "check": "unit-contracts",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "incant/web",
+      "description": "Malformed image/network handling and room authentication negative controls",
+      "duration_seconds": 1.349,
+      "exit_code": 0,
+      "id": "incant-web/unit-contracts",
+      "log": "logs/incant-web_unit-contracts.log",
+      "output_tail": "\n> incant@1.1.0 test\n> vitest run\n\n\n RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web\n\n \u2713 tests/contracts.test.ts (7 tests) 12ms\n\n Test Files  1 passed (1)\n      Tests  7 passed (7)\n   Start at  01:01:13\n   Duration  530ms (transform 82ms, setup 0ms, collect 109ms, tests 12ms, environment 0ms, prepare 113ms)\n",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-11T08:01:13Z",
+      "status": "PASS"
+    },
+    {
+      "check": "browser-flows",
+      "command": [
+        "npm",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "incant/web",
+      "description": "Synthetic browser ink, recovery, cast, voice-race, dialog and responsive checks; requires local server on port5173",
+      "duration_seconds": 131.238,
+      "exit_code": 1,
+      "id": "incant-web/browser-flows",
+      "log": "logs/incant-web_browser-flows.log",
+      "output_tail": "         - retrying click action\n           - waiting 500ms\n\n\n      76 |     });\n      77 |   });\n    > 78 |   await page.getByRole(\"button\", { name: \"Open saved spells\" }).click();\n         |                                                                 ^\n      79 |   await expect(\n      80 |     page.getByRole(\"dialog\", { name: \"Your saved spells\" }),\n      81 |   ).toBeVisible();\n        at /Users/anjan/Documents/SolOS/incant/web/tests/immersive-affordances.e2e.ts:78:65\n\n    Error Context: test-results/immersive-affordances.e2e.-c2a50-and-share-exact-image-bytes/error-context.md\n\n  3 failed\n    tests/archive.e2e.ts:197:1 \u203a different spells reuse the exact sketch and archive both results \u2500\u2500\n    tests/immersive-affordances.e2e.ts:25:1 \u203a peel compares exact saved source without changing drawing or result \n    tests/immersive-affordances.e2e.ts:58:1 \u203a illustrated books expose saved creations and share exact image bytes \n  34 passed (2.2m)",
+      "project": "incant-web",
+      "reason": "command exited 1",
+      "required": true,
+      "started_at": "2026-09-11T08:01:14Z",
+      "status": "FAIL"
+    }
+  ],
+  "schema_version": 1,
+  "status": "FAIL"
+}

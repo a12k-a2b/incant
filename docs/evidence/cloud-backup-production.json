@@ -1,0 +1,37 @@
+{
+  "time": "2026-09-11T08:30:59.858986+00:00",
+  "deployment": "83ca49b1-bf24-411a-9477-0e9f69a52ba4",
+  "restartDeployment": "a3a38b62-612b-4ab0-87a6-bf2c2a3ed331",
+  "productionBuild": "PASS",
+  "unauthenticatedBackupRejected": {
+    "result": "PASS",
+    "httpStatus": 401
+  },
+  "earlierExport": {
+    "sketches": 6,
+    "generations": 5,
+    "restartExactByteReadback": "PASS",
+    "uniqueObjects": 8
+  },
+  "deviceBackup": {
+    "result": "PASS",
+    "sketchRecords": 14,
+    "uniqueSourceImages": 11,
+    "generations": 13,
+    "visibleStatus": "Cloud backup up to date"
+  },
+  "androidShareSheet": {
+    "result": "PASS",
+    "evidence": "Android package and chooser_header/resolver_list/chooser_action_row native resource IDs observed after Share image tap; dismissed without recipient selection"
+  },
+  "frameDefault": "see-through",
+  "wandAfterTypewriter": {
+    "syntheticTests": "PASS",
+    "intermittentHardwareInterruption": "NOT REPRODUCED"
+  },
+  "privateScreenshots": "retained in /private/tmp; no real artwork included in repository",
+  "assets": {
+    "index-CS7GFiAr.js": "b56da70cbdd20a77f775a042edb2d8e45f0dfa5e4af6d868ad793082da30d595",
+    "index-1U2Xlx-d.css": "71fb8ac48e72fe042819a9470fee4b6f46225999c67f3ec90f8e5beab450f1b1"
+  }
+}

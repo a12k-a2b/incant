@@ -4,6 +4,7 @@ COPY package*.json ./
 RUN npm ci --no-audit --no-fund
 COPY index.html tsconfig.json vite.config.ts server.ts ./
 COPY src ./src
+COPY server ./server
 COPY public ./public
 COPY scripts/build-sw.mjs ./scripts/build-sw.mjs
 RUN npm run build

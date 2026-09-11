@@ -1,3 +1,4 @@
+import { backupRouter } from './server/backup';
 import express from "express";
 import { existsSync } from "node:fs";
 if (existsSync(".env")) process.loadEnvFile(".env");
@@ -95,6 +96,7 @@ app.use("/api", (req, res, next) => {
   }
   next();
 });
+app.use("/api/backup", backupRouter(process.env.RAILWAY_VOLUME_MOUNT_PATH ? `${process.env.RAILWAY_VOLUME_MOUNT_PATH}/incant-backup-v1` : process.env.INCANT_BACKUP_PATH));
 let activeCasts = 0;
 const castTimes: number[] = [];
 app.post("/api/cast", (_req, res, next) => {

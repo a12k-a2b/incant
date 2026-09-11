@@ -1,6 +1,7 @@
 // Independent archive: do not change the existing gallery database or draft format.
 export type Pair = {
   id?: number;
+  cloudKey?: string;
   bundleId?: string;
   sessionId?: string;
   sessionStarted?: number;
@@ -36,7 +37,7 @@ function open(): Promise<IDBDatabase> {
     r.onerror = () => reject(r.error);
   });
 }
-async function meta<T>(key: string): Promise<T | undefined> {
+export async function meta<T>(key: string): Promise<T | undefined> {
   const d = await open();
   try {
     return await new Promise((resolve, reject) => {
@@ -48,7 +49,7 @@ async function meta<T>(key: string): Promise<T | undefined> {
     d.close();
   }
 }
-async function putMeta(key: string, value: unknown) {
+export async function putMeta(key: string, value: unknown) {
   const d = await open();
   try {
     await new Promise<void>((resolve, reject) => {
@@ -119,7 +120,10 @@ export async function archiveSketch(
           } else save();
         };
       };
-      t.oncomplete = () => resolve(saved);
+      t.oncomplete = () => {
+        window.dispatchEvent(new Event("incant-archive-saved"));
+        resolve(saved);
+      };
       t.onabort = () => reject(t.error);
       t.onerror = () => reject(t.error);
     });
@@ -149,7 +153,10 @@ export async function archiveImage(
         pair.updated = Date.now();
         s.put(pair);
       };
-      t.oncomplete = () => resolve(pair);
+      t.oncomplete = () => {
+        window.dispatchEvent(new Event("incant-archive-saved"));
+        resolve(pair);
+      };
       t.onabort = () => reject(t.error || new Error("Sketch pair missing"));
       t.onerror = () => reject(t.error);
     });
@@ -450,4 +457,33 @@ export async function downloadArchive() {
   a.download = "Incant-pairs.zip";
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
+// Restore into separate rows; never replace the current drawing or delete local work.
+export async function importCloudPairs(items: (Pair & { cloudKey: string })[]) {
+  const d = await open();
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const t = d.transaction(["pairs", "meta"], "readwrite"),
+        p = t.objectStore("pairs"),
+        m = t.objectStore("meta");
+      for (const item of items) {
+        const r = m.get("restored:" + item.cloudKey);
+        r.onsuccess = () => {
+          const { id, ...copy } = item;
+          const save = p.put({
+            ...copy,
+            ...(typeof r.result === "number" ? { id: r.result } : {}),
+          });
+          save.onsuccess = () =>
+            m.put(save.result, "restored:" + item.cloudKey);
+        };
+      }
+      t.oncomplete = () => resolve();
+      t.onabort = () => reject(t.error);
+      t.onerror = () => reject(t.error);
+    });
+  } finally {
+    d.close();
+  }
 }

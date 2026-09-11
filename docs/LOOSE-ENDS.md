@@ -1,11 +1,7 @@
 # Incant loose ends
 
-## Pull-down parchment corner — deferred, 2026-09-11
+## Parchment corner — clarified and implemented, 2026-09-11
 
-Owner suggested keeping the tactile idea of pulling or peeling a parchment corner for later if it overlaps with the moon.
+The earlier proposal was to peel back a finished image and compare it with its source sketch, not start a fresh page. The owner resurfaced the original proposal and explicitly requested implementation. This supersedes the earlier deferral based on an incorrect interpretation.
 
-Decision: defer it as a fresh-page gesture. The moon already saves the current work and starts a new parchment with the night-to-dawn transition. A second gesture for that same action would duplicate the interaction and add discovery burden to immersive mode.
-
-No distinct corner-pull behavior was found in the current implementation or project notes. Do not add one now. Preserve the visual/interaction idea for a future feature with a separate purpose; revisiting saved pages is one possible use, not an approved implementation plan.
-
-The moon remains the immersive new-page control. This decision does not change repeated casting on the same sketch or paired archiving.
+The corner now reveals the exact source retained with the selected generation. Drag for a partial comparison or tap for a full toggle. It does not erase ink, alter a generation, or start a page. The moon remains the new-page interaction.

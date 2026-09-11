@@ -1,5 +1,7 @@
+import { backupStatus, syncCloud, restoreCloud } from "@/lib/cloud-backup";
 import { useEffect, useState } from "react";
 import { allPairs, type Pair } from "@/lib/archive";
+import { shareImage, saveImage } from "@/lib/share-image";
 import type { Creation } from "@/lib/collection";
 export function ArchiveLibrary({
   open,
@@ -14,6 +16,14 @@ export function ArchiveLibrary({
 }) {
   const [pairs, setPairs] = useState<Pair[]>([]);
   const [error, setError] = useState("");
+  const [cloud, setCloud] = useState(backupStatus);
+  const [recovering, setRecovering] = useState(false);
+  useEffect(() => {
+    const update = () => setCloud(backupStatus);
+    window.addEventListener("incant-backup-status", update);
+    return () => window.removeEventListener("incant-backup-status", update);
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     let alive = true;
@@ -68,6 +78,29 @@ export function ArchiveLibrary({
       aria-label="Saved manifestations"
     >
       <p className="eyebrow">YOUR SPELLBOOK</p>
+      <p role="status">{cloud}</p>
+      <div className="archive-cloud-actions">
+        <button type="button" onClick={() => void syncCloud()}>
+          Back up now
+        </button>
+        <button
+          type="button"
+          disabled={busy || recovering}
+          onClick={async () => {
+            setRecovering(true);
+            try {
+              await restoreCloud();
+              setPairs(await allPairs());
+            } catch {
+              /* status explains recovery failure */
+            } finally {
+              setRecovering(false);
+            }
+          }}
+        >
+          {recovering ? "Recovering…" : "Recover cloud spellbook"}
+        </button>
+      </div>
       {error && <p role="status">{error}</p>}
       {!rows.length && (
         <p>Your sketches and spells will appear here automatically.</p>
@@ -105,23 +138,67 @@ export function ArchiveLibrary({
                     <div className="collection-strip">
                       {versions.flatMap((p) =>
                         p.images.map((i) => (
-                          <button
-                            key={i.id}
-                            disabled={busy}
-                            aria-label={"Open image: " + i.spell}
-                            onClick={() =>
-                              onOpen({
-                                id: i.id,
-                                image: i.image,
-                                spell: i.spell,
-                                created: i.created || p.created || 0,
-                                sketch: p.sketch,
-                              })
-                            }
-                          >
-                            <img src={i.image} alt="" loading="lazy" />
-                            <span>{i.spell}</span>
-                          </button>
+                          <div className="archive-generation" key={i.id}>
+                            <button
+                              disabled={busy}
+                              aria-label={"Open image: " + i.spell}
+                              onClick={() =>
+                                onOpen({
+                                  id: i.id,
+                                  image: i.image,
+                                  spell: i.spell,
+                                  created: i.created || p.created || 0,
+                                  sketch: p.sketch,
+                                })
+                              }
+                            >
+                              <img src={i.image} alt="" loading="lazy" />
+                              <span>{i.spell}</span>
+                            </button>
+                            <div className="archive-file-actions">
+                              <button
+                                aria-label={"Save image: " + i.spell}
+                                onClick={() => {
+                                  try {
+                                    saveImage({
+                                      id: i.id,
+                                      image: i.image,
+                                      spell: i.spell,
+                                      created: i.created || 0,
+                                    });
+                                  } catch (e) {
+                                    setError(
+                                      e instanceof Error
+                                        ? e.message
+                                        : "Could not save image",
+                                    );
+                                  }
+                                }}
+                              >
+                                Save
+                              </button>
+                              <button
+                                aria-label={"Share image: " + i.spell}
+                                onClick={() => {
+                                  setError("");
+                                  void shareImage({
+                                    id: i.id,
+                                    image: i.image,
+                                    spell: i.spell,
+                                    created: i.created || 0,
+                                  }).catch((e) =>
+                                    setError(
+                                      e instanceof Error
+                                        ? e.message
+                                        : "Could not share image",
+                                    ),
+                                  );
+                                }}
+                              >
+                                Share
+                              </button>
+                            </div>
+                          </div>
                         )),
                       )}
                     </div>

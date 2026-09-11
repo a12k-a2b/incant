@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="7.42"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1595 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-Cxek8_rn.css   47.96 kB │ gzip: 11.22 kB
+dist/assets/index-CSU9DaQx.js   304.84 kB │ gzip: 96.62 kB
+✓ built in 2.64s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="1.94"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (7 tests) 15ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  01:05:48
+   Duration  832ms (transform 105ms, setup 0ms, collect 144ms, tests 15ms, environment 0ms, prepare 105ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="92.964"><failure message="command exited 1">
+    Call log:
+      - Expect "toBeVisible" locator('.manifestation.image-ready') with timeout 5000ms
+      - waiting for locator('.manifestation.image-ready')
+
+
+      217 |     await page.getByLabel("Type your spell").fill(words);
+      218 |     await page.getByRole("button", { name: "Cast typed spell" }).click();
+    &gt; 219 |     await expect(page.locator(".manifestation.image-ready")).toBeVisible();
+          |                                                              ^
+      220 |     await expect(page.locator(".spell-fog")).toHaveCount(0, { timeout: 6000 });
+      221 |   }
+      222 |   expect(sent.map((s) =&gt; s.incantation)).toEqual([
+        at /Users/anjan/Documents/SolOS/incant/web/tests/archive.e2e.ts:219:62
+
+    Error Context: test-results/archive.e2e.ts-different-s-e222f-ch-and-archive-both-results/error-context.md
+
+  1 failed
+    tests/archive.e2e.ts:197:1 › different spells reuse the exact sketch and archive both results ──
+  36 passed (1.5m)</failure><system-out>
+    Call log:
+      - Expect "toBeVisible" locator('.manifestation.image-ready') with timeout 5000ms
+      - waiting for locator('.manifestation.image-ready')
+
+
+      217 |     await page.getByLabel("Type your spell").fill(words);
+      218 |     await page.getByRole("button", { name: "Cast typed spell" }).click();
+    &gt; 219 |     await expect(page.locator(".manifestation.image-ready")).toBeVisible();
+          |                                                              ^
+      220 |     await expect(page.locator(".spell-fog")).toHaveCount(0, { timeout: 6000 });
+      221 |   }
+      222 |   expect(sent.map((s) =&gt; s.incantation)).toEqual([
+        at /Users/anjan/Documents/SolOS/incant/web/tests/archive.e2e.ts:219:62
+
+    Error Context: test-results/archive.e2e.ts-different-s-e222f-ch-and-archive-both-results/error-context.md
+
+  1 failed
+    tests/archive.e2e.ts:197:1 › different spells reuse the exact sketch and archive both results ──
+  36 passed (1.5m)</system-out></testcase></testsuite>

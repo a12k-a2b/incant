@@ -1910,3 +1910,34 @@ dialog::backdrop {
 .immersive-room[data-frame="big"][data-frame-layer="foreground"] .paper-wrap::after {
  mask-image:linear-gradient(to right,#000 14%,transparent 20%,transparent 80%,#000 86%),linear-gradient(to bottom,#000 7%,transparent 12%,transparent 85%,#000 95%),radial-gradient(ellipse 43% 28% at 0 0,#000 85%,transparent 100%),radial-gradient(ellipse 39% 26% at 100% 0,#000 85%,transparent 100%),radial-gradient(ellipse 49% 33% at 0 100%,#000 85%,transparent 100%),radial-gradient(ellipse 39% 35% at 100% 100%,#000 85%,transparent 100%);
 }
+/* Illustrated affordances only: the books are already painted into the frame. */
+.spellbooks-key {position:absolute;z-index:8;right:0;bottom:14%;width:13%;height:13%;min-width:48px;min-height:48px;background:transparent;touch-action:manipulation;}
+.casting-hourglass {position:absolute;z-index:10;left:calc(50% + 105px);bottom:22px;width:56px;height:66px;display:grid;place-items:center;background:radial-gradient(ellipse,#fff6df 40%,#fff6df00 72%);color:#49351e;touch-action:manipulation;}
+.casting-hourglass svg {animation:hourglass-turn 3.8s ease-in-out infinite;filter:drop-shadow(0 1px 1px #fff9e5);}
+@keyframes hourglass-turn {0%,62%{transform:rotate(0) translateY(0);}72%{transform:rotate(-12deg) translateY(-4px);}90%,100%{transform:rotate(180deg) translateY(0);}}
+.comparison-sketch {position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#f7f3e8;pointer-events:none;z-index:2;}
+.parchment-peel {position:absolute;right:0;bottom:0;z-index:6;width:60px;height:60px;background:transparent;touch-action:none;user-select:none;-webkit-user-select:none;}
+.parchment-peel span {position:absolute;inset:4px;background:linear-gradient(135deg,#b6a580,#fff9e6 60%,#dccbad);clip-path:polygon(100% 0,0 100%,100% 100%);filter:drop-shadow(-2px -2px 2px #34281777);}
+.archive-generation {flex:0 0 110px;}
+.collection-strip .archive-generation>button {width:110px;}
+.archive-file-actions {display:flex;gap:4px;margin-top:4px;}
+.collection-strip .archive-file-actions button {width:auto;min-width:48px;min-height:44px;flex:1;padding:6px;font-size:12px;border:0;}
+@media(prefers-reduced-motion:reduce){.casting-hourglass svg{animation:none;}}
+.saved-spells-dialog {width:min(820px,calc(100vw - 32px));max-height:86dvh;padding:24px;background:#f7f0df;color:#342c20;border:1px solid #a89574;overflow:auto;}
+.saved-spells-dialog::backdrop {background:#211a1466;}
+.saved-spells-dialog header {display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.saved-spells-dialog header button {width:44px;height:44px;background:transparent;}
+.saved-spells-dialog .collection {margin-top:16px;}
+@media(max-width:600px){.casting-hourglass{left:calc(50% - 92px);bottom:18px;width:48px;height:56px;}}
+.saved-spells-dialog {position:fixed;inset:0;margin:auto;}
+.saved-spells-dialog h2 {font-size:25px;}
+.parchment-peel {right:6%;bottom:6%;}
+/* Keep illustrated targets distinct on short screens as well as DC-1 portrait. */
+.typewriter-key {height:clamp(70px,15dvh,150px);min-height:0;}
+.typewriter-key img {height:100%;object-fit:contain;object-position:bottom right;}
+.spellbooks-key {bottom:max(18%,160px);}
+
+/* Frame illustrations remain visible while their actions are temporarily disabled. */
+.typewriter-key:disabled, .spellbooks-key:disabled { opacity: 1; }
+.archive-cloud-actions {display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
+.archive-cloud-actions button {padding:10px 14px;border:1px solid #97836b;background:#f5eddd;border-radius:6px;}

@@ -7,7 +7,8 @@ try {
  await page.getByLabel('Room passphrase').fill((await readFile('.env.access','utf8')).trim().split('=')[1]);
  await page.getByRole('button',{name:'Open the room',exact:true}).click();
  await page.locator('.immersive-mode').waitFor();
- if(await page.getByRole('button').count()!==3)throw new Error('Unexpected visible controls');
+ if(await page.locator('main').getAttribute('data-frame-layer')!=='see-through')throw new Error('Frame rollback not active');
+ if(await page.getByRole('button').count()!==4)throw new Error('Unexpected visible controls');
  if(!await page.locator('.typewriter-key').isVisible() || await page.locator('.desk-latch').isVisible())throw new Error('Extra UI visible');
  await page.locator('.typewriter-key img').evaluate(async (img: HTMLImageElement) => img.decode());
  await page.screenshot({path:'../docs/evidence/immersive-mode-hosted.png'});
@@ -22,6 +23,6 @@ try {
  if(await page.locator('.paper-wrap').evaluate(e=>getComputedStyle(e,'::after').opacity)!=='0.9')throw new Error('Foreground opacity mismatch');
  await page.getByRole('button',{name:'New spell — turn the moon'}).click();await page.locator('.turning-moon').waitFor();
  if(await page.getByRole('dialog',{name:'Keep your spell pairs'}).isVisible())throw new Error('Unexpected save popup');
- const result={automaticMoon:'PASS',foregroundOpacity:'PASS',singleTypewriterFocus:'PASS',namedFrameSwitch:'PASS',date:new Date().toISOString(),mode:'immersive',visibleControls:3,frameParchmentWandAndTypewriter:'PASS'};
+ const result={seeThroughDefault:'PASS',automaticMoon:'PASS',foregroundOpacity:'PASS',singleTypewriterFocus:'PASS',namedFrameSwitch:'PASS',date:new Date().toISOString(),mode:'immersive',visibleControls:4,frameParchmentWandAndTypewriter:'PASS'};
  await writeFile('../docs/evidence/immersive-mode-hosted.json',JSON.stringify(result,null,2)+'\n');console.log(result);
 } finally {await browser.close();}

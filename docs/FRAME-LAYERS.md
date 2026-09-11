@@ -7,3 +7,7 @@ Default Foreground: the existing artwork is composited above the canvas/result a
 `/?layer=foreground` selects the new treatment; `/?layer=see-through` restores the prior gradient masks. The selection persists in localStorage. Original artwork and the old CSS mask treatment remain available.
 
 Comparison screenshots frame-foreground.png and frame-see-through.png use the same previously generated synthetic cottage result in an isolated browser. The owner's real screenshot is private and not committed. CSS and persistence tests accompany visual inspection; no physical display-percentage calibration is claimed.
+
+## Owner rollback, 2026-09-11
+
+The owner disliked the halo/glow introduced by the foreground mask. The default is now See-through again, even if a previous localStorage preference selected foreground. The experimental treatment remains accessible only through an explicit `?layer=foreground` URL; frame sizes are unchanged.

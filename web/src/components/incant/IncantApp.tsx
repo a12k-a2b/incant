@@ -1,6 +1,8 @@
+import { startCloudBackup } from "@/lib/cloud-backup";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   BookOpen,
+  Hourglass,
   Feather,
   Eraser,
   Undo2,
@@ -32,6 +34,7 @@ import {
   endPage,
   syncArchive,
 } from "@/lib/archive";
+import { SketchPeel } from "./SketchPeel";
 import { ArchiveLibrary } from "./ArchiveLibrary";
 import { Grimoire } from "./Grimoire";
 import { Sigil } from "./DeskArt";
@@ -96,14 +99,14 @@ export function IncantApp({
       } catch {}
       return requested;
     }
-    try {
-      return localStorage.getItem("incant-frame-layer") === "see-through"
-        ? "see-through"
-        : "foreground";
-    } catch {
-      return "foreground";
-    }
+    return "see-through";
   });
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const libraryDialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (libraryOpen) libraryDialog.current?.showModal();
+    else libraryDialog.current?.close();
+  }, [libraryOpen]);
   const [panel, setPanel] = useState(
     () =>
       new URLSearchParams(window.location.search).get("view") === "spellbook",
@@ -206,6 +209,7 @@ export function IncantApp({
     };
   }, [revision]);
   useEffect(() => () => turnTimers.current.forEach(clearTimeout), []);
+  useEffect(() => startCloudBackup(), []);
   const busy = phase !== "idle",
     empty = sketch.current?.isEmpty() ?? true;
   useEffect(() => {
@@ -598,6 +602,15 @@ export function IncantApp({
                   }}
                 />
               )}
+              {active?.sketch &&
+                loadedImage === active.id &&
+                !busy &&
+                !revealing && (
+                  <SketchPeel
+                    key={"peel-" + active.id}
+                    source={active.sketch}
+                  />
+                )}
               {turning && <div className="day-cycle" aria-hidden="true" />}
               {(phase === "casting" ||
                 revealing ||
@@ -637,6 +650,26 @@ export function IncantApp({
         >
           <span className="moon-orbit" aria-hidden="true" />
         </button>
+        <button
+          className="spellbooks-key"
+          aria-label="Open saved spells"
+          disabled={busy}
+          onContextMenu={(e) => e.preventDefault()}
+          onClick={() => setLibraryOpen(true)}
+        />
+        {phase === "casting" && (
+          <button
+            className="casting-hourglass"
+            aria-label="Stop casting spell"
+            onContextMenu={(e) => e.preventDefault()}
+            onClick={() => {
+              cancel();
+              setNotice("Stopped. Your sketch is safe.");
+            }}
+          >
+            <Hourglass aria-hidden="true" size={36} />
+          </button>
+        )}
         <div className="wand-rest">
           <button
             ref={voiceButton}
@@ -678,6 +711,7 @@ export function IncantApp({
                 setRevealing(false);
                 return;
               }
+              e.currentTarget.focus({ preventScroll: true });
               voicePointer.current = e.pointerId;
               voicePress.current = {
                 started: performance.now(),
@@ -823,6 +857,33 @@ export function IncantApp({
         )}
       </section>
       <dialog
+        ref={libraryDialog}
+        className="saved-spells-dialog"
+        aria-label="Your saved spells"
+        onCancel={() => setLibraryOpen(false)}
+        onClose={() => setLibraryOpen(false)}
+      >
+        <header>
+          <h2>Your spellbook</h2>
+          <button
+            aria-label="Close saved spells"
+            onClick={() => setLibraryOpen(false)}
+          >
+            <X />
+          </button>
+        </header>
+        <ArchiveLibrary
+          open={libraryOpen}
+          creations={creations}
+          busy={busy}
+          onOpen={(c) => {
+            setActive(c);
+            setLast(c.sketch ? { sketch: c.sketch, words: c.spell } : null);
+            setLibraryOpen(false);
+          }}
+        />
+      </dialog>
+      <dialog
         ref={panelRef}
         className="desk-drawer"
         onCancel={() => setPanel(false)}
@@ -966,7 +1027,12 @@ export function IncantApp({
       </dialog>
       <dialog
         ref={typeDialog}
-        onClose={() => room.current?.style.removeProperty("height")}
+        onClose={() => {
+          typeField.current?.removeAttribute("autofocus");
+          if (document.activeElement === typeField.current)
+            typeField.current?.blur();
+          room.current?.style.removeProperty("height");
+        }}
         className="type-bubble"
         aria-label="Type a spell"
       >

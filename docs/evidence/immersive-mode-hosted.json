@@ -1,10 +1,11 @@
 {
+  "seeThroughDefault": "PASS",
   "automaticMoon": "PASS",
   "foregroundOpacity": "PASS",
   "singleTypewriterFocus": "PASS",
   "namedFrameSwitch": "PASS",
-  "date": "2026-09-11T07:55:52.874Z",
+  "date": "2026-09-11T08:26:34.629Z",
   "mode": "immersive",
-  "visibleControls": 3,
+  "visibleControls": 4,
   "frameParchmentWandAndTypewriter": "PASS"
 }
