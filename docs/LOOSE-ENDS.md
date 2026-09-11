@@ -1,5 +1,15 @@
 # Incant loose ends
 
+## Explore alternative casts — version two, deferred, 2026-09-11
+
+Owner request: offer roughly four interpretations of the same sketch and spell, inspired by the choice of results in Midjourney. Sometimes the first generation misses the image someone has in mind; alternatives can help them discover and communicate details they cannot yet describe concretely. Record for version two only; do not build or start extra generation requests now.
+
+Show the first result as soon as it is ready. Let the user request or reveal a second, third, and fourth interpretation without redrawing or repeating the spell. The generation strategy is intentionally undecided: generate each alternative on demand, or generate the remaining three in the background after the first result and reveal them sequentially. Compare waiting time, generation cost, cancellation, and wasted unused results before choosing; do not assume all four must finish before showing anything.
+
+Alternatives should explore meaningful, prompt-appropriate differences rather than four nearly identical rerolls: realistic versus illustrated or cartoon-like, energetic versus calm, or other treatments suggested by the subject and intent. These are examples, not a fixed preset list. Every alternative must retain the sketch's composition, positions, proportions, and core elements and respect explicit instructions in the spell. Variety should help express the user's idea without replacing it with unrelated scenes.
+
+Keep all alternatives attached to the same source sketch and spell in the existing archive, including which treatment produced each result. Allow revisiting and comparing them without losing the first result. Explore an interaction that fits the immersive frame rather than committing to conventional buttons now. This complements the deferred style-continuity idea: discover a treatment through alternatives, then optionally carry a chosen result's style into subsequent pages of a story.
+
 ## Continue a cast’s style — deferred, 2026-09-11
 
 Owner request: retain the visual style that emerges in a successful cast and optionally carry it into future casts made from new sketches. Track this idea only; do not implement it yet.
