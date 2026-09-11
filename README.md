@@ -74,3 +74,7 @@ The final [repository QA profile](docs/evidence/qa-pr-final/report.md) passed th
 ## Android web app for Run13
 
 The current illustrated parchment revision includes an installable Chrome-based APK in `android-web`. See [packaging and canvas details](docs/PARCHMENT-AND-ANDROID.md). It is separate from the unverified native Android prototype.
+
+## Next version: speak and point
+
+[Saved V2 design](docs/V2-SPEAK-AND-POINT.md): combine timed stylus references with spoken explanation to communicate an idea. Deferred until after owner testing of the installed V1; no V2 runtime changes are deployed.
