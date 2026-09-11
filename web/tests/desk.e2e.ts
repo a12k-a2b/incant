@@ -158,7 +158,15 @@ for (const [name, width, height] of [
       ),
     ).toBe(true);
     const r = (await page.locator("canvas").boundingBox())!;
-    expect(Math.abs(r.width / r.height - 2 / 3)).toBeLessThan(0.01);
+    const native = await page
+      .locator("canvas")
+      .evaluate((c: HTMLCanvasElement) => c.width / c.height);
+    expect(Math.abs(r.width / r.height - native)).toBeLessThan(0.01);
+    expect((r.width * r.height) / (width * height)).toBeGreaterThan(0.5);
+    const frame = (await page.locator(".drawing-area").boundingBox())!;
+    expect((r.width * r.height) / (frame.width * frame.height)).toBeGreaterThan(
+      0.68,
+    );
     await page.screenshot({
       path: `../docs/evidence/${name}.png`,
       fullPage: true,
@@ -295,4 +303,30 @@ test("early voice release discards a late microphone grant", async ({
   await expect(
     page.getByRole("button", { name: /Hold to speak/ }),
   ).toBeEnabled();
+});
+test("resizing preserves the drawing's original proportions and pixels", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await page.goto("/");
+  await draw(page);
+  const before = await page
+    .locator("canvas")
+    .evaluate((c: HTMLCanvasElement) => ({
+      png: c.toDataURL(),
+      w: c.width,
+      h: c.height,
+    }));
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await expect
+    .poll(async () => {
+      const c = page.locator("canvas"),
+        r = (await c.boundingBox())!;
+      return Math.abs(r.width / r.height - before.w / before.h);
+    })
+    .toBeLessThan(0.01);
+  const after = await page
+    .locator("canvas")
+    .evaluate((c: HTMLCanvasElement) => c.toDataURL());
+  expect(after).toBe(before.png);
 });

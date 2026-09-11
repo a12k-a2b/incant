@@ -43,3 +43,24 @@ export function Sigil() {
     </svg>
   );
 }
+
+export function ParchmentFrame() {
+  return (
+    <div className="parchment-frame" aria-hidden="true">
+      {[0, 1, 2, 3].map((i) => (
+        <svg
+          key={i}
+          className={`flourish flourish-${i}`}
+          viewBox="0 0 100 100"
+          fill="none"
+        >
+          <g stroke="currentColor" strokeWidth="1.1">
+            <path d="M6 94V21Q6 6 21 6H94M13 81V28Q13 13 28 13H81M8 58C35 58 23 19 49 12M12 49C19 23 58 35 58 8M22 64C48 44 13 31 28 24C40 18 49 38 39 43C31 48 28 38 33 34M64 22C44 48 31 13 24 28" />
+            <path d="m65 12 4 9 9 4-9 4-4 9-4-9-9-4 9-4ZM25 67l4 7-4 7-4-7z" />
+            <circle cx="24" cy="24" r="4" />
+          </g>
+        </svg>
+      ))}
+    </div>
+  );
+}

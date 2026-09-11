@@ -14,6 +14,19 @@ if (process.env.NODE_ENV === "production" && !secret)
   throw new Error("APP_ACCESS_KEY must be configured for hosted Incant.");
 const access = createAccess(secret);
 const attempts = new Map<string, { count: number; until: number }>();
+app.get("/.well-known/assetlinks.json", (_req, res) =>
+  res.sendFile(
+    fileURLToPath(
+      new URL(
+        process.env.NODE_ENV === "production"
+          ? "./dist/.well-known/assetlinks.json"
+          : "./public/.well-known/assetlinks.json",
+        import.meta.url,
+      ),
+    ),
+    { dotfiles: "allow" },
+  ),
+);
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 app.use("/api", (req, res, next) => {

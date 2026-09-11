@@ -24,7 +24,7 @@ import {
   type Tool,
 } from "./SketchCanvas";
 import { Grimoire } from "./Grimoire";
-import { DeskArt, Sigil } from "./DeskArt";
+import { DeskArt, Sigil, ParchmentFrame } from "./DeskArt";
 type Phase = "idle" | "connecting" | "listening" | "finishing" | "casting";
 type Voice = {
   live: GeminiLiveTranscribe;
@@ -494,8 +494,7 @@ export function IncantApp({
             </div>
             <div className="paper-wrap">
               <div className="paper" aria-busy={phase === "casting"}>
-                <span className="paper-corner corner-a" />
-                <span className="paper-corner corner-b" />
+                <ParchmentFrame />
                 <SketchCanvas
                   ref={sketch}
                   tool={tool}

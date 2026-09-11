@@ -66,7 +66,7 @@ function buildForm(
   const form = new FormData();
   form.append("model", model);
   form.append("prompt", prompt);
-  form.append("size", input.size ?? "1024x1536");
+  form.append("size", `${bytes.readUInt32BE(16)}x${bytes.readUInt32BE(20)}`);
   form.append("quality", input.quality);
   form.append(
     "image",
@@ -94,6 +94,22 @@ export async function editSketchToImage(
     !bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))
   ) {
     return { ok: false, error: "The sketch could not be read." };
+  }
+
+  const width = bytes.readUInt32BE(16),
+    height = bytes.readUInt32BE(20);
+  if (
+    width < 512 ||
+    height < 512 ||
+    width > 1536 ||
+    height > 1536 ||
+    width % 16 ||
+    height % 16 ||
+    width * height < 655360 ||
+    width / height < 1 / 3 ||
+    width / height > 3
+  ) {
+    return { ok: false, error: "This parchment size is not supported." };
   }
 
   const prompt = buildSpellPrompt({

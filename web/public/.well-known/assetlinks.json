@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.incant.web",
+      "sha256_cert_fingerprints": [
+        "54:1B:CC:05:FC:51:EB:C2:75:10:CC:1A:4E:45:3D:5B:53:7A:9A:35:ED:46:2B:8A:70:0E:39:09:FD:F4:9E:7A"
+      ]
+    }
+  }
+]

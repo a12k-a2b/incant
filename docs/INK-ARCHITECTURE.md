@@ -19,3 +19,5 @@ The PWA supports installable standalone presentation, a cached offline drawing s
 If measurement warrants it, implement a small Android drawing client with a native ink surface and the same server API before considering a full application rewrite. Keep the web client for laptops and other tablets.
 
 Sources checked 2026-09-10: [Android low-latency stylus example](https://developer.android.com/codelabs/large-screens/advanced-stylus-support?hl=en), [PWA installation](https://web.dev/learn/pwa/installation?hl=en).
+
+Update: the owner-requested parchment-first revision now uses adaptive sheet dimensions and a Chrome-based Android launcher. See [current design and packaging](PARCHMENT-AND-ANDROID.md); the earlier fixed1024×1536 paragraph describes the prior revision.

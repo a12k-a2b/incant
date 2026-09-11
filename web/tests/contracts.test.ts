@@ -69,3 +69,40 @@ it("access tokens reject absence, tampering, and a different room key", () => {
   );
   expect(equalSecret("abc", "ab")).toBe(false);
 });
+it("image request dimensions follow the actual parchment PNG", async () => {
+  const png = Buffer.alloc(80);
+  Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]).copy(png);
+  png.writeUInt32BE(1152, 16);
+  png.writeUInt32BE(1536, 20);
+  const fetch = vi
+    .fn()
+    .mockResolvedValue(
+      new Response(JSON.stringify({ data: [{ b64_json: "synthetic" }] }), {
+        status: 200,
+      }),
+    );
+  vi.stubGlobal("fetch", fetch);
+  const result = await editSketchToImage({
+    ...DEFAULT_SETTINGS,
+    openaiKey: "synthetic",
+    sketchPngBase64: png.toString("base64"),
+    incantation: "test",
+  });
+  expect(result.ok).toBe(true);
+  expect((fetch.mock.calls[0][1].body as FormData).get("size")).toBe(
+    "1152x1536",
+  );
+  png.writeUInt32BE(65535, 16);
+  fetch.mockClear();
+  expect(
+    (
+      await editSketchToImage({
+        ...DEFAULT_SETTINGS,
+        openaiKey: "synthetic",
+        sketchPngBase64: png.toString("base64"),
+        incantation: "test",
+      })
+    ).ok,
+  ).toBe(false);
+  expect(fetch).not.toHaveBeenCalled();
+});

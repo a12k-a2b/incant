@@ -70,3 +70,7 @@ API references: [OpenAI sketch-to-render prompting](https://developers.openai.co
 The selected P04 prompt was chosen from seven candidates across 30 generated test images, judged by Fable and Astra. See [results and limitations](docs/prompt-tournament/RESULTS.md).
 
 The final [repository QA profile](docs/evidence/qa-pr-final/report.md) passed the build, five unit checks, and thirteen browser scenarios. [Hosted checks](docs/evidence/hosted-smoke.json) verify private access and offline draft persistence; [the real hosted cast](docs/evidence/hosted-final-provider.json) returned an image and verified live voice setup. [Deployment provenance](docs/evidence/deployment-final.json) identifies the Railway image and source hashes. These do not certify physical DC-1 pen latency, microphone behavior, or release readiness on hardware.
+
+## Android web app for Run13
+
+The current illustrated parchment revision includes an installable Chrome-based APK in `android-web`. See [packaging and canvas details](docs/PARCHMENT-AND-ANDROID.md). It is separate from the unverified native Android prototype.

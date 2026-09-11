@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-09-11T06:10:16.883461+00:00",
+  "package": "app.incant.web",
+  "version": "1.0",
+  "apkSha256": "59d9f5840db0aeb91ec0fbeaa1db62e364c23dd0f65914b7815bc70b5b0624b0",
+  "signing": "local Android debug certificate, owner test build",
+  "certificateSha256": "541bcc05fc51ebc27510cc1a4e453d5b537a9a35ed462b8a700e3909fdf49e7a",
+  "device": "connected DC-1 JP5R02349",
+  "fingerprint": "Daylight/vext_jagar/jagar:13/TP1A.220624.014/2609012347:user/release-keys",
+  "install": "PASS",
+  "fullscreen": "PASS: launched app.incant.web; drawing room visible and no URL/tab toolbar in UI hierarchy",
+  "penLatency": "BLOCKED: requires physical pen testing",
+  "microphoneOnDevice": "BLOCKED: requires owner spoken test",
+  "remoteDebugging": "Not used; approval review rejected broad browser forwarding",
+  "canvasPhysicalBounds": [
+    114,
+    255,
+    1068,
+    1370
+  ],
+  "websiteAssociation": "PASS: HTTPS assetlinks endpoint 200 and verified Chrome fullscreen",
+  "deployment": "8cda0a44-5a49-49a0-91ac-95d2fc7a902a",
+  "deploymentImageDigest": "sha256:0dff60352ed6fdee6ca1c8fe7494a4fc55f25823f04c3a414aacf1f58fcd2a89"
+}

@@ -3,7 +3,9 @@
     "argv": [
       "/opt/homebrew/Cellar/node/26.5.0/bin/node",
       "/Users/anjan/Documents/SolOS/incant/web/node_modules/.bin/playwright",
-      "test"
+      "test",
+      "--grep",
+      "layout dc1-portrait"
     ],
     "configFile": "/Users/anjan/Documents/SolOS/incant/web/playwright.config.ts",
     "rootDir": "/Users/anjan/Documents/SolOS/incant/web/tests",
@@ -71,176 +73,6 @@
       "line": 0,
       "specs": [
         {
-          "title": "drawing, palm rejection, undo/redo, and reload persistence",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 4651,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:43:22.417Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-f5e9e8fc6b4e446ad28c",
-          "file": "desk.e2e.ts",
-          "line": 15,
-          "column": 1
-        },
-        {
-          "title": "failed cast recovers, uses current words, and never erases the sketch",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 5085,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:43:31.102Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-fc2b25dd3dc5d06a3aa5",
-          "file": "desk.e2e.ts",
-          "line": 43,
-          "column": 1
-        },
-        {
-          "title": "successful image persists and original drawing remains recoverable",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 6614,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:43:36.245Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-3f3e449f3653ebb7b621",
-          "file": "desk.e2e.ts",
-          "line": 69,
-          "column": 1
-        },
-        {
-          "title": "cancellation prevents late results from replacing the desk",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 3614,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:43:42.894Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-a16c764fd28f2f5e3aef",
-          "file": "desk.e2e.ts",
-          "line": 119,
-          "column": 1
-        },
-        {
-          "title": "layout desktop",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2017,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:43:46.541Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-f2b18778b69bd9fddfb6",
-          "file": "desk.e2e.ts",
-          "line": 151,
-          "column": 3
-        },
-        {
           "title": "layout dc1-portrait",
           "ok": true,
           "tags": [],
@@ -256,12 +88,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2412,
+                  "duration": 3372,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-11T05:43:48.625Z",
+                  "startTime": "2026-09-11T06:12:50.670Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -273,253 +105,15 @@
           "file": "desk.e2e.ts",
           "line": 151,
           "column": 3
-        },
-        {
-          "title": "layout dc1-landscape",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1932,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:43:51.097Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-244109fb7ab7d15642ba",
-          "file": "desk.e2e.ts",
-          "line": 151,
-          "column": 3
-        },
-        {
-          "title": "layout tablet-portrait",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 3234,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:43:53.061Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-9c0214c580ef97a3b215",
-          "file": "desk.e2e.ts",
-          "line": 151,
-          "column": 3
-        },
-        {
-          "title": "layout tablet-landscape",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2245,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:43:56.328Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-c9f9ae92e1b75652277d",
-          "file": "desk.e2e.ts",
-          "line": 151,
-          "column": 3
-        },
-        {
-          "title": "layout phone",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1956,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:43:58.630Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-91a1da273e70bc445f0d",
-          "file": "desk.e2e.ts",
-          "line": 151,
-          "column": 3
-        },
-        {
-          "title": "spellbook keyboard focus and honest setup",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1688,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:44:00.630Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-9d2985365360bcf0b742",
-          "file": "desk.e2e.ts",
-          "line": 168,
-          "column": 1
-        },
-        {
-          "title": "voice uses final speech rather than the previous typed spell",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 8699,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:44:02.373Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-7c8d55518c04286a4ec7",
-          "file": "desk.e2e.ts",
-          "line": 178,
-          "column": 1
-        },
-        {
-          "title": "early voice release discards a late microphone grant",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2873,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-09-11T05:44:11.133Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "a58455fa5bbf677dcbeb-bdaa981e7063f4e4ab89",
-          "file": "desk.e2e.ts",
-          "line": 255,
-          "column": 1
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-11T05:43:21.051Z",
-    "duration": 68447.36700000001,
-    "expected": 13,
+    "startTime": "2026-09-11T06:12:49.636Z",
+    "duration": 6751.401000000001,
+    "expected": 1,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

@@ -999,3 +999,344 @@ dialog::backdrop {
   width: 100%;
   margin-top: 16px;
 }
+
+/* The parchment is the app. Compact chrome stays at its edges. */
+.drawing-room {
+  height: 100dvh;
+  min-height: 0;
+  padding: 0 10px;
+  position: relative;
+  overflow: auto;
+}
+.room-header {
+  height: 48px;
+  max-width: none;
+  border: 0;
+}
+.wordmark {
+  font-size: 27px;
+  letter-spacing: -1px;
+}
+.brand-star {
+  font-size: 26px;
+  margin-right: 6px;
+}
+.edition,
+.room-aside,
+.ritual-aside,
+.room-footer,
+.paper-foot,
+.page-caption {
+  display: none;
+}
+.header-actions {
+  gap: 12px;
+}
+.book-button {
+  border: 0;
+  padding: 0 8px;
+}
+.workspace {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  height: calc(100dvh - 48px);
+}
+.desk {
+  display: grid;
+  grid-template-rows: 44px minmax(160px, 1fr) auto;
+  height: 100%;
+  padding: 0;
+}
+.desk-top {
+  margin: 0;
+  padding: 0 8px;
+  justify-content: flex-end;
+}
+.desk-top > div {
+  display: none;
+}
+.drawing-area {
+  position: relative;
+  display: block;
+  min-height: 0;
+  padding: 0;
+}
+.tool-rail {
+  position: absolute;
+  top: -44px;
+  left: 0;
+  width: auto;
+  height: 44px;
+  flex-direction: row;
+  gap: 3px;
+  z-index: 5;
+}
+.tool-button {
+  width: 44px;
+  height: 42px;
+}
+.tool-divider {
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+}
+.paper-wrap {
+  width: 100%;
+  height: 100%;
+}
+.paper {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  aspect-ratio: auto;
+  margin: 0;
+  border: 1px solid #8f8063;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 0 0 5px #b4a78933,
+    0 1px 8px #40331d20;
+  overflow: hidden;
+}
+.drawing-canvas {
+  inset: 0;
+  margin: auto;
+}
+.parchment-frame {
+  position: absolute;
+  inset: 5px;
+  z-index: 3;
+  pointer-events: none;
+  border: 1px solid #8f806350;
+  border-radius: 3px;
+}
+.flourish {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  color: #786b50;
+}
+.flourish-0 {
+  top: 0;
+  left: 0;
+}
+.flourish-1 {
+  top: 0;
+  right: 0;
+  transform: rotate(90deg);
+}
+.flourish-2 {
+  bottom: 0;
+  right: 0;
+  transform: rotate(180deg);
+}
+.flourish-3 {
+  bottom: 0;
+  left: 0;
+  transform: rotate(270deg);
+}
+.empty-parchment {
+  padding: 25px;
+}
+.empty-parchment svg {
+  width: 44px;
+  height: 44px;
+  margin: 0 0 10px;
+  opacity: 0.45;
+}
+.empty-parchment p {
+  font-size: 23px;
+  margin: 0;
+}
+.empty-parchment span {
+  font-size: 12px;
+  margin-top: 7px;
+}
+.empty-parchment small {
+  display: none;
+}
+.spell-area {
+  margin: 0;
+  padding: 6px 4px 4px;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 12px;
+}
+.spell-area > label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.spell-input-row {
+  padding: 0;
+  border: 0;
+  gap: 8px;
+}
+.spell-input-row textarea {
+  font-size: 14px;
+  line-height: 1.4;
+  height: 44px;
+  padding: 11px 8px;
+  border-bottom: 1px solid #a59b85;
+}
+.cast-button {
+  min-height: 44px;
+  padding: 0 12px;
+}
+.voice-row {
+  padding: 0;
+  gap: 0;
+}
+.spell-hint {
+  display: none;
+}
+.voice-wand {
+  min-height: 44px;
+  font-size: 12px;
+}
+.result-actions {
+  grid-column: 1/-1;
+  margin: 0;
+  padding: 0;
+}
+.desk-message {
+  grid-column: 1/-1;
+  margin: 0;
+  padding: 5px 10px;
+}
+.collection {
+  margin: 12px 0;
+}
+@media (max-width: 520px) {
+  .header-actions {
+    gap: 4px;
+  }
+  .header-actions > .plain-button {
+    display: none;
+  }
+  .drawing-room {
+    padding: 0 6px;
+  }
+  .tool-button {
+    width: 40px;
+  }
+  .tool-divider {
+    margin: 0 2px;
+  }
+  .flourish {
+    width: 53px;
+    height: 53px;
+  }
+  .spell-area {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .voice-row {
+    justify-content: flex-end;
+  }
+  .voice-wand {
+    min-height: 38px;
+  }
+  .empty-parchment span {
+    max-width: none;
+  }
+  .empty-parchment p {
+    font-size: 21px;
+  }
+}
+/* Illustrated endpaper surrounds, rather than covers, the usable sheet. */
+.paper-wrap {
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: clamp(24px, 5dvh, 64px) clamp(26px, 6vw, 82px);
+  border-image: url("/wizard-frame.png") 180 fill stretch;
+}
+.paper {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  clip-path: polygon(
+    0 0.3%,
+    5% 0,
+    10% 0.25%,
+    16% 0,
+    23% 0.3%,
+    31% 0.1%,
+    38% 0.35%,
+    46% 0,
+    55% 0.25%,
+    65% 0,
+    74% 0.3%,
+    83% 0.05%,
+    92% 0.3%,
+    100% 0,
+    99.8% 10%,
+    100% 24%,
+    99.7% 39%,
+    100% 53%,
+    99.8% 67%,
+    100% 81%,
+    99.8% 93%,
+    100% 100%,
+    91% 99.7%,
+    83% 100%,
+    75% 99.8%,
+    66% 100%,
+    56% 99.7%,
+    48% 100%,
+    38% 99.8%,
+    29% 100%,
+    20% 99.7%,
+    11% 100%,
+    0 99.8%,
+    0.2% 87%,
+    0 76%,
+    0.3% 62%,
+    0 48%,
+    0.2% 34%,
+    0 20%
+  );
+}
+.parchment-frame {
+  display: none;
+}
+/* Keep engraved creatures in proportion; repeat only the narrow foliage strips. */
+.paper-wrap {
+  border-width: clamp(28px, 6vw, 82px);
+  border-image-slice: 300;
+  border-image-repeat: round;
+}
+.paper-wrap {
+  border-image-source: url("/wizard-frame-v2.png");
+  border-image-slice: 180;
+}
+@media (orientation: portrait) {
+  .paper-wrap {
+    position: relative;
+    border: 0;
+    background: url("/wizard-frame-v2.png") center/100% 100% no-repeat;
+  }
+  .paper {
+    position: absolute;
+    inset: 5.5% 8.5%;
+    width: auto;
+    height: auto;
+  }
+}
+@media (orientation: portrait) {
+  .paper {
+    background: transparent;
+  }
+  .drawing-canvas {
+    mix-blend-mode: multiply;
+  }
+}
+/* Blend against the illustrated sheet itself; a clip-path would isolate it. */
+.paper { clip-path:none; background:transparent; }
+.drawing-canvas { mix-blend-mode:multiply; }
