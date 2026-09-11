@@ -50,6 +50,7 @@ export function IncantApp({
   imageReady?: boolean;
   voiceReady?: boolean;
 }) {
+  const immersiveMode = new URLSearchParams(window.location.search).get("mode") !== "desk";
   const [panel, setPanel] = useState(false);
   const panelRef = useRef<HTMLDialogElement>(null);
   const typeDialog = useRef<HTMLDialogElement>(null);
@@ -420,7 +421,7 @@ export function IncantApp({
   };
   return (
     <main
-      className={`drawing-room immersive-room phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
+      className={`drawing-room immersive-room ${immersiveMode ? "immersive-mode" : ""} phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
     >
       <section className="desk" aria-label="Wizard's drawing desk">
         <div className="drawing-area">
@@ -496,6 +497,7 @@ export function IncantApp({
           <button
             ref={voiceButton}
             aria-label={
+              immersiveMode && (phase === "casting" || phase === "finishing") ? "Stop spell" : immersiveMode && active ? "Return to sketch" :
               phase === "connecting"
                 ? handsFree
                   ? "Connecting… tap to cancel"
@@ -510,10 +512,12 @@ export function IncantApp({
             }
             aria-describedby="wand-status"
             className={`voice-wand ${phase === "listening" ? "listening" : ""}`}
-            disabled={phase === "casting" || phase === "finishing"}
+            disabled={!immersiveMode && (phase === "casting" || phase === "finishing")}
             onPointerDown={(e) => {
               if (voicePointer.current !== null || e.button !== 0) return;
               e.preventDefault();
+              if (immersiveMode && (phase === "casting" || phase === "finishing")) { cancel(); return; }
+              if (immersiveMode && active) { setActive(null); setRevealing(false); return; }
               voicePointer.current = e.pointerId;
               voicePress.current = {
                 started: performance.now(),
@@ -554,6 +558,8 @@ export function IncantApp({
               }
               if ((e.key === " " || e.key === "Enter") && !e.repeat) {
                 e.preventDefault();
+                if (immersiveMode && (phase === "casting" || phase === "finishing")) { cancel(); return; }
+                if (immersiveMode && active) { setActive(null); setRevealing(false); return; }
                 void beginVoice();
               }
             }}

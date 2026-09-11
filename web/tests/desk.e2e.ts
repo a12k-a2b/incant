@@ -46,7 +46,7 @@ async function png(page: Page) {
 test("immersive desk keeps tools tucked away and palm input ignored", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   await expect(page.getByText("Begin with a scribble")).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Cast spell", exact: true }),
@@ -79,7 +79,7 @@ test("immersive desk keeps tools tucked away and palm input ignored", async ({
 test("failed cast clears fog and preserves original sketch and retry", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   await draw(page);
   const original = await png(page);
   await writeSpell(page, "A cottage");
@@ -96,7 +96,7 @@ test("failed cast clears fog and preserves original sketch and retry", async ({
 test("casting fog reveals a saved image and historical reroll keeps its source", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   await draw(page);
   const original = await png(page);
   await page.route("**/api/cast", async (r) => {
@@ -148,7 +148,7 @@ test("casting fog reveals a saved image and historical reroll keeps its source",
 test("cancelled spell cannot replace drawing with a late result", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   await draw(page);
   const original = await png(page);
   await writeSpell(page, "Cancel me");
@@ -181,7 +181,7 @@ for (const [name, width, height] of [
 ] as const) {
   test(`layout ${name}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
-    await page.goto("/");
+    await page.goto("/?mode=desk");
     const c = page.locator("canvas"),
       r = (await c.boundingBox())!;
     expect((r.width * r.height) / (width * height)).toBeGreaterThan(0.54);
@@ -201,7 +201,7 @@ for (const [name, width, height] of [
 }
 test("resize retains exact original drawing pixels", async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 1024 });
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   await draw(page);
   const original = await png(page);
   await page.setViewportSize({ width: 1024, height: 768 });
@@ -212,7 +212,7 @@ test("reduced motion disables fog motion and image reveal animation", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   await draw(page);
   const original = await png(page);
   await page.route("**/api/cast", (r) =>
@@ -298,7 +298,7 @@ for (const input of ["keyboard", "touch-hold", "tap"] as const) {
         },
       });
     });
-    await page.goto("/");
+    await page.goto("/?mode=desk");
     await draw(page);
     await writeSpell(page, "An old typed cottage");
     await closeTools(page);
@@ -390,7 +390,7 @@ test("early voice release discards a late microphone grant", async ({
     tokens++;
     return r.fulfill({ json: { ok: true, token: "synthetic" } });
   });
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   await draw(page);
   const b = page.locator(".voice-wand");
   const box = (await b.boundingBox())!;
@@ -411,7 +411,7 @@ for (const mode of ["pen-button", "pen-bitmask", "toolbar"] as const) {
   test(`pixel eraser ${mode}: partial line, undo, redo, reload, and draw again`, async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/?mode=desk");
     const canvas = page.locator("canvas");
     const r = (await canvas.boundingBox())!;
     const x = (f: number) => r.x + r.width * f;
@@ -482,7 +482,7 @@ for (const mode of ["pen-button", "pen-bitmask", "toolbar"] as const) {
 }
 
 test('typewriter focuses the bubble, retains words, and casts once', async ({page}) => {
-  await page.goto('/'); await draw(page);
+  await page.goto('/?mode=desk'); await draw(page);
   await page.getByRole('button',{name:'Type a spell',exact:true}).click();
   const field=page.getByRole('textbox',{name:'Type your spell',exact:true});
   await expect(field).toBeFocused();
@@ -503,10 +503,42 @@ test('typewriter focuses the bubble, retains words, and casts once', async ({pag
   expect(requests).toBe(1);
 });
 test('typewriter bubble fits narrow keyboard-sized viewport',async({page})=>{
-  await page.setViewportSize({width:390,height:500});await page.goto('/');
+  await page.setViewportSize({width:390,height:500});await page.goto('/?mode=desk');
   await page.getByRole('button',{name:'Type a spell',exact:true}).click();
   await expect(page.getByRole('textbox',{name:'Type your spell',exact:true})).toBeInViewport();
   await expect(page.getByRole('button',{name:'Cast typed spell',exact:true})).toBeInViewport();
   await page.screenshot({path:'../docs/evidence/typewriter-bubble-phone.png'});
   await page.keyboard.press('Escape');await expect(page.locator('.type-bubble')).not.toBeVisible();
+});
+
+
+test('immersive mode shows only the frame, parchment and wand, including while casting', async ({page}) => {
+ await page.goto('/');
+ await expect(page.locator('.immersive-mode')).toBeVisible();
+ await expect(page.getByRole('button')).toHaveCount(1);
+ await expect(page.locator('.typewriter-key')).not.toBeVisible();
+ await expect(page.locator('.desk-latch')).not.toBeVisible();
+ await expect(page.locator('.empty-parchment')).not.toBeVisible();
+ await draw(page);
+ // Seed a typed spell through the preserved rollback view, then return to the default room.
+ await page.goto('/?mode=desk'); await writeSpell(page,'A synthetic test'); await closeTools(page);
+ await page.goto('/');
+ await page.screenshot({path:'../docs/evidence/immersive-mode.png'});
+ await expect(page.locator('canvas')).toBeVisible();
+ const original=await png(page);
+ await page.route('**/api/cast',async r=>{await new Promise(resolve=>setTimeout(resolve,1200));await r.fulfill({json:{ok:true,imageBase64:original.split(',')[1],mime:'image/png'}}).catch(()=>{});});
+ // Set up casting independently of the separately tested speech adapter.
+ await page.locator('.cast-button').evaluate((b:HTMLButtonElement)=>b.click());
+ await expect(page.locator('.phase-casting')).toBeVisible();
+ await expect(page.getByRole('button')).toHaveCount(1);
+ await page.locator('.voice-wand').click();
+ await expect(page.locator('.spell-fog')).toHaveCount(0);
+ await page.waitForTimeout(1300);
+ await expect(page.locator('.manifestation')).toHaveCount(0);
+ await page.locator('.cast-button').evaluate((b:HTMLButtonElement)=>b.click());
+ await expect(page.locator('.manifestation.image-ready')).toBeVisible();
+ await expect(page.getByRole('button')).toHaveCount(1);
+ await page.locator('.voice-wand').click();
+ await expect(page.locator('.manifestation')).toHaveCount(0);
+ expect(await png(page)).toBe(original);
 });
