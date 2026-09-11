@@ -1,0 +1,30 @@
+{
+  "id": "P02-cottage-1",
+  "candidate": "P02",
+  "case": "cottage",
+  "repeat": 1,
+  "date": "2026-09-11T05:22:58.989Z",
+  "model": "gpt-image-2.5-flare",
+  "quality": "medium",
+  "size": "1024x1536",
+  "inputSha256": "6083ce1445f3ceb699633d012f422406285cdfda7e9f33bbc1c3db910d822070",
+  "promptSha256": "d73de765993d1ca25468e4076400047b721891c2f8ec698c0fccf6e465b35cba",
+  "httpStatus": 200,
+  "requestId": "req_0e78c2efbd7645c7885f9e9df2120658",
+  "usage": {
+    "input_tokens": 1273,
+    "input_tokens_details": {
+      "image_tokens": 864,
+      "text_tokens": 409
+    },
+    "output_tokens": 343,
+    "output_tokens_details": {
+      "image_tokens": 343,
+      "text_tokens": 0
+    },
+    "total_tokens": 1616
+  },
+  "status": "PASS",
+  "outputSha256": "803acdde741e32e87a0c1119c712fd8d0a78674bcbc2729ead70469c18bd0aa4",
+  "elapsedMs": 16389
+}

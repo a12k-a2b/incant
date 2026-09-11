@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="0" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="10.62"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1591 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-Db8tBID1.css   28.08 kB │ gzip:  6.95 kB
+dist/assets/index-CTSFbGsf.js   287.10 kB │ gzip: 90.97 kB
+✓ built in 3.65s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="3.287"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (5 tests) 20ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  22:30:47
+   Duration  1.36s (transform 199ms, setup 0ms, collect 300ms, tests 20ms, environment 0ms, prepare 342ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="34.997"><system-out>
+Running 13 tests using 1 worker
+
+(node:16682) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/desk.e2e.ts:15:1 › drawing, palm rejection, undo/redo, and reload persistence (2.7s)
+  ✓   2 tests/desk.e2e.ts:43:1 › failed cast recovers, uses current words, and never erases the sketch (1.6s)
+  ✓   3 tests/desk.e2e.ts:69:1 › successful image persists and original drawing remains recoverable (2.2s)
+  ✓   4 tests/desk.e2e.ts:99:1 › cancellation prevents late results from replacing the desk (2.7s)
+  ✓   5 tests/desk.e2e.ts:131:3 › layout desktop (1.3s)
+  ✓   6 tests/desk.e2e.ts:131:3 › layout dc1-portrait (1.4s)
+  ✓   7 tests/desk.e2e.ts:131:3 › layout dc1-landscape (1.1s)
+  ✓   8 tests/desk.e2e.ts:131:3 › layout tablet-portrait (1.1s)
+  ✓   9 tests/desk.e2e.ts:131:3 › layout tablet-landscape (1.3s)
+  ✓  10 tests/desk.e2e.ts:131:3 › layout phone (1.1s)
+  ✓  11 tests/desk.e2e.ts:148:1 › spellbook keyboard focus and honest setup (1.2s)
+  ✓  12 tests/desk.e2e.ts:158:1 › voice uses final speech rather than the previous typed spell (5.5s)
+  ✓  13 tests/desk.e2e.ts:235:1 › early voice release discards a late microphone grant (2.3s)
+
+  13 passed (33.6s)</system-out></testcase></testsuite>

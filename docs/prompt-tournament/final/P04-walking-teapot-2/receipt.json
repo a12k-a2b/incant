@@ -1,0 +1,30 @@
+{
+  "id": "P04-walking-teapot-2",
+  "candidate": "P04",
+  "case": "walking-teapot",
+  "repeat": 2,
+  "date": "2026-09-11T05:38:00.715Z",
+  "model": "gpt-image-2.5-flare",
+  "quality": "medium",
+  "size": "1024x1536",
+  "inputSha256": "df211ba4d0244630014d42b20c401af587389bcdd300f015bfa3012fab934fc6",
+  "promptSha256": "76b168cfde0a11593e66a2a28dada8e8a922e0e6e30f72c94e2bb76843b67cd8",
+  "httpStatus": 200,
+  "requestId": "req_e789f4661efd425e9abc33fa8a99b53b",
+  "usage": {
+    "input_tokens": 1038,
+    "input_tokens_details": {
+      "image_tokens": 864,
+      "text_tokens": 174
+    },
+    "output_tokens": 343,
+    "output_tokens_details": {
+      "image_tokens": 343,
+      "text_tokens": 0
+    },
+    "total_tokens": 1381
+  },
+  "status": "PASS",
+  "outputSha256": "8eb9bf4c7002e87183af1d0e55cceadd0a048cb6760ee1b807e64c647a0803ec",
+  "elapsedMs": 11199
+}

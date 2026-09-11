@@ -78,8 +78,20 @@ export function SpellOverlay({ phase, imageSrc, message }: Props) {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="gather-runes flex flex-col items-center gap-3 text-ink">
             <svg viewBox="0 0 80 80" className="h-20 w-20" fill="none">
-              <circle cx="40" cy="40" r="28" stroke="currentColor" strokeWidth="0.8" />
-              <circle cx="40" cy="40" r="16" stroke="currentColor" strokeWidth="0.6" />
+              <circle
+                cx="40"
+                cy="40"
+                r="28"
+                stroke="currentColor"
+                strokeWidth="0.8"
+              />
+              <circle
+                cx="40"
+                cy="40"
+                r="16"
+                stroke="currentColor"
+                strokeWidth="0.6"
+              />
               <path
                 d="M40 8 L40 72 M8 40 L72 40 M18 18 L62 62 M62 18 L18 62"
                 stroke="currentColor"

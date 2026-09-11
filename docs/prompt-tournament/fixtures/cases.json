@@ -1,0 +1,62 @@
+[
+  {
+    "id": "cottage",
+    "spell": "A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "anchors": {
+      "cottage": "lower left, broad asymmetrical triangular roof; door left and round window right",
+      "tree": "right of house, tall oval crown, trunk to ground",
+      "moon": "small upper right",
+      "counts": "one cottage, one tree, one moon; keep large open upper-left sky"
+    },
+    "phase": "screen",
+    "image": "cottage.png"
+  },
+  {
+    "id": "dragon",
+    "spell": "Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.",
+    "anchors": {
+      "pose": "head upper left, long bent neck joins large horizontal oval body",
+      "limbs": "two visible legs below body",
+      "wing": "single quadrilateral wing above middle-right body",
+      "tail": "exits right then bends upward; two small horns"
+    },
+    "phase": "screen",
+    "image": "dragon.png"
+  },
+  {
+    "id": "cup-books",
+    "spell": "A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.",
+    "anchors": {
+      "mug": "large lower-left trapezoid mug with oval opening",
+      "handle": "right side mug, empty central hole",
+      "books": "two stacked books upper right, diagonal edges",
+      "steam": "one wavy line above mug, no added tabletop props"
+    },
+    "phase": "screen",
+    "image": "cup-books.png"
+  },
+  {
+    "id": "mountain-boat",
+    "spell": "A luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.",
+    "anchors": {
+      "mountains": "left peak tallest, right peak shorter; same ridge shape",
+      "boat": "small below center; triangular sail points right from vertical mast",
+      "sun": "small upper right",
+      "waterline": "around two thirds down"
+    },
+    "phase": "final",
+    "image": "mountain-boat.png"
+  },
+  {
+    "id": "walking-teapot",
+    "spell": "An enchanted silver teapot with a smiling face and two little feet, detailed magical realism on a simple background.",
+    "anchors": {
+      "body": "broad round body centered below middle",
+      "spout": "long diagonal spout upper-left",
+      "handle": "loop right side, open hole",
+      "face": "two circular eyes and smile, two feet below body, lid and knob above"
+    },
+    "phase": "final",
+    "image": "walking-teapot.png"
+  }
+]

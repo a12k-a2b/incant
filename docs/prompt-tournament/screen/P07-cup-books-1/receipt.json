@@ -1,0 +1,30 @@
+{
+  "id": "P07-cup-books-1",
+  "candidate": "P07",
+  "case": "cup-books",
+  "repeat": 1,
+  "date": "2026-09-11T05:26:42.127Z",
+  "model": "gpt-image-2.5-flare",
+  "quality": "medium",
+  "size": "1024x1536",
+  "inputSha256": "9565586604a50d0bd703be18dec2db43550dd88ba4ecb4b6c7bb79318e390364",
+  "promptSha256": "8480dab273db6cda0adcfc5f8d66ffc54ee706896d24ba1284e94ece730db15b",
+  "httpStatus": 200,
+  "requestId": "req_a75c2a6a774e43019ffddef8c59c121c",
+  "usage": {
+    "input_tokens": 1341,
+    "input_tokens_details": {
+      "image_tokens": 864,
+      "text_tokens": 477
+    },
+    "output_tokens": 343,
+    "output_tokens_details": {
+      "image_tokens": 343,
+      "text_tokens": 0
+    },
+    "total_tokens": 1684
+  },
+  "status": "PASS",
+  "outputSha256": "253a8106948470488792791b4596f656d3bd124ca92ea7bd4d1ebea1f98c5b02",
+  "elapsedMs": 40724
+}

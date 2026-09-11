@@ -1,0 +1,21 @@
+{
+  "stopReason": "EndTurn",
+  "usage": {
+    "input_tokens": 14221,
+    "cache_read_input_tokens": 128,
+    "output_tokens": 2629,
+    "reasoning_tokens": 2443,
+    "total_tokens": 16978
+  },
+  "lane": "grok-minimal",
+  "route": "existing Grok Build subscription through grok-heavy",
+  "modelUsage": {
+    "grok-4.6-build": {
+      "inputTokens": 14221,
+      "outputTokens": 2629,
+      "cacheReadInputTokens": 128,
+      "modelCalls": 1,
+      "costUSD": 0.0075276
+    }
+  }
+}

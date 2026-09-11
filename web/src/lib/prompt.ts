@@ -4,6 +4,9 @@ export type SpellPromptInput = {
   variationIndex?: number;
 };
 
+export const SKETCH_RENDER_TEMPLATE =
+  "Render this sketch into a finished image of the same drawing. The layout is locked: keep every subject's place, relative size, silhouette, pose, and count exactly as drawn. Do not replace it with a different picture of a similar subject.\n\nUse this instruction for materials, lighting, surface detail, and style: {{SPELL}}\n\nIf it names a specific change, alter only that and leave the rest as drawn. Read faint, doubled, or incomplete marks as the simplest complete forms already on the page; ignore stray ticks that do not form an object. Do not invent extra parts, objects, or scenery.";
+
 const VARIATION_SHIFTS = [
   "",
   "Create a distinct variation: shift the lighting and time of day, keeping the same composition.",
@@ -13,21 +16,20 @@ const VARIATION_SHIFTS = [
 
 export function buildSpellPrompt(input: SpellPromptInput): string {
   const spell = input.incantation.trim();
-  const shift = VARIATION_SHIFTS[input.variationIndex ?? 0] ?? VARIATION_SHIFTS[1];
+  const shift =
+    VARIATION_SHIFTS[input.variationIndex ?? 0] ?? VARIATION_SHIFTS[1];
 
+  // P04: frozen empirical tournament candidate; see docs/prompt-tournament.
   const lines = [
-    "Turn this drawing into a complete, finished image.",
-    "Preserve the exact layout, proportions, perspective, and placement of every element in the sketch.",
-    "Treat the sketch as the compositional guide — do not invent new major subjects or rearrange the scene.",
-    spell
-      ? `The caster's spell (follow this for style, setting, materials, lighting, and extra detail):\n"""${spell}"""`
-      : "Interpret the sketch faithfully. Choose plausible materials, lighting, and environment consistent with the drawing.",
-    "Do not add text, watermarks, captions, or UI unless the spell explicitly asks for lettering.",
+    SKETCH_RENDER_TEMPLATE.replace(
+      "{{SPELL}}",
+      spell || "Choose a finish consistent with the drawn forms.",
+    ),
   ];
 
   if (input.livePaper) {
     lines.push(
-      "Compose with strong value contrast, clear silhouettes, and readable shapes so the image holds up on a reflective grayscale display. Avoid relying on hue alone to separate forms.",
+      "Use clear silhouettes and value contrast so the image remains legible on a grayscale display.",
     );
   }
 

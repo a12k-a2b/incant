@@ -1,0 +1,8 @@
+.env
+.env.*
+node_modules
+dist
+test-results
+playwright-report
+tests
+scripts/live-smoke.ts

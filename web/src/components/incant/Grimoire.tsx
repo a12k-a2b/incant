@@ -1,9 +1,11 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import type { IncantSettings, ImageModel, ImageQuality } from "@/lib/settings";
 import { cn } from "@/lib/utils";
 
 type Props = {
   open: boolean;
+  imageReady?: boolean;
+  voiceReady?: boolean;
   settings: IncantSettings;
   onChange: (next: IncantSettings) => void;
   onClose: () => void;
@@ -31,22 +33,36 @@ function Field({
   );
 }
 
-export function Grimoire({ open, settings, onChange, onClose }: Props) {
-  if (!open) return null;
+export function Grimoire({
+  open,
+  settings,
+  onChange,
+  onClose,
+  imageReady,
+  voiceReady,
+}: Props) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (open) dialog.current?.showModal();
+    else dialog.current?.close();
+  }, [open]);
 
-  const set = <K extends keyof IncantSettings>(key: K, value: IncantSettings[K]) =>
-    onChange({ ...settings, [key]: value });
+  const set = <K extends keyof IncantSettings>(
+    key: K,
+    value: IncantSettings[K],
+  ) => onChange({ ...settings, [key]: value });
 
   return (
-    <div className="absolute inset-0 z-40 flex items-end bg-ink/35">
-      <div
-        role="dialog"
-        aria-label="Grimoire"
-        className="paper-grain max-h-[86%] w-full overflow-y-auto rounded-t-xl border-t border-ink/25 px-5 pb-8 pt-4"
-      >
+    <dialog
+      ref={dialog}
+      onCancel={onClose}
+      onClose={onClose}
+      className="spellbook-dialog"
+    >
+      <div aria-label="Spellbook settings" className="w-full px-6 pb-8 pt-5">
         <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-ink/25" />
         <div className="mb-5 flex items-baseline justify-between">
-          <h2 className="text-xl text-ink">Grimoire</h2>
+          <h2 className="text-xl text-ink">Spellbook</h2>
           <button
             type="button"
             onClick={onClose}
@@ -59,7 +75,11 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
         <div className="flex flex-col gap-5">
           <Field
             label="OpenAI key"
-            hint="A key is already on the canvas. Leave this blank unless you want to override it."
+            hint={
+              imageReady
+                ? "Image casting is connected through your server. No key needed here."
+                : "Enter your key, or configure the server."
+            }
           >
             <input
               id="openai-key"
@@ -68,7 +88,7 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
               spellCheck={false}
               value={settings.openaiKey}
               onChange={(e) => set("openaiKey", e.target.value)}
-              placeholder="already on the canvas"
+              placeholder="Enter API key"
               aria-label="OpenAI key"
               className="h-11 rounded-sm border border-ink/25 bg-parchment px-3 font-body text-base text-ink outline-none focus:border-ink"
             />
@@ -76,7 +96,11 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
 
           <Field
             label="Gemini key"
-            hint="A key is already on the canvas. Leave this blank unless you want to override it."
+            hint={
+              voiceReady
+                ? "Voice is connected through your server. No key needed here."
+                : "Enter your Gemini key, or configure the server."
+            }
           >
             <input
               id="gemini-key"
@@ -85,7 +109,7 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
               spellCheck={false}
               value={settings.geminiKey}
               onChange={(e) => set("geminiKey", e.target.value)}
-              placeholder="already on the canvas"
+              placeholder="Enter API key"
               aria-label="Gemini key"
               className="h-11 rounded-sm border border-ink/25 bg-parchment px-3 font-body text-base text-ink outline-none focus:border-ink"
             />
@@ -145,8 +169,8 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
           </Field>
 
           <Toggle
-            label="Ornate cabinet"
-            hint="Carved oak, brass fittings, and depth — the cereal-box relic. Off is the flat folio."
+            label="Room illustrations"
+            hint="Books, a moonlit window, and a little encouragement in the margins."
             on={settings.chamber}
             onToggle={() => set("chamber", !settings.chamber)}
           />
@@ -166,13 +190,14 @@ export function Grimoire({ open, settings, onChange, onClose }: Props) {
           />
 
           <p className="font-body text-sm leading-snug text-ash">
-            ChatGPT Sketch (@Sketch) is a ChatGPT-only drawing surface. Incant
-            uses the Images API the same way: your stylus sketch is sent as the
-            reference image with your spoken spell as the prompt.
+            Keys are stored in this browser. The app server forwards your image
+            key, sketch, and spell to OpenAI, and your voice key to Google to
+            open a listening session. Microphone audio goes to Gemini only while
+            listening. Images use your API account and may incur charges.
           </p>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }
 
@@ -197,6 +222,7 @@ function Toggle({
       </div>
       <button
         type="button"
+        aria-label={label}
         role="switch"
         aria-checked={on}
         onClick={onToggle}

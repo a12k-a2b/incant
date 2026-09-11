@@ -1,0 +1,30 @@
+{
+  "id": "P06-dragon-1",
+  "candidate": "P06",
+  "case": "dragon",
+  "repeat": 1,
+  "date": "2026-09-11T05:25:37.130Z",
+  "model": "gpt-image-2.5-flare",
+  "quality": "medium",
+  "size": "1024x1536",
+  "inputSha256": "b94ed50b94a7f6f764d6986847a705cf2b1b1722775527e0e306a7d438a4bedd",
+  "promptSha256": "6fafeb97655ae0e4bcb2bf2911bbc63355a6c7235a23ca3aff4111730dff3dce",
+  "httpStatus": 200,
+  "requestId": "req_135ad0e61abf4c4c899aab27c2df17b3",
+  "usage": {
+    "input_tokens": 1277,
+    "input_tokens_details": {
+      "image_tokens": 864,
+      "text_tokens": 413
+    },
+    "output_tokens": 343,
+    "output_tokens_details": {
+      "image_tokens": 343,
+      "text_tokens": 0
+    },
+    "total_tokens": 1620
+  },
+  "status": "PASS",
+  "outputSha256": "09e0fbb8425034c80f8aa0a22feec6ae2ea093671f854ee83fc81b3383005d34",
+  "elapsedMs": 53091
+}

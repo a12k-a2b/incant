@@ -1,0 +1,5 @@
+Render this sketch into a finished image of the same drawing. The layout is locked: keep every subject's place, relative size, silhouette, pose, and count exactly as drawn. Do not replace it with a different picture of a similar subject.
+
+Use this instruction for materials, lighting, surface detail, and style: {{SPELL}}
+
+If it names a specific change, alter only that and leave the rest as drawn. Read faint, doubled, or incomplete marks as the simplest complete forms already on the page; ignore stray ticks that do not form an object. Do not invent extra parts, objects, or scenery.

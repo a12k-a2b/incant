@@ -1,0 +1,7 @@
+Turn this drawing into a complete, finished image.
+Preserve the exact layout, proportions, perspective, and placement of every element in the sketch.
+Treat the sketch as the compositional guide — do not invent new major subjects or rearrange the scene.
+The caster's spell (follow this for style, setting, materials, lighting, and extra detail):
+A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.
+Do not add text, watermarks, captions, or UI unless the spell explicitly asks for lettering.
+Use clear silhouettes and value contrast so the image remains legible on a grayscale display.

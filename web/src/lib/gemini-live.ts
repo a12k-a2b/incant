@@ -50,7 +50,10 @@ export class GeminiLiveTranscribe {
     return this.ws?.readyState === WebSocket.OPEN && this.setupDone;
   }
 
-  async connect(apiKey: string, onTranscript?: TranscriptHandler): Promise<void> {
+  async connect(
+    apiKey: string,
+    onTranscript?: TranscriptHandler,
+  ): Promise<void> {
     this.onTranscript = onTranscript ?? null;
     if (this.connected) return;
 
@@ -67,7 +70,9 @@ export class GeminiLiveTranscribe {
       this.setupReject = reject;
 
       this.setupTimer = window.setTimeout(() => {
-        this.setupReject?.(new Error("The transcribe circle did not open in time."));
+        this.setupReject?.(
+          new Error("The transcribe circle did not open in time."),
+        );
         this.setupReject = null;
         this.setupResolve = null;
         ws.close();
@@ -108,12 +113,20 @@ export class GeminiLiveTranscribe {
 
       ws.onerror = () => {
         window.clearTimeout(this.setupTimer);
-        this.setupReject?.(new Error("Could not reach Gemini Live Transcribe."));
+        this.setupReject?.(
+          new Error("Could not reach Gemini Live Transcribe."),
+        );
         this.setupReject = null;
         this.setupResolve = null;
       };
 
       ws.onclose = () => {
+        window.clearTimeout(this.setupTimer);
+        this.setupReject?.(
+          new Error("The listening connection closed. Try again."),
+        );
+        this.setupReject = null;
+        this.setupResolve = null;
         this.ready = false;
         this.setupDone = false;
         if (this.ws === ws) this.ws = null;
@@ -156,13 +169,17 @@ export class GeminiLiveTranscribe {
 
     const started = Date.now();
     while (Date.now() - started < waitMs) {
-      if (this.finals.length > 0 && !this.interim) break;
+      // Wait for the final flush, not merely the first earlier phrase.
       await new Promise((r) => setTimeout(r, 80));
     }
     return this.combined();
   }
 
   disconnect() {
+    window.clearTimeout(this.setupTimer);
+    this.setupReject?.(new Error("Listening cancelled."));
+    this.setupReject = null;
+    this.setupResolve = null;
     this.turnActive = false;
     this.ready = false;
     this.setupDone = false;
@@ -176,7 +193,7 @@ export class GeminiLiveTranscribe {
 
   private combined() {
     const finalText = this.finals.join(" ").trim();
-    return (finalText || this.interim).trim();
+    return [finalText, this.interim].filter(Boolean).join(" ").trim();
   }
 
   private async handleMessage(data: unknown) {

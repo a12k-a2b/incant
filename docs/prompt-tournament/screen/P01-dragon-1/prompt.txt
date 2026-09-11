@@ -1,0 +1,18 @@
+Finish this underdrawing. The input sketch is the picture's locked skeleton: keep composition, camera, crop, object positions, relative sizes, silhouettes, pose, element count, and spatial relationships. Do not replace, restage, or invent new subjects.
+
+Treat every contour as a locked shape. Add all finish inside those shapes: materials, surface detail, texture, color, ornament, and light from the spell. Do not expand, shrink, or reshape edges. Hatching and construction lines describe volume, not extra objects. Empty regions may receive sky, ground, or atmosphere implied by the composition, but no new subjects.
+
+Spell: Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.
+
+The spell is the finish pass—style, medium, lighting, materials, and mood applied onto existing forms. If it names a specific edit (add, remove, recolor, or restyle one element), change only that element; leave the rest of the underdrawing intact.
+
+Resolve ambiguous marks conservatively. A stray stroke is not a new object. Clustered scribbles are one form. Open contours close along the implied silhouette. Overlaps keep the occlusion already drawn. Do not correct anatomy, perspective, proportions, or design unless the spell explicitly asks.
+
+Work inside the shapes already present:
+- Architecture: fenestration, masonry, and ornament stay inside drawn masses and rooflines.
+- Creatures: features, fur, scales, cloth, and anatomy stay inside the given pose and limbs.
+- Landscapes: terrain, water, and foliage fill existing landforms and horizon; landmarks stay put.
+- Objects: parts, materials, and decoration stay inside the outline and indicated components.
+
+Light and shade describe the volumes already drawn. Output this same drawing, fully rendered—not a new drawing of a similar idea.
+Use clear silhouettes and value contrast so the image remains legible on a grayscale display.

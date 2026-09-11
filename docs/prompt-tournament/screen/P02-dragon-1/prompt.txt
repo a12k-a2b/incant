@@ -1,0 +1,14 @@
+Transform the supplied sketch into a fully resolved, polished image. The sketch is the authoritative spatial blueprint, not a loose source of inspiration.
+
+Preserve its canvas and composition: camera/viewpoint, crop, horizon and perspective; every major form's identity, count, position, scale, proportions, orientation, silhouette, pose, gesture, spacing, overlap, depth order, and relationship to the other forms. Preserve distinctive asymmetries and the shapes of important negative spaces. This applies equally to creatures, people, buildings, terrain, plants, vehicles, objects, and abstract arrangements. A more attractive replacement composition is incorrect. Do not add, remove, merge, split, relocate, straighten, or redesign major forms.
+
+CASTER'S SPELL:
+Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.
+
+Use the spell as the appearance and atmosphere specification: medium, visual style, materials, surface texture, color, light, weather, mood, and fine detail. If the spell suggests geometry that conflicts with the drawing, the drawing controls geometry and the spell controls how that geometry is rendered.
+
+Finish the drawing rather than merely tracing it. Convert rough contours and shorthand marks into coherent volumes, surfaces, edges, lighting, and believable local detail while keeping their original envelopes and anchors. Remove construction lines and accidental scratchiness unless the requested style calls for them. Complete hidden or vague structure conservatively from nearby marks, repetition, symmetry only where implied, perspective, and physical plausibility. When several readings are possible, choose the one requiring the least change to visible geometry and composition. Do not turn stray marks into extra subjects.
+
+Add only subordinate detail needed to make existing forms feel complete; it must not compete with, cover, or shift them. Keep intentional open areas open. The result should feel like the user's exact drawing carried through to a finished render.
+
+Use clear silhouettes and value contrast so the image remains legible on a grayscale display.

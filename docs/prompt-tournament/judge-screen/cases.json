@@ -1,0 +1,860 @@
+[
+  {
+    "id": "P01-cottage-1",
+    "candidate": "P01",
+    "case": "cottage",
+    "repeat": 1,
+    "date": "2026-09-11T05:22:45.165Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "6083ce1445f3ceb699633d012f422406285cdfda7e9f33bbc1c3db910d822070",
+    "promptSha256": "872141fb56e361c4e1dd3634e307355ef6b5df3be95d7f40cea61314eb82c33c",
+    "httpStatus": 200,
+    "requestId": "req_48f5ad2945df41a48c4f4884498cc635",
+    "usage": {
+      "input_tokens": 1269,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 405
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1612
+    },
+    "status": "PASS",
+    "outputSha256": "a71204857c119ead9ffe15a576bed941f876b6d992b2b2c36cefaa5148b3784b",
+    "elapsedMs": 22566,
+    "spell": "A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "anchors": {
+      "cottage": "lower left, broad asymmetrical triangular roof; door left and round window right",
+      "tree": "right of house, tall oval crown, trunk to ground",
+      "moon": "small upper right",
+      "counts": "one cottage, one tree, one moon; keep large open upper-left sky"
+    },
+    "prompt": "Finish this underdrawing. The input sketch is the picture's locked skeleton: keep composition, camera, crop, object positions, relative sizes, silhouettes, pose, element count, and spatial relationships. Do not replace, restage, or invent new subjects.\n\nTreat every contour as a locked shape. Add all finish inside those shapes: materials, surface detail, texture, color, ornament, and light from the spell. Do not expand, shrink, or reshape edges. Hatching and construction lines describe volume, not extra objects. Empty regions may receive sky, ground, or atmosphere implied by the composition, but no new subjects.\n\nSpell: A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.\n\nThe spell is the finish pass\u2014style, medium, lighting, materials, and mood applied onto existing forms. If it names a specific edit (add, remove, recolor, or restyle one element), change only that element; leave the rest of the underdrawing intact.\n\nResolve ambiguous marks conservatively. A stray stroke is not a new object. Clustered scribbles are one form. Open contours close along the implied silhouette. Overlaps keep the occlusion already drawn. Do not correct anatomy, perspective, proportions, or design unless the spell explicitly asks.\n\nWork inside the shapes already present:\n- Architecture: fenestration, masonry, and ornament stay inside drawn masses and rooflines.\n- Creatures: features, fur, scales, cloth, and anatomy stay inside the given pose and limbs.\n- Landscapes: terrain, water, and foliage fill existing landforms and horizon; landmarks stay put.\n- Objects: parts, materials, and decoration stay inside the outline and indicated components.\n\nLight and shade describe the volumes already drawn. Output this same drawing, fully rendered\u2014not a new drawing of a similar idea.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P01-cottage-1.png"
+  },
+  {
+    "id": "P01-cup-books-1",
+    "candidate": "P01",
+    "case": "cup-books",
+    "repeat": 1,
+    "date": "2026-09-11T05:22:45.086Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "9565586604a50d0bd703be18dec2db43550dd88ba4ecb4b6c7bb79318e390364",
+    "promptSha256": "ef9e156a05f35ff304968c4c9e73ee30925e0e5cea08f27d112c69a361db0d37",
+    "httpStatus": 200,
+    "requestId": "req_9d711d4e25cc4d6982f7f0fb6731ccc6",
+    "usage": {
+      "input_tokens": 1268,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 404
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1611
+    },
+    "status": "PASS",
+    "outputSha256": "4dec3dcaca1f338a483015a2f9e72dbccb8b603adc63bd19d3f4cfbecb851537",
+    "elapsedMs": 13849,
+    "spell": "A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.",
+    "anchors": {
+      "mug": "large lower-left trapezoid mug with oval opening",
+      "handle": "right side mug, empty central hole",
+      "books": "two stacked books upper right, diagonal edges",
+      "steam": "one wavy line above mug, no added tabletop props"
+    },
+    "prompt": "Finish this underdrawing. The input sketch is the picture's locked skeleton: keep composition, camera, crop, object positions, relative sizes, silhouettes, pose, element count, and spatial relationships. Do not replace, restage, or invent new subjects.\n\nTreat every contour as a locked shape. Add all finish inside those shapes: materials, surface detail, texture, color, ornament, and light from the spell. Do not expand, shrink, or reshape edges. Hatching and construction lines describe volume, not extra objects. Empty regions may receive sky, ground, or atmosphere implied by the composition, but no new subjects.\n\nSpell: A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.\n\nThe spell is the finish pass\u2014style, medium, lighting, materials, and mood applied onto existing forms. If it names a specific edit (add, remove, recolor, or restyle one element), change only that element; leave the rest of the underdrawing intact.\n\nResolve ambiguous marks conservatively. A stray stroke is not a new object. Clustered scribbles are one form. Open contours close along the implied silhouette. Overlaps keep the occlusion already drawn. Do not correct anatomy, perspective, proportions, or design unless the spell explicitly asks.\n\nWork inside the shapes already present:\n- Architecture: fenestration, masonry, and ornament stay inside drawn masses and rooflines.\n- Creatures: features, fur, scales, cloth, and anatomy stay inside the given pose and limbs.\n- Landscapes: terrain, water, and foliage fill existing landforms and horizon; landmarks stay put.\n- Objects: parts, materials, and decoration stay inside the outline and indicated components.\n\nLight and shade describe the volumes already drawn. Output this same drawing, fully rendered\u2014not a new drawing of a similar idea.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P01-cup-books-1.png"
+  },
+  {
+    "id": "P01-dragon-1",
+    "candidate": "P01",
+    "case": "dragon",
+    "repeat": 1,
+    "date": "2026-09-11T05:22:45.152Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "b94ed50b94a7f6f764d6986847a705cf2b1b1722775527e0e306a7d438a4bedd",
+    "promptSha256": "1e6d2970a60522e6852563a7e9232ae654d1bd0c2ceb106fdb2eab37ec25cc1f",
+    "httpStatus": 200,
+    "requestId": "req_ac98d2ae908545eb87b1f3177ceafcba",
+    "usage": {
+      "input_tokens": 1274,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 410
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1617
+    },
+    "status": "PASS",
+    "outputSha256": "3414bd3f21ada4b4b3e5f5d153700605f8667d9876446fb5f8975a82070df7d6",
+    "elapsedMs": 13993,
+    "spell": "Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.",
+    "anchors": {
+      "pose": "head upper left, long bent neck joins large horizontal oval body",
+      "limbs": "two visible legs below body",
+      "wing": "single quadrilateral wing above middle-right body",
+      "tail": "exits right then bends upward; two small horns"
+    },
+    "prompt": "Finish this underdrawing. The input sketch is the picture's locked skeleton: keep composition, camera, crop, object positions, relative sizes, silhouettes, pose, element count, and spatial relationships. Do not replace, restage, or invent new subjects.\n\nTreat every contour as a locked shape. Add all finish inside those shapes: materials, surface detail, texture, color, ornament, and light from the spell. Do not expand, shrink, or reshape edges. Hatching and construction lines describe volume, not extra objects. Empty regions may receive sky, ground, or atmosphere implied by the composition, but no new subjects.\n\nSpell: Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.\n\nThe spell is the finish pass\u2014style, medium, lighting, materials, and mood applied onto existing forms. If it names a specific edit (add, remove, recolor, or restyle one element), change only that element; leave the rest of the underdrawing intact.\n\nResolve ambiguous marks conservatively. A stray stroke is not a new object. Clustered scribbles are one form. Open contours close along the implied silhouette. Overlaps keep the occlusion already drawn. Do not correct anatomy, perspective, proportions, or design unless the spell explicitly asks.\n\nWork inside the shapes already present:\n- Architecture: fenestration, masonry, and ornament stay inside drawn masses and rooflines.\n- Creatures: features, fur, scales, cloth, and anatomy stay inside the given pose and limbs.\n- Landscapes: terrain, water, and foliage fill existing landforms and horizon; landmarks stay put.\n- Objects: parts, materials, and decoration stay inside the outline and indicated components.\n\nLight and shade describe the volumes already drawn. Output this same drawing, fully rendered\u2014not a new drawing of a similar idea.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P01-dragon-1.png"
+  },
+  {
+    "id": "P02-cottage-1",
+    "candidate": "P02",
+    "case": "cottage",
+    "repeat": 1,
+    "date": "2026-09-11T05:22:58.989Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "6083ce1445f3ceb699633d012f422406285cdfda7e9f33bbc1c3db910d822070",
+    "promptSha256": "d73de765993d1ca25468e4076400047b721891c2f8ec698c0fccf6e465b35cba",
+    "httpStatus": 200,
+    "requestId": "req_0e78c2efbd7645c7885f9e9df2120658",
+    "usage": {
+      "input_tokens": 1273,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 409
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1616
+    },
+    "status": "PASS",
+    "outputSha256": "803acdde741e32e87a0c1119c712fd8d0a78674bcbc2729ead70469c18bd0aa4",
+    "elapsedMs": 16389,
+    "spell": "A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "anchors": {
+      "cottage": "lower left, broad asymmetrical triangular roof; door left and round window right",
+      "tree": "right of house, tall oval crown, trunk to ground",
+      "moon": "small upper right",
+      "counts": "one cottage, one tree, one moon; keep large open upper-left sky"
+    },
+    "prompt": "Transform the supplied sketch into a fully resolved, polished image. The sketch is the authoritative spatial blueprint, not a loose source of inspiration.\n\nPreserve its canvas and composition: camera/viewpoint, crop, horizon and perspective; every major form's identity, count, position, scale, proportions, orientation, silhouette, pose, gesture, spacing, overlap, depth order, and relationship to the other forms. Preserve distinctive asymmetries and the shapes of important negative spaces. This applies equally to creatures, people, buildings, terrain, plants, vehicles, objects, and abstract arrangements. A more attractive replacement composition is incorrect. Do not add, remove, merge, split, relocate, straighten, or redesign major forms.\n\nCASTER'S SPELL:\nA cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.\n\nUse the spell as the appearance and atmosphere specification: medium, visual style, materials, surface texture, color, light, weather, mood, and fine detail. If the spell suggests geometry that conflicts with the drawing, the drawing controls geometry and the spell controls how that geometry is rendered.\n\nFinish the drawing rather than merely tracing it. Convert rough contours and shorthand marks into coherent volumes, surfaces, edges, lighting, and believable local detail while keeping their original envelopes and anchors. Remove construction lines and accidental scratchiness unless the requested style calls for them. Complete hidden or vague structure conservatively from nearby marks, repetition, symmetry only where implied, perspective, and physical plausibility. When several readings are possible, choose the one requiring the least change to visible geometry and composition. Do not turn stray marks into extra subjects.\n\nAdd only subordinate detail needed to make existing forms feel complete; it must not compete with, cover, or shift them. Keep intentional open areas open. The result should feel like the user's exact drawing carried through to a finished render.\n\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P02-cottage-1.png"
+  },
+  {
+    "id": "P02-cup-books-1",
+    "candidate": "P02",
+    "case": "cup-books",
+    "repeat": 1,
+    "date": "2026-09-11T05:23:07.817Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "9565586604a50d0bd703be18dec2db43550dd88ba4ecb4b6c7bb79318e390364",
+    "promptSha256": "9db2e2338b6f439b341dbc751f297f1f691abbff188abf2de3c43389772c00ce",
+    "httpStatus": 200,
+    "requestId": "req_9a3db4b36e5940f0a6e3d1921db17a59",
+    "usage": {
+      "input_tokens": 1272,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 408
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1615
+    },
+    "status": "PASS",
+    "outputSha256": "fc44bac349a4c3ee8e7b6c2263d923e3b2c19f1a6f7f44151ad808441455ea9d",
+    "elapsedMs": 31999,
+    "spell": "A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.",
+    "anchors": {
+      "mug": "large lower-left trapezoid mug with oval opening",
+      "handle": "right side mug, empty central hole",
+      "books": "two stacked books upper right, diagonal edges",
+      "steam": "one wavy line above mug, no added tabletop props"
+    },
+    "prompt": "Transform the supplied sketch into a fully resolved, polished image. The sketch is the authoritative spatial blueprint, not a loose source of inspiration.\n\nPreserve its canvas and composition: camera/viewpoint, crop, horizon and perspective; every major form's identity, count, position, scale, proportions, orientation, silhouette, pose, gesture, spacing, overlap, depth order, and relationship to the other forms. Preserve distinctive asymmetries and the shapes of important negative spaces. This applies equally to creatures, people, buildings, terrain, plants, vehicles, objects, and abstract arrangements. A more attractive replacement composition is incorrect. Do not add, remove, merge, split, relocate, straighten, or redesign major forms.\n\nCASTER'S SPELL:\nA realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.\n\nUse the spell as the appearance and atmosphere specification: medium, visual style, materials, surface texture, color, light, weather, mood, and fine detail. If the spell suggests geometry that conflicts with the drawing, the drawing controls geometry and the spell controls how that geometry is rendered.\n\nFinish the drawing rather than merely tracing it. Convert rough contours and shorthand marks into coherent volumes, surfaces, edges, lighting, and believable local detail while keeping their original envelopes and anchors. Remove construction lines and accidental scratchiness unless the requested style calls for them. Complete hidden or vague structure conservatively from nearby marks, repetition, symmetry only where implied, perspective, and physical plausibility. When several readings are possible, choose the one requiring the least change to visible geometry and composition. Do not turn stray marks into extra subjects.\n\nAdd only subordinate detail needed to make existing forms feel complete; it must not compete with, cover, or shift them. Keep intentional open areas open. The result should feel like the user's exact drawing carried through to a finished render.\n\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P02-cup-books-1.png"
+  },
+  {
+    "id": "P02-dragon-1",
+    "candidate": "P02",
+    "case": "dragon",
+    "repeat": 1,
+    "date": "2026-09-11T05:22:59.154Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "b94ed50b94a7f6f764d6986847a705cf2b1b1722775527e0e306a7d438a4bedd",
+    "promptSha256": "f8b102e7899dc41f583278fa376e69bcaf93f0ddbf7680c7383b95a4060d28d0",
+    "httpStatus": 200,
+    "requestId": "req_477c6b6af0af49b7a16ef474d6fdff29",
+    "usage": {
+      "input_tokens": 1278,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 414
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1621
+    },
+    "status": "PASS",
+    "outputSha256": "77aedc6d83d68070aa59744fb776d245700a047a6c8261b560e7b964181b4c6f",
+    "elapsedMs": 28363,
+    "spell": "Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.",
+    "anchors": {
+      "pose": "head upper left, long bent neck joins large horizontal oval body",
+      "limbs": "two visible legs below body",
+      "wing": "single quadrilateral wing above middle-right body",
+      "tail": "exits right then bends upward; two small horns"
+    },
+    "prompt": "Transform the supplied sketch into a fully resolved, polished image. The sketch is the authoritative spatial blueprint, not a loose source of inspiration.\n\nPreserve its canvas and composition: camera/viewpoint, crop, horizon and perspective; every major form's identity, count, position, scale, proportions, orientation, silhouette, pose, gesture, spacing, overlap, depth order, and relationship to the other forms. Preserve distinctive asymmetries and the shapes of important negative spaces. This applies equally to creatures, people, buildings, terrain, plants, vehicles, objects, and abstract arrangements. A more attractive replacement composition is incorrect. Do not add, remove, merge, split, relocate, straighten, or redesign major forms.\n\nCASTER'S SPELL:\nBring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.\n\nUse the spell as the appearance and atmosphere specification: medium, visual style, materials, surface texture, color, light, weather, mood, and fine detail. If the spell suggests geometry that conflicts with the drawing, the drawing controls geometry and the spell controls how that geometry is rendered.\n\nFinish the drawing rather than merely tracing it. Convert rough contours and shorthand marks into coherent volumes, surfaces, edges, lighting, and believable local detail while keeping their original envelopes and anchors. Remove construction lines and accidental scratchiness unless the requested style calls for them. Complete hidden or vague structure conservatively from nearby marks, repetition, symmetry only where implied, perspective, and physical plausibility. When several readings are possible, choose the one requiring the least change to visible geometry and composition. Do not turn stray marks into extra subjects.\n\nAdd only subordinate detail needed to make existing forms feel complete; it must not compete with, cover, or shift them. Keep intentional open areas open. The result should feel like the user's exact drawing carried through to a finished render.\n\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P02-dragon-1.png"
+  },
+  {
+    "id": "P03-cottage-1",
+    "candidate": "P03",
+    "case": "cottage",
+    "repeat": 1,
+    "date": "2026-09-11T05:23:15.389Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "6083ce1445f3ceb699633d012f422406285cdfda7e9f33bbc1c3db910d822070",
+    "promptSha256": "03518138df53428ed713e382997f071afd8f2699355245c13eb7c8004273b3ba",
+    "httpStatus": 200,
+    "requestId": "req_9d0ccba843ad41208780b5af29d4bef7",
+    "usage": {
+      "input_tokens": 957,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 93
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1300
+    },
+    "status": "PASS",
+    "outputSha256": "698c7b2c9bd2640afc136a405233531f159933506bfee0e277dc2092f9d1165b",
+    "elapsedMs": 40292,
+    "spell": "A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "anchors": {
+      "cottage": "lower left, broad asymmetrical triangular roof; door left and round window right",
+      "tree": "right of house, tall oval crown, trunk to ground",
+      "moon": "small upper right",
+      "counts": "one cottage, one tree, one moon; keep large open upper-left sky"
+    },
+    "prompt": "Render the supplied drawing as a complete finished image. Keep its composition, relative dimensions, and viewpoint unchanged. Apply suitable surfaces and illumination according to this request: A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.. Do not introduce additional subjects or lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P03-cottage-1.png"
+  },
+  {
+    "id": "P03-cup-books-1",
+    "candidate": "P03",
+    "case": "cup-books",
+    "repeat": 1,
+    "date": "2026-09-11T05:23:39.822Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "9565586604a50d0bd703be18dec2db43550dd88ba4ecb4b6c7bb79318e390364",
+    "promptSha256": "79b33b90226b6f120638879b8d57467fa2c9fec55f30b0c8108ae5ae2cb304f3",
+    "httpStatus": 200,
+    "requestId": "req_306caa8701eb4562ab982fcd1045515b",
+    "usage": {
+      "input_tokens": 956,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 92
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1299
+    },
+    "status": "PASS",
+    "outputSha256": "fe977c6dcb4293535e86b485ad627016da97576e05a97ea7604ffcd14d46c302",
+    "elapsedMs": 39051,
+    "spell": "A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.",
+    "anchors": {
+      "mug": "large lower-left trapezoid mug with oval opening",
+      "handle": "right side mug, empty central hole",
+      "books": "two stacked books upper right, diagonal edges",
+      "steam": "one wavy line above mug, no added tabletop props"
+    },
+    "prompt": "Render the supplied drawing as a complete finished image. Keep its composition, relative dimensions, and viewpoint unchanged. Apply suitable surfaces and illumination according to this request: A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.. Do not introduce additional subjects or lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P03-cup-books-1.png"
+  },
+  {
+    "id": "P03-dragon-1",
+    "candidate": "P03",
+    "case": "dragon",
+    "repeat": 1,
+    "date": "2026-09-11T05:23:27.559Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "b94ed50b94a7f6f764d6986847a705cf2b1b1722775527e0e306a7d438a4bedd",
+    "promptSha256": "fc5b3dfd5e29c61f9012a4bd3f719d2523b0a6345ce7f27d16be852696a2bdc6",
+    "httpStatus": 200,
+    "requestId": "req_5b87274fab9a491f8583a16e0db9256c",
+    "usage": {
+      "input_tokens": 962,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 98
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1305
+    },
+    "status": "PASS",
+    "outputSha256": "9ed78d97596086bf6eace1e5913d08d54c92eb0fb8775ac3655bc46651f7e4ff",
+    "elapsedMs": 41160,
+    "spell": "Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.",
+    "anchors": {
+      "pose": "head upper left, long bent neck joins large horizontal oval body",
+      "limbs": "two visible legs below body",
+      "wing": "single quadrilateral wing above middle-right body",
+      "tail": "exits right then bends upward; two small horns"
+    },
+    "prompt": "Render the supplied drawing as a complete finished image. Keep its composition, relative dimensions, and viewpoint unchanged. Apply suitable surfaces and illumination according to this request: Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.. Do not introduce additional subjects or lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P03-dragon-1.png"
+  },
+  {
+    "id": "P04-cottage-1",
+    "candidate": "P04",
+    "case": "cottage",
+    "repeat": 1,
+    "date": "2026-09-11T05:23:55.686Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "6083ce1445f3ceb699633d012f422406285cdfda7e9f33bbc1c3db910d822070",
+    "promptSha256": "43d880361fa085d3c5d337dd33013c9a431b3c32ff97e4178897f55f2e1b0fb8",
+    "httpStatus": 200,
+    "requestId": "req_3a0a68711f30416fbb0eeaa597967014",
+    "usage": {
+      "input_tokens": 1037,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 173
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1380
+    },
+    "status": "PASS",
+    "outputSha256": "53e3bfd7891f384b70d6036f915e4724fb0d728ddabe69ebc3a4808a2e406f47",
+    "elapsedMs": 52607,
+    "spell": "A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "anchors": {
+      "cottage": "lower left, broad asymmetrical triangular roof; door left and round window right",
+      "tree": "right of house, tall oval crown, trunk to ground",
+      "moon": "small upper right",
+      "counts": "one cottage, one tree, one moon; keep large open upper-left sky"
+    },
+    "prompt": "Render this sketch into a finished image of the same drawing. The layout is locked: keep every subject's place, relative size, silhouette, pose, and count exactly as drawn. Do not replace it with a different picture of a similar subject.\n\nUse this instruction for materials, lighting, surface detail, and style: A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.\n\nIf it names a specific change, alter only that and leave the rest as drawn. Read faint, doubled, or incomplete marks as the simplest complete forms already on the page; ignore stray ticks that do not form an object. Do not invent extra parts, objects, or scenery.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P04-cottage-1.png"
+  },
+  {
+    "id": "P04-cup-books-1",
+    "candidate": "P04",
+    "case": "cup-books",
+    "repeat": 1,
+    "date": "2026-09-11T05:24:18.878Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "9565586604a50d0bd703be18dec2db43550dd88ba4ecb4b6c7bb79318e390364",
+    "promptSha256": "f1fb32defb454b5c2d18515b319dfa212dbd462efb508770f6b3022dfe132c0d",
+    "httpStatus": 200,
+    "requestId": "req_6397eb8210354bef90ee4e4739e2d6d2",
+    "usage": {
+      "input_tokens": 1036,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 172
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1379
+    },
+    "status": "PASS",
+    "outputSha256": "17bb7974751346b09454c03a8f546c4f3a45420e9674526d8b805c52f54348bb",
+    "elapsedMs": 51892,
+    "spell": "A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.",
+    "anchors": {
+      "mug": "large lower-left trapezoid mug with oval opening",
+      "handle": "right side mug, empty central hole",
+      "books": "two stacked books upper right, diagonal edges",
+      "steam": "one wavy line above mug, no added tabletop props"
+    },
+    "prompt": "Render this sketch into a finished image of the same drawing. The layout is locked: keep every subject's place, relative size, silhouette, pose, and count exactly as drawn. Do not replace it with a different picture of a similar subject.\n\nUse this instruction for materials, lighting, surface detail, and style: A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.\n\nIf it names a specific change, alter only that and leave the rest as drawn. Read faint, doubled, or incomplete marks as the simplest complete forms already on the page; ignore stray ticks that do not form an object. Do not invent extra parts, objects, or scenery.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P04-cup-books-1.png"
+  },
+  {
+    "id": "P04-dragon-1",
+    "candidate": "P04",
+    "case": "dragon",
+    "repeat": 1,
+    "date": "2026-09-11T05:24:08.722Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "b94ed50b94a7f6f764d6986847a705cf2b1b1722775527e0e306a7d438a4bedd",
+    "promptSha256": "774ae87d15e3b6de61d97a23003bff66f1f4f2b25eb2555f46105134b5ecd4c4",
+    "httpStatus": 200,
+    "requestId": "req_16568439d8964f60ad83c53bc3d64530",
+    "usage": {
+      "input_tokens": 1042,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 178
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1385
+    },
+    "status": "PASS",
+    "outputSha256": "c2762375c7168e3ff8b4977645b06e7e2ab59d01f5a09ff899786ccde529e467",
+    "elapsedMs": 51042,
+    "spell": "Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.",
+    "anchors": {
+      "pose": "head upper left, long bent neck joins large horizontal oval body",
+      "limbs": "two visible legs below body",
+      "wing": "single quadrilateral wing above middle-right body",
+      "tail": "exits right then bends upward; two small horns"
+    },
+    "prompt": "Render this sketch into a finished image of the same drawing. The layout is locked: keep every subject's place, relative size, silhouette, pose, and count exactly as drawn. Do not replace it with a different picture of a similar subject.\n\nUse this instruction for materials, lighting, surface detail, and style: Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.\n\nIf it names a specific change, alter only that and leave the rest as drawn. Read faint, doubled, or incomplete marks as the simplest complete forms already on the page; ignore stray ticks that do not form an object. Do not invent extra parts, objects, or scenery.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P04-dragon-1.png"
+  },
+  {
+    "id": "P05-cottage-1",
+    "candidate": "P05",
+    "case": "cottage",
+    "repeat": 1,
+    "date": "2026-09-11T05:24:48.295Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "6083ce1445f3ceb699633d012f422406285cdfda7e9f33bbc1c3db910d822070",
+    "promptSha256": "f2abac20ab1047417344e03db31823b58dc9e548e45a2da33997c7f2b937d88d",
+    "httpStatus": 200,
+    "requestId": "req_6de02368e3b94aaa911cdc6f74ef4f37",
+    "usage": {
+      "input_tokens": 1008,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 144
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1351
+    },
+    "status": "PASS",
+    "outputSha256": "56f020eda26a18e28b1ac21354d69f54ad91078dd0094515a712efeebfbce9bb",
+    "elapsedMs": 35704,
+    "spell": "A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "anchors": {
+      "cottage": "lower left, broad asymmetrical triangular roof; door left and round window right",
+      "tree": "right of house, tall oval crown, trunk to ground",
+      "moon": "small upper right",
+      "counts": "one cottage, one tree, one moon; keep large open upper-left sky"
+    },
+    "prompt": "Turn this drawing into a complete, finished image.\nPreserve the exact layout, proportions, perspective, and placement of every element in the sketch.\nTreat the sketch as the compositional guide \u2014 do not invent new major subjects or rearrange the scene.\nThe caster's spell (follow this for style, setting, materials, lighting, and extra detail):\nA cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.\nDo not add text, watermarks, captions, or UI unless the spell explicitly asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P05-cottage-1.png"
+  },
+  {
+    "id": "P05-cup-books-1",
+    "candidate": "P05",
+    "case": "cup-books",
+    "repeat": 1,
+    "date": "2026-09-11T05:25:10.772Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "9565586604a50d0bd703be18dec2db43550dd88ba4ecb4b6c7bb79318e390364",
+    "promptSha256": "c3461293b9e219f5b299d5265b5e1f932a5f33629a50f431a9163d3b2e23e7e9",
+    "httpStatus": 200,
+    "requestId": "req_d2a775f8526e4b159fd67cabfd52d31f",
+    "usage": {
+      "input_tokens": 1007,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 143
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1350
+    },
+    "status": "PASS",
+    "outputSha256": "929e90fdce5200cd306b26c7212c7a1547f5e8574ccf59d78dcef792159bf167",
+    "elapsedMs": 39508,
+    "spell": "A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.",
+    "anchors": {
+      "mug": "large lower-left trapezoid mug with oval opening",
+      "handle": "right side mug, empty central hole",
+      "books": "two stacked books upper right, diagonal edges",
+      "steam": "one wavy line above mug, no added tabletop props"
+    },
+    "prompt": "Turn this drawing into a complete, finished image.\nPreserve the exact layout, proportions, perspective, and placement of every element in the sketch.\nTreat the sketch as the compositional guide \u2014 do not invent new major subjects or rearrange the scene.\nThe caster's spell (follow this for style, setting, materials, lighting, and extra detail):\nA realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.\nDo not add text, watermarks, captions, or UI unless the spell explicitly asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P05-cup-books-1.png"
+  },
+  {
+    "id": "P05-dragon-1",
+    "candidate": "P05",
+    "case": "dragon",
+    "repeat": 1,
+    "date": "2026-09-11T05:24:59.770Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "b94ed50b94a7f6f764d6986847a705cf2b1b1722775527e0e306a7d438a4bedd",
+    "promptSha256": "9c150fd303ce1e6f94f98f161ece4fc6ee9c6ca499edd730f839ce796b73c1e3",
+    "httpStatus": 200,
+    "requestId": "req_2b6910cb4fc6411fa2f9c822bf037021",
+    "usage": {
+      "input_tokens": 1013,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 149
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1356
+    },
+    "status": "PASS",
+    "outputSha256": "23e1901f018b2cf56aa8a18cd19525f75e4e4802d0d70a4381a9a378206aa1a1",
+    "elapsedMs": 37357,
+    "spell": "Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.",
+    "anchors": {
+      "pose": "head upper left, long bent neck joins large horizontal oval body",
+      "limbs": "two visible legs below body",
+      "wing": "single quadrilateral wing above middle-right body",
+      "tail": "exits right then bends upward; two small horns"
+    },
+    "prompt": "Turn this drawing into a complete, finished image.\nPreserve the exact layout, proportions, perspective, and placement of every element in the sketch.\nTreat the sketch as the compositional guide \u2014 do not invent new major subjects or rearrange the scene.\nThe caster's spell (follow this for style, setting, materials, lighting, and extra detail):\nBring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.\nDo not add text, watermarks, captions, or UI unless the spell explicitly asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P05-dragon-1.png"
+  },
+  {
+    "id": "P06-cottage-1",
+    "candidate": "P06",
+    "case": "cottage",
+    "repeat": 1,
+    "date": "2026-09-11T05:25:24.028Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "6083ce1445f3ceb699633d012f422406285cdfda7e9f33bbc1c3db910d822070",
+    "promptSha256": "a1943a5012a66c0eeca0f22d4876deaa7c5eea560f878bbfc07b5fd976d16fe1",
+    "httpStatus": 200,
+    "requestId": "req_7bf3da9660884c3ca6f447cfc808254c",
+    "usage": {
+      "input_tokens": 1272,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 408
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1615
+    },
+    "status": "PASS",
+    "outputSha256": "09c81c3060cd46f276cbeea21a38426c9f45e027310092a01e8704dcc5db3932",
+    "elapsedMs": 39439,
+    "spell": "A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "anchors": {
+      "cottage": "lower left, broad asymmetrical triangular roof; door left and round window right",
+      "tree": "right of house, tall oval crown, trunk to ground",
+      "moon": "small upper right",
+      "counts": "one cottage, one tree, one moon; keep large open upper-left sky"
+    },
+    "prompt": "Complete the supplied sketch by rendering directly over it as a locked underdrawing. The result must read as this exact drawing brought to a finished state, not as a redesigned or newly composed version of its subject.\n\nTreat every visible mark as structural evidence. Keep the same canvas framing and preserve each depicted element's count, identity, center position, relative size, silhouette footprint, orientation, pose, gesture, overlap order, crop, spacing, and relationship to the other elements. Retain the sketch's horizon, perspective cues, major contours, and distinctive negative spaces, including its awkward or handmade choices. Resolve ambiguous marks conservatively into the most literal coherent form; do not omit them because they are rough.\n\nBuild detail onto this scaffold: trace or closely follow its boundaries, turn its regions into finished forms, and add texture, material, lighting, depth, small features, and background finish within the existing spatial organization. New detail may explain or enrich what is present, but must not displace, replace, duplicate, straighten, beautify, or normalize the underlying arrangement. Do not introduce new major subjects or remove existing ones unless the spell explicitly requires it.\n\nSpell:\nA cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.\n\nUse the spell as the authority for style, setting, materials, atmosphere, lighting, color, and requested detail. If\u2014and only if\u2014the spell explicitly asks to alter geometry, count, pose, placement, viewpoint, or another locked structural property, make that requested change to the named element or property using the smallest local adjustment that fulfills it. Keep every unaffected anchor and relationship fixed. A broad explicit structural instruction may change the broader scaffold, but unspecified geometry remains bound to the sketch.\n\nProduce one cohesive, fully rendered image. Add no captions, watermarks, interface elements, or lettering unless the spell explicitly requests them.\n\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P06-cottage-1.png"
+  },
+  {
+    "id": "P06-cup-books-1",
+    "candidate": "P06",
+    "case": "cup-books",
+    "repeat": 1,
+    "date": "2026-09-11T05:25:50.285Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "9565586604a50d0bd703be18dec2db43550dd88ba4ecb4b6c7bb79318e390364",
+    "promptSha256": "0a0fce70bb002e408895fb82e27b1ec124f7a19d28f5daa2dac713fcefb42b5c",
+    "httpStatus": 200,
+    "requestId": "req_8a401ec8e2464efd8baa73e9e37b7fec",
+    "usage": {
+      "input_tokens": 1271,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 407
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1614
+    },
+    "status": "PASS",
+    "outputSha256": "21d2d36a6aa8c959f6a133de9b54d6c757ec99f1655bbb4807d62ae8303c9ff3",
+    "elapsedMs": 51830,
+    "spell": "A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.",
+    "anchors": {
+      "mug": "large lower-left trapezoid mug with oval opening",
+      "handle": "right side mug, empty central hole",
+      "books": "two stacked books upper right, diagonal edges",
+      "steam": "one wavy line above mug, no added tabletop props"
+    },
+    "prompt": "Complete the supplied sketch by rendering directly over it as a locked underdrawing. The result must read as this exact drawing brought to a finished state, not as a redesigned or newly composed version of its subject.\n\nTreat every visible mark as structural evidence. Keep the same canvas framing and preserve each depicted element's count, identity, center position, relative size, silhouette footprint, orientation, pose, gesture, overlap order, crop, spacing, and relationship to the other elements. Retain the sketch's horizon, perspective cues, major contours, and distinctive negative spaces, including its awkward or handmade choices. Resolve ambiguous marks conservatively into the most literal coherent form; do not omit them because they are rough.\n\nBuild detail onto this scaffold: trace or closely follow its boundaries, turn its regions into finished forms, and add texture, material, lighting, depth, small features, and background finish within the existing spatial organization. New detail may explain or enrich what is present, but must not displace, replace, duplicate, straighten, beautify, or normalize the underlying arrangement. Do not introduce new major subjects or remove existing ones unless the spell explicitly requires it.\n\nSpell:\nA realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.\n\nUse the spell as the authority for style, setting, materials, atmosphere, lighting, color, and requested detail. If\u2014and only if\u2014the spell explicitly asks to alter geometry, count, pose, placement, viewpoint, or another locked structural property, make that requested change to the named element or property using the smallest local adjustment that fulfills it. Keep every unaffected anchor and relationship fixed. A broad explicit structural instruction may change the broader scaffold, but unspecified geometry remains bound to the sketch.\n\nProduce one cohesive, fully rendered image. Add no captions, watermarks, interface elements, or lettering unless the spell explicitly requests them.\n\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P06-cup-books-1.png"
+  },
+  {
+    "id": "P06-dragon-1",
+    "candidate": "P06",
+    "case": "dragon",
+    "repeat": 1,
+    "date": "2026-09-11T05:25:37.130Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "b94ed50b94a7f6f764d6986847a705cf2b1b1722775527e0e306a7d438a4bedd",
+    "promptSha256": "6fafeb97655ae0e4bcb2bf2911bbc63355a6c7235a23ca3aff4111730dff3dce",
+    "httpStatus": 200,
+    "requestId": "req_135ad0e61abf4c4c899aab27c2df17b3",
+    "usage": {
+      "input_tokens": 1277,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 413
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1620
+    },
+    "status": "PASS",
+    "outputSha256": "09e0fbb8425034c80f8aa0a22feec6ae2ea093671f854ee83fc81b3383005d34",
+    "elapsedMs": 53091,
+    "spell": "Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.",
+    "anchors": {
+      "pose": "head upper left, long bent neck joins large horizontal oval body",
+      "limbs": "two visible legs below body",
+      "wing": "single quadrilateral wing above middle-right body",
+      "tail": "exits right then bends upward; two small horns"
+    },
+    "prompt": "Complete the supplied sketch by rendering directly over it as a locked underdrawing. The result must read as this exact drawing brought to a finished state, not as a redesigned or newly composed version of its subject.\n\nTreat every visible mark as structural evidence. Keep the same canvas framing and preserve each depicted element's count, identity, center position, relative size, silhouette footprint, orientation, pose, gesture, overlap order, crop, spacing, and relationship to the other elements. Retain the sketch's horizon, perspective cues, major contours, and distinctive negative spaces, including its awkward or handmade choices. Resolve ambiguous marks conservatively into the most literal coherent form; do not omit them because they are rough.\n\nBuild detail onto this scaffold: trace or closely follow its boundaries, turn its regions into finished forms, and add texture, material, lighting, depth, small features, and background finish within the existing spatial organization. New detail may explain or enrich what is present, but must not displace, replace, duplicate, straighten, beautify, or normalize the underlying arrangement. Do not introduce new major subjects or remove existing ones unless the spell explicitly requires it.\n\nSpell:\nBring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.\n\nUse the spell as the authority for style, setting, materials, atmosphere, lighting, color, and requested detail. If\u2014and only if\u2014the spell explicitly asks to alter geometry, count, pose, placement, viewpoint, or another locked structural property, make that requested change to the named element or property using the smallest local adjustment that fulfills it. Keep every unaffected anchor and relationship fixed. A broad explicit structural instruction may change the broader scaffold, but unspecified geometry remains bound to the sketch.\n\nProduce one cohesive, fully rendered image. Add no captions, watermarks, interface elements, or lettering unless the spell explicitly requests them.\n\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P06-dragon-1.png"
+  },
+  {
+    "id": "P07-cottage-1",
+    "candidate": "P07",
+    "case": "cottage",
+    "repeat": 1,
+    "date": "2026-09-11T05:26:03.474Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "6083ce1445f3ceb699633d012f422406285cdfda7e9f33bbc1c3db910d822070",
+    "promptSha256": "33b8ff3ddb23affa8f505c057c541ae3857ba44e4cf9c319b4cebd213cd9d1d4",
+    "httpStatus": 200,
+    "requestId": "req_e1b307d45dad4fc88000b3a9bf45b97c",
+    "usage": {
+      "input_tokens": 1342,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 478
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1685
+    },
+    "status": "PASS",
+    "outputSha256": "ef29f911f2211d7f19868f11fb512d5bccd162abdf54eeb97677d78e31698383",
+    "elapsedMs": 50985,
+    "spell": "A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "anchors": {
+      "cottage": "lower left, broad asymmetrical triangular roof; door left and round window right",
+      "tree": "right of house, tall oval crown, trunk to ground",
+      "moon": "small upper right",
+      "counts": "one cottage, one tree, one moon; keep large open upper-left sky"
+    },
+    "prompt": "Treat this sketch as a binding geometry contract. Fully render THIS drawing. A more beautiful, centered, or canonical scene of the same subject is a failure.\n\nREGISTRATION TEST: if the sketch were laid as a transparent overlay on the result, major contours, centroids, silhouettes, gaps, and the frame would still line up.\n\nLOCK THESE ANCHORS:\n\u2022 Frame \u2014 crop, camera, horizon, perspective cues.\n\u2022 Inventory \u2014 how many of each depicted thing, including repeated parts (windows, limbs, peaks, objects), and the identity of every major form (building, creature, figure, landform, plant, object, mass).\n\u2022 Placement \u2014 each form's canvas position, center, ground/contact points, and spacing from neighbors.\n\u2022 Envelope \u2014 silhouette, relative size, proportions, orientation, pose/gesture, facing, and handmade irregularities (lean, asymmetry, uneven gaps).\n\u2022 Depth \u2014 occlusion order and the shapes of important negative spaces.\nDo not add, remove, merge, split, move, resize, or redesign a major form. Keep empty regions empty.\n\nSPELL:\nA cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.\n\nThe spell is the appearance layer only: style, medium, materials, color, light, weather, mood, and surface detail. Shade and texture the locked geometry. If the spell suggests a different layout, keep the sketch's geometry and apply the requested look to it. If the spell explicitly names a structural change, alter only that named property on the named form, using the smallest local edit; every other anchor stays fixed.\n\nFINISH THE VOLUMES:\nTurn rough strokes into coherent solids, edges, and surfaces that occupy the original envelopes. Read ambiguous or stray marks as the interpretation that changes geometry least; never promote construction lines or scratches into extra subjects. Complete hidden parts only from adjacent marks, already-implied local symmetry, and perspective. Add only subordinate detail that does not cover, compete with, or shift locked forms. Do not straighten, symmetrize, or \"correct\" the drawing.\n\nOutput one finished image. No captions, watermarks, UI, or lettering unless the spell asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P07-cottage-1.png"
+  },
+  {
+    "id": "P07-cup-books-1",
+    "candidate": "P07",
+    "case": "cup-books",
+    "repeat": 1,
+    "date": "2026-09-11T05:26:42.127Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "9565586604a50d0bd703be18dec2db43550dd88ba4ecb4b6c7bb79318e390364",
+    "promptSha256": "8480dab273db6cda0adcfc5f8d66ffc54ee706896d24ba1284e94ece730db15b",
+    "httpStatus": 200,
+    "requestId": "req_a75c2a6a774e43019ffddef8c59c121c",
+    "usage": {
+      "input_tokens": 1341,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 477
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1684
+    },
+    "status": "PASS",
+    "outputSha256": "253a8106948470488792791b4596f656d3bd124ca92ea7bd4d1ebea1f98c5b02",
+    "elapsedMs": 40724,
+    "spell": "A realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.",
+    "anchors": {
+      "mug": "large lower-left trapezoid mug with oval opening",
+      "handle": "right side mug, empty central hole",
+      "books": "two stacked books upper right, diagonal edges",
+      "steam": "one wavy line above mug, no added tabletop props"
+    },
+    "prompt": "Treat this sketch as a binding geometry contract. Fully render THIS drawing. A more beautiful, centered, or canonical scene of the same subject is a failure.\n\nREGISTRATION TEST: if the sketch were laid as a transparent overlay on the result, major contours, centroids, silhouettes, gaps, and the frame would still line up.\n\nLOCK THESE ANCHORS:\n\u2022 Frame \u2014 crop, camera, horizon, perspective cues.\n\u2022 Inventory \u2014 how many of each depicted thing, including repeated parts (windows, limbs, peaks, objects), and the identity of every major form (building, creature, figure, landform, plant, object, mass).\n\u2022 Placement \u2014 each form's canvas position, center, ground/contact points, and spacing from neighbors.\n\u2022 Envelope \u2014 silhouette, relative size, proportions, orientation, pose/gesture, facing, and handmade irregularities (lean, asymmetry, uneven gaps).\n\u2022 Depth \u2014 occlusion order and the shapes of important negative spaces.\nDo not add, remove, merge, split, move, resize, or redesign a major form. Keep empty regions empty.\n\nSPELL:\nA realistic handmade ceramic tea mug beside two worn leather books, soft morning light and richly tactile surfaces.\n\nThe spell is the appearance layer only: style, medium, materials, color, light, weather, mood, and surface detail. Shade and texture the locked geometry. If the spell suggests a different layout, keep the sketch's geometry and apply the requested look to it. If the spell explicitly names a structural change, alter only that named property on the named form, using the smallest local edit; every other anchor stays fixed.\n\nFINISH THE VOLUMES:\nTurn rough strokes into coherent solids, edges, and surfaces that occupy the original envelopes. Read ambiguous or stray marks as the interpretation that changes geometry least; never promote construction lines or scratches into extra subjects. Complete hidden parts only from adjacent marks, already-implied local symmetry, and perspective. Add only subordinate detail that does not cover, compete with, or shift locked forms. Do not straighten, symmetrize, or \"correct\" the drawing.\n\nOutput one finished image. No captions, watermarks, UI, or lettering unless the spell asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P07-cup-books-1.png"
+  },
+  {
+    "id": "P07-dragon-1",
+    "candidate": "P07",
+    "case": "dragon",
+    "repeat": 1,
+    "date": "2026-09-11T05:26:30.235Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "b94ed50b94a7f6f764d6986847a705cf2b1b1722775527e0e306a7d438a4bedd",
+    "promptSha256": "6afaee0ababef9b06e8dc4455135e9b4d1af51d645016dbfdc56fcfa43180f05",
+    "httpStatus": 200,
+    "requestId": "req_6a571e346dcf42479ed77f8f5c40d765",
+    "usage": {
+      "input_tokens": 1347,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 483
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1690
+    },
+    "status": "PASS",
+    "outputSha256": "aba9b9289a8f424bef2327bc77c0dab822dc69ee322afe5ceff36c785e5fac66",
+    "elapsedMs": 40852,
+    "spell": "Bring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.",
+    "anchors": {
+      "pose": "head upper left, long bent neck joins large horizontal oval body",
+      "limbs": "two visible legs below body",
+      "wing": "single quadrilateral wing above middle-right body",
+      "tail": "exits right then bends upward; two small horns"
+    },
+    "prompt": "Treat this sketch as a binding geometry contract. Fully render THIS drawing. A more beautiful, centered, or canonical scene of the same subject is a failure.\n\nREGISTRATION TEST: if the sketch were laid as a transparent overlay on the result, major contours, centroids, silhouettes, gaps, and the frame would still line up.\n\nLOCK THESE ANCHORS:\n\u2022 Frame \u2014 crop, camera, horizon, perspective cues.\n\u2022 Inventory \u2014 how many of each depicted thing, including repeated parts (windows, limbs, peaks, objects), and the identity of every major form (building, creature, figure, landform, plant, object, mass).\n\u2022 Placement \u2014 each form's canvas position, center, ground/contact points, and spacing from neighbors.\n\u2022 Envelope \u2014 silhouette, relative size, proportions, orientation, pose/gesture, facing, and handmade irregularities (lean, asymmetry, uneven gaps).\n\u2022 Depth \u2014 occlusion order and the shapes of important negative spaces.\nDo not add, remove, merge, split, move, resize, or redesign a major form. Keep empty regions empty.\n\nSPELL:\nBring my small friendly dragon to life as a detailed clay creature. Keep its playful, lopsided shape and tiny folded wing.\n\nThe spell is the appearance layer only: style, medium, materials, color, light, weather, mood, and surface detail. Shade and texture the locked geometry. If the spell suggests a different layout, keep the sketch's geometry and apply the requested look to it. If the spell explicitly names a structural change, alter only that named property on the named form, using the smallest local edit; every other anchor stays fixed.\n\nFINISH THE VOLUMES:\nTurn rough strokes into coherent solids, edges, and surfaces that occupy the original envelopes. Read ambiguous or stray marks as the interpretation that changes geometry least; never promote construction lines or scratches into extra subjects. Complete hidden parts only from adjacent marks, already-implied local symmetry, and perspective. Add only subordinate detail that does not cover, compete with, or shift locked forms. Do not straighten, symmetrize, or \"correct\" the drawing.\n\nOutput one finished image. No captions, watermarks, UI, or lettering unless the spell asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P07-dragon-1.png"
+  },
+  {
+    "id": "P08-cottage-1",
+    "candidate": "P08",
+    "case": "cottage",
+    "repeat": 1,
+    "date": "2026-09-11T05:25:04.593Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "6083ce1445f3ceb699633d012f422406285cdfda7e9f33bbc1c3db910d822070",
+    "promptSha256": "2309d2a97fbdc0c1b0705fad1c72980b31de1ea27647cdbed67b98f10a63dc54",
+    "httpStatus": 200,
+    "requestId": "req_82a16dc3fd5a407cbc99d04767df9838",
+    "usage": {
+      "input_tokens": 945,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 81
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1288
+    },
+    "status": "PASS",
+    "outputSha256": "aef9ea8339b83876505e1a640599ece306dddecc33a20907960e428514f43eeb",
+    "elapsedMs": 14932,
+    "spell": "A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "anchors": {
+      "cottage": "lower left, broad asymmetrical triangular roof; door left and round window right",
+      "tree": "right of house, tall oval crown, trunk to ground",
+      "moon": "small upper right",
+      "counts": "one cottage, one tree, one moon; keep large open upper-left sky"
+    },
+    "prompt": "Ignore the sketch layout. Create a grand cinematic castle centered in the frame, a mountain on the left, a river across the foreground and two moons above. Use the theme of this request but invent a more impressive composition: A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.",
+    "comparisonImage": "P08-cottage-1.png"
+  }
+]

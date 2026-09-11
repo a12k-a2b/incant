@@ -1,92 +1,72 @@
-# Incant
+# Incant — the drawing room
 
-A wizard’s canvas for the [Daylight DC-1](https://daylightcomputer.com). Draw a sketch with the stylus, hold the wand and speak a spell, release — the sketch transfigures into a finished image.
+A little ink. A few words. A world of your own.
 
-**Draw. Speak. Transfigure.**
+Incant turns **your sketch** into a finished image. The drawing fixes composition, placement and proportions; your spoken or typed spell supplies material, atmosphere and detail. A wizard’s parchment, a quill, and a small act of transformation.
 
-## Screenshots
+## Open on Daylight
 
-Ornate cabinet is on by default — carved oak, brass, candles, the parchment in a sunken well. Grimoire → **Ornate cabinet** turns it off for the flat folio.
+The private PWA is hosted at **https://incant-web-production.up.railway.app**. Use the room passphrase supplied separately. On DC-1, open it in a current browser, then choose **Install app** or **Add to Home screen**. No provider key is needed on the device when the hosted server is configured.
 
-### Cabinet
+1. Draw with a stylus (or mouse). Finger strokes are ignored.
+2. Hold **Hold to speak**, wait for **Listening**, and describe what the drawing should become. Release to cast. Keyboard users can hold Space or Enter on the same button.
+3. Or type the incantation and choose **Cast spell**.
+4. Save an image, return to your sketch, or try another interpretation. Finished images collect in the local spellbook.
 
-<p>
-<img src="docs/screenshots/01-cabinet-help.png" alt="Cabinet help — how to weave" width="280" />
-<img src="docs/screenshots/02-cabinet-canvas.png" alt="Empty cabinet canvas with wand" width="280" />
-<img src="docs/screenshots/03-cabinet-sketch.png" alt="Ink sketch in the cabinet well" width="280" />
-</p>
+The drawing and spell are saved in this browser. After the installed app shell has loaded once, it can reopen offline for drawing. Voice and image generation need a connection. Download is the durable copy you can keep outside browser storage; clearing site data removes local drafts and images.
 
-<p>
-<img src="docs/screenshots/04-cabinet-grimoire.png" alt="Grimoire settings drawer" width="280" />
-<img src="docs/screenshots/08-cabinet-manifested.png" alt="Transfigured visage in the cabinet" width="280" />
-</p>
+## What changed
 
-### Folio
+- A grayscale-conscious illustrated worktable with a larger parchment, visible tools, readable spell controls and responsive portrait/landscape layouts.
+- A runnable Vite/React app with a small Express server, production Docker build and Railway configuration. The prior web export was missing build files and referenced absent host components.
+- Vector stroke history instead of full-screen bitmap copies. Coalesced input, fixed tool per stroke, consistent canvas/export aspect ratio, undo/redo and persistent drafts.
+- Bounded casts; failed requests settle; previous images/sketch remain available; cancelled requests cannot replace the active page.
+- Final speech is passed directly into casting; early release stops a late microphone grant; listening stops when the app is hidden and after one minute.
+- A private room gate, secure session cookies, request limits and server-held API keys. No silent model fallback.
+- Install manifest and offline app-shell cache. API responses and secrets are never cached by the service worker.
 
-<p>
-<img src="docs/screenshots/05-folio-help.png" alt="Flat folio help overlay" width="280" />
-<img src="docs/screenshots/06-folio-canvas.png" alt="Flat folio empty parchment" width="280" />
-</p>
+## Local development
 
-### Sketch → visage
+Requires Node 22.12+.
 
-A quill sketch of a cottage, then the same composition after the spell:
+```sh
+cd web
+npm ci
+cp .env.example .env
+# Set provider keys in .env. Do not commit it.
+npm run dev
+```
 
-<p>
-<img src="docs/screenshots/12-sketch-cottage.png" alt="Ink sketch of a cottage and moon" width="280" />
-<img src="docs/screenshots/10-visage-cottage.png" alt="Watercolor cottage under a harvest moon" width="280" />
-</p>
+Open http://localhost:5173. For production, set `APP_ACCESS_KEY` to a long private passphrase, then run `npm run build` and `npm start`. Set `HOST=0.0.0.0` on a server. Railway uses the supplied Dockerfile.
 
-A mountain trail:
+Tests: `npm test`, `npm run build`, `npm run test:e2e` (local server required; run `npx playwright install chromium` once). `CHROME_PATH` optionally selects an existing Chromium executable.
 
-<p>
-<img src="docs/screenshots/13-sketch-mountain.png" alt="Ink sketch of mountain peaks" width="280" />
-<img src="docs/screenshots/11-visage-mountain.png" alt="Oil painting of a mountain trail at dawn" width="280" />
-</p>
+Within SolOS, the common harness is:
 
-## How Sketch actually works
+```sh
+./bin/daylight-qa --config incant/qa-projects.json run --profile pr --project incant-web
+```
 
-ChatGPT **Sketch** (`@Sketch`) is a ChatGPT product surface, not a separate developer API. There is no dedicated “sketch mode” endpoint.
+## How the keys and requests travel
 
-The same capability is available to apps through the **Images API**:
+Daylight → Incant on Railway → OpenAI image edits → Daylight.
 
-- Model: `gpt-image-2.5-flare` (fast) or `gpt-image-2.5-sunburst` (precise)
-- Endpoint: `POST /v1/images/edits`
-- You send the sketch as the reference image and the spoken (or typed) spell as the prompt
+Railway keeps `OPENAI_API_KEY`, `GEMINI_API_KEY` and `APP_ACCESS_KEY` in service variables. For voice, Railway issues a one-use short-lived Gemini token; microphone audio streams from the device to Gemini. It does not pass through Railway. In local bring-your-own-key mode, keys entered in the Spellbook are stored in the browser and sent through your app server to the relevant provider. Use only an app server you trust.
 
-That is the official “turn a drawing into a realistic image” workflow. Incant uses it. An iframe of ChatGPT is unnecessary.
+The server does not persist sketches or generated images. The providers receive the content necessary for the requested generation/transcription. Provider API charges and Railway hosting charges apply. Cancelling after submission stops waiting; it cannot guarantee reversal of provider work or billing. The hourly request limit is per running instance and resets on restart; it is not an account spending cap.
 
-Voice uses **Gemini 3.5 Live Transcribe** (`gemini-3.5-transcribe-live`) over the Live API, push-to-talk / manual VAD — hold the wand, speak, release to finalize.
+## PWA versus native ink
 
-## Using it on a DC-1
+The PWA is the primary implementation in this pass. The existing [`android/`](android/) export remains an unverified prototype; its known voice/lifecycle/inking gaps are not advertised as fixed. See [the ink architecture decision](docs/INK-ARCHITECTURE.md) for the note-overlay reuse assessment. Native ink extraction should follow a measured DC-1 pen-latency comparison.
 
-The live app is a portrait, grayscale-first parchment UI with software palm rejection (canvas ignores finger/touch; only pen and mouse draw). The DC-1’s Wacom EMR layer already rejects palms in hardware; Incant double-filters.
+## Evidence and remaining work
 
-1. Open the web app in the DC-1 browser, or install it as a PWA.
-2. Open **Grimoire** and paste an OpenAI key and a Gemini key. Keys stay on the device.
-3. Draw. Hold the wand. Speak. Release.
+See [verification contract](docs/QA-CONTRACT.md), [QA report](docs/evidence/qa-pr/report.md), and [prompt tournament protocol](docs/prompt-tournament/protocol.md). Synthetic browser and live-provider evidence are separate. Actual DC-1 latency, Wacom behavior, suspend/wake, battery and physical UX acceptance remain **BLOCKED / manual** until tested on the device.
 
-There is also a native **Jetpack Compose** app in [`android/`](android/) for sideloading:
+API references: [OpenAI sketch-to-render prompting](https://developers.openai.com/api/docs/guides/image-prompting#turn-a-drawing-into-a-realistic-image), [Gemini Live transcription](https://ai.google.dev/gemini-api/docs/live-api/live-transcribe). The published recipe is an API baseline; no private ChatGPT Sketch system prompt is claimed.
 
-- Custom `SketchView` with stylus pressure and palm rejection (`TOOL_TYPE_FINGER` ignored)
-- Hold-to-talk wand
-- Same OpenAI + Gemini wiring
+## Prompt and deployment evidence
 
-Open `android/` in Android Studio, let Gradle sync, run on the DC-1.
+The selected P04 prompt was chosen from seven candidates across 30 generated test images, judged by Fable and Astra. See [results and limitations](docs/prompt-tournament/RESULTS.md).
 
-## Product choices
-
-- **Ornate cabinet** (on by default) is the cereal-box relic: oak, brass, depth. Off is the flat folio, better if you want a quieter page.
-- **One visage first.** Casting generates one image so it returns quickly. **Another** weaves a new interpretation of the same sketch + spell. Previous results collect as **echoes** along the bottom.
-- **Fourfold visages** (Grimoire toggle, off by default) fires four in parallel. The first to return becomes the large image; the rest fill in as echoes. Four tiny thumbnails of similar images are hard to tell apart on Live Paper, so the large image stays primary.
-- **Compose for Live Paper** (on by default) asks the model for strong value contrast so the result still reads in grayscale.
-- You can always **type** the spell if the microphone is unavailable.
-
-## Grimoire keys
-
-| Key | Used for |
-|---|---|
-| OpenAI | `gpt-image-2.5-flare` / `sunburst` image edits |
-| Gemini | `gemini-3.5-transcribe-live` push-to-talk |
-
-Keys never leave the device except to those APIs.
+The final [repository QA profile](docs/evidence/qa-pr-final/report.md) passed the build, five unit checks, and thirteen browser scenarios. [Hosted checks](docs/evidence/hosted-smoke.json) verify private access and offline draft persistence; [the real hosted cast](docs/evidence/hosted-final-provider.json) returned an image and verified live voice setup. [Deployment provenance](docs/evidence/deployment-final.json) identifies the Railway image and source hashes. These do not certify physical DC-1 pen latency, microphone behavior, or release readiness on hardware.

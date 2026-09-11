@@ -1,0 +1,30 @@
+{
+  "id": "P07-mountain-boat-2",
+  "candidate": "P07",
+  "case": "mountain-boat",
+  "repeat": 2,
+  "date": "2026-09-11T05:38:02.121Z",
+  "model": "gpt-image-2.5-flare",
+  "quality": "medium",
+  "size": "1024x1536",
+  "inputSha256": "0454c98603376db9737232226f290b43b6696551da3551feaee28b844ee2fd76",
+  "promptSha256": "202fa7362f66c475e1e0e47718ea0eeddecc615d77a3ada86bf4e7f9db0eda2c",
+  "httpStatus": 200,
+  "requestId": "req_ce3fbb7e0c964320aee69a59faeccb47",
+  "usage": {
+    "input_tokens": 1339,
+    "input_tokens_details": {
+      "image_tokens": 864,
+      "text_tokens": 475
+    },
+    "output_tokens": 343,
+    "output_tokens_details": {
+      "image_tokens": 343,
+      "text_tokens": 0
+    },
+    "total_tokens": 1682
+  },
+  "status": "PASS",
+  "outputSha256": "32cec8ee775cb890c85068fa61629872308f5efce9dcf4626e87f758d7324b1d",
+  "elapsedMs": 37612
+}

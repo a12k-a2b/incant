@@ -1,0 +1,314 @@
+[
+  {
+    "id": "P04-mountain-boat-1",
+    "candidate": "P04",
+    "case": "mountain-boat",
+    "repeat": 1,
+    "date": "2026-09-11T05:37:48.002Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "0454c98603376db9737232226f290b43b6696551da3551feaee28b844ee2fd76",
+    "promptSha256": "fdffb0d732cb8122e160590ddc083803e2c15067b57c4925bb3f0ebaf672319d",
+    "httpStatus": 200,
+    "requestId": "req_c43a7edf3f764110882adc61ef3e24b1",
+    "usage": {
+      "input_tokens": 1034,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 170
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1377
+    },
+    "status": "PASS",
+    "outputSha256": "9a30a05516d3cb3c42e327193ee90583a61bf64bda22cf93d3f07016913e8a19",
+    "elapsedMs": 14112,
+    "spell": "A luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.",
+    "anchors": {
+      "mountains": "left peak tallest, right peak shorter; same ridge shape",
+      "boat": "small below center; triangular sail points right from vertical mast",
+      "sun": "small upper right",
+      "waterline": "around two thirds down"
+    },
+    "prompt": "Render this sketch into a finished image of the same drawing. The layout is locked: keep every subject's place, relative size, silhouette, pose, and count exactly as drawn. Do not replace it with a different picture of a similar subject.\n\nUse this instruction for materials, lighting, surface detail, and style: A luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.\n\nIf it names a specific change, alter only that and leave the rest as drawn. Read faint, doubled, or incomplete marks as the simplest complete forms already on the page; ignore stray ticks that do not form an object. Do not invent extra parts, objects, or scenery.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P04-mountain-boat-1.png"
+  },
+  {
+    "id": "P04-mountain-boat-2",
+    "candidate": "P04",
+    "case": "mountain-boat",
+    "repeat": 2,
+    "date": "2026-09-11T05:37:47.999Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "0454c98603376db9737232226f290b43b6696551da3551feaee28b844ee2fd76",
+    "promptSha256": "fdffb0d732cb8122e160590ddc083803e2c15067b57c4925bb3f0ebaf672319d",
+    "httpStatus": 200,
+    "requestId": "req_3101c18c6b8b4b1b9626368e43fc21d0",
+    "usage": {
+      "input_tokens": 1034,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 170
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1377
+    },
+    "status": "PASS",
+    "outputSha256": "88744f42b84dbf5a5ed5f2c810e71379059fd98b4f3b6ce20a317dc4b4dcbd83",
+    "elapsedMs": 12709,
+    "spell": "A luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.",
+    "anchors": {
+      "mountains": "left peak tallest, right peak shorter; same ridge shape",
+      "boat": "small below center; triangular sail points right from vertical mast",
+      "sun": "small upper right",
+      "waterline": "around two thirds down"
+    },
+    "prompt": "Render this sketch into a finished image of the same drawing. The layout is locked: keep every subject's place, relative size, silhouette, pose, and count exactly as drawn. Do not replace it with a different picture of a similar subject.\n\nUse this instruction for materials, lighting, surface detail, and style: A luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.\n\nIf it names a specific change, alter only that and leave the rest as drawn. Read faint, doubled, or incomplete marks as the simplest complete forms already on the page; ignore stray ticks that do not form an object. Do not invent extra parts, objects, or scenery.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P04-mountain-boat-2.png"
+  },
+  {
+    "id": "P04-walking-teapot-1",
+    "candidate": "P04",
+    "case": "walking-teapot",
+    "repeat": 1,
+    "date": "2026-09-11T05:37:47.920Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "df211ba4d0244630014d42b20c401af587389bcdd300f015bfa3012fab934fc6",
+    "promptSha256": "76b168cfde0a11593e66a2a28dada8e8a922e0e6e30f72c94e2bb76843b67cd8",
+    "httpStatus": 200,
+    "requestId": "req_3789b968e89a49b48662e1da22f9491a",
+    "usage": {
+      "input_tokens": 1038,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 174
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1381
+    },
+    "status": "PASS",
+    "outputSha256": "675ad67359676f07bad15c67c13157064e323bb34205afba8a64307904be441d",
+    "elapsedMs": 13063,
+    "spell": "An enchanted silver teapot with a smiling face and two little feet, detailed magical realism on a simple background.",
+    "anchors": {
+      "body": "broad round body centered below middle",
+      "spout": "long diagonal spout upper-left",
+      "handle": "loop right side, open hole",
+      "face": "two circular eyes and smile, two feet below body, lid and knob above"
+    },
+    "prompt": "Render this sketch into a finished image of the same drawing. The layout is locked: keep every subject's place, relative size, silhouette, pose, and count exactly as drawn. Do not replace it with a different picture of a similar subject.\n\nUse this instruction for materials, lighting, surface detail, and style: An enchanted silver teapot with a smiling face and two little feet, detailed magical realism on a simple background.\n\nIf it names a specific change, alter only that and leave the rest as drawn. Read faint, doubled, or incomplete marks as the simplest complete forms already on the page; ignore stray ticks that do not form an object. Do not invent extra parts, objects, or scenery.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P04-walking-teapot-1.png"
+  },
+  {
+    "id": "P04-walking-teapot-2",
+    "candidate": "P04",
+    "case": "walking-teapot",
+    "repeat": 2,
+    "date": "2026-09-11T05:38:00.715Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "df211ba4d0244630014d42b20c401af587389bcdd300f015bfa3012fab934fc6",
+    "promptSha256": "76b168cfde0a11593e66a2a28dada8e8a922e0e6e30f72c94e2bb76843b67cd8",
+    "httpStatus": 200,
+    "requestId": "req_e789f4661efd425e9abc33fa8a99b53b",
+    "usage": {
+      "input_tokens": 1038,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 174
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1381
+    },
+    "status": "PASS",
+    "outputSha256": "8eb9bf4c7002e87183af1d0e55cceadd0a048cb6760ee1b807e64c647a0803ec",
+    "elapsedMs": 11199,
+    "spell": "An enchanted silver teapot with a smiling face and two little feet, detailed magical realism on a simple background.",
+    "anchors": {
+      "body": "broad round body centered below middle",
+      "spout": "long diagonal spout upper-left",
+      "handle": "loop right side, open hole",
+      "face": "two circular eyes and smile, two feet below body, lid and knob above"
+    },
+    "prompt": "Render this sketch into a finished image of the same drawing. The layout is locked: keep every subject's place, relative size, silhouette, pose, and count exactly as drawn. Do not replace it with a different picture of a similar subject.\n\nUse this instruction for materials, lighting, surface detail, and style: An enchanted silver teapot with a smiling face and two little feet, detailed magical realism on a simple background.\n\nIf it names a specific change, alter only that and leave the rest as drawn. Read faint, doubled, or incomplete marks as the simplest complete forms already on the page; ignore stray ticks that do not form an object. Do not invent extra parts, objects, or scenery.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P04-walking-teapot-2.png"
+  },
+  {
+    "id": "P07-mountain-boat-1",
+    "candidate": "P07",
+    "case": "mountain-boat",
+    "repeat": 1,
+    "date": "2026-09-11T05:38:01.002Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "0454c98603376db9737232226f290b43b6696551da3551feaee28b844ee2fd76",
+    "promptSha256": "202fa7362f66c475e1e0e47718ea0eeddecc615d77a3ada86bf4e7f9db0eda2c",
+    "httpStatus": 200,
+    "requestId": "req_6b602d5154e441a08995063327034b76",
+    "usage": {
+      "input_tokens": 1339,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 475
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1682
+    },
+    "status": "PASS",
+    "outputSha256": "bb2829958387ff350ca7614497febcd6933c26922e66f559610ed55c6656c2f5",
+    "elapsedMs": 25369,
+    "spell": "A luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.",
+    "anchors": {
+      "mountains": "left peak tallest, right peak shorter; same ridge shape",
+      "boat": "small below center; triangular sail points right from vertical mast",
+      "sun": "small upper right",
+      "waterline": "around two thirds down"
+    },
+    "prompt": "Treat this sketch as a binding geometry contract. Fully render THIS drawing. A more beautiful, centered, or canonical scene of the same subject is a failure.\n\nREGISTRATION TEST: if the sketch were laid as a transparent overlay on the result, major contours, centroids, silhouettes, gaps, and the frame would still line up.\n\nLOCK THESE ANCHORS:\n\u2022 Frame \u2014 crop, camera, horizon, perspective cues.\n\u2022 Inventory \u2014 how many of each depicted thing, including repeated parts (windows, limbs, peaks, objects), and the identity of every major form (building, creature, figure, landform, plant, object, mass).\n\u2022 Placement \u2014 each form's canvas position, center, ground/contact points, and spacing from neighbors.\n\u2022 Envelope \u2014 silhouette, relative size, proportions, orientation, pose/gesture, facing, and handmade irregularities (lean, asymmetry, uneven gaps).\n\u2022 Depth \u2014 occlusion order and the shapes of important negative spaces.\nDo not add, remove, merge, split, move, resize, or redesign a major form. Keep empty regions empty.\n\nSPELL:\nA luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.\n\nThe spell is the appearance layer only: style, medium, materials, color, light, weather, mood, and surface detail. Shade and texture the locked geometry. If the spell suggests a different layout, keep the sketch's geometry and apply the requested look to it. If the spell explicitly names a structural change, alter only that named property on the named form, using the smallest local edit; every other anchor stays fixed.\n\nFINISH THE VOLUMES:\nTurn rough strokes into coherent solids, edges, and surfaces that occupy the original envelopes. Read ambiguous or stray marks as the interpretation that changes geometry least; never promote construction lines or scratches into extra subjects. Complete hidden parts only from adjacent marks, already-implied local symmetry, and perspective. Add only subordinate detail that does not cover, compete with, or shift locked forms. Do not straighten, symmetrize, or \"correct\" the drawing.\n\nOutput one finished image. No captions, watermarks, UI, or lettering unless the spell asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P07-mountain-boat-1.png"
+  },
+  {
+    "id": "P07-mountain-boat-2",
+    "candidate": "P07",
+    "case": "mountain-boat",
+    "repeat": 2,
+    "date": "2026-09-11T05:38:02.121Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "0454c98603376db9737232226f290b43b6696551da3551feaee28b844ee2fd76",
+    "promptSha256": "202fa7362f66c475e1e0e47718ea0eeddecc615d77a3ada86bf4e7f9db0eda2c",
+    "httpStatus": 200,
+    "requestId": "req_ce3fbb7e0c964320aee69a59faeccb47",
+    "usage": {
+      "input_tokens": 1339,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 475
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1682
+    },
+    "status": "PASS",
+    "outputSha256": "32cec8ee775cb890c85068fa61629872308f5efce9dcf4626e87f758d7324b1d",
+    "elapsedMs": 37612,
+    "spell": "A luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.",
+    "anchors": {
+      "mountains": "left peak tallest, right peak shorter; same ridge shape",
+      "boat": "small below center; triangular sail points right from vertical mast",
+      "sun": "small upper right",
+      "waterline": "around two thirds down"
+    },
+    "prompt": "Treat this sketch as a binding geometry contract. Fully render THIS drawing. A more beautiful, centered, or canonical scene of the same subject is a failure.\n\nREGISTRATION TEST: if the sketch were laid as a transparent overlay on the result, major contours, centroids, silhouettes, gaps, and the frame would still line up.\n\nLOCK THESE ANCHORS:\n\u2022 Frame \u2014 crop, camera, horizon, perspective cues.\n\u2022 Inventory \u2014 how many of each depicted thing, including repeated parts (windows, limbs, peaks, objects), and the identity of every major form (building, creature, figure, landform, plant, object, mass).\n\u2022 Placement \u2014 each form's canvas position, center, ground/contact points, and spacing from neighbors.\n\u2022 Envelope \u2014 silhouette, relative size, proportions, orientation, pose/gesture, facing, and handmade irregularities (lean, asymmetry, uneven gaps).\n\u2022 Depth \u2014 occlusion order and the shapes of important negative spaces.\nDo not add, remove, merge, split, move, resize, or redesign a major form. Keep empty regions empty.\n\nSPELL:\nA luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.\n\nThe spell is the appearance layer only: style, medium, materials, color, light, weather, mood, and surface detail. Shade and texture the locked geometry. If the spell suggests a different layout, keep the sketch's geometry and apply the requested look to it. If the spell explicitly names a structural change, alter only that named property on the named form, using the smallest local edit; every other anchor stays fixed.\n\nFINISH THE VOLUMES:\nTurn rough strokes into coherent solids, edges, and surfaces that occupy the original envelopes. Read ambiguous or stray marks as the interpretation that changes geometry least; never promote construction lines or scratches into extra subjects. Complete hidden parts only from adjacent marks, already-implied local symmetry, and perspective. Add only subordinate detail that does not cover, compete with, or shift locked forms. Do not straighten, symmetrize, or \"correct\" the drawing.\n\nOutput one finished image. No captions, watermarks, UI, or lettering unless the spell asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P07-mountain-boat-2.png"
+  },
+  {
+    "id": "P07-walking-teapot-1",
+    "candidate": "P07",
+    "case": "walking-teapot",
+    "repeat": 1,
+    "date": "2026-09-11T05:38:11.926Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "df211ba4d0244630014d42b20c401af587389bcdd300f015bfa3012fab934fc6",
+    "promptSha256": "cb5f6f4d347a9de70580e302264bd00ab6304dd97328df7e20613b92c36c4573",
+    "httpStatus": 200,
+    "requestId": "req_5ecb9afb3fdc4f6b93f6f5f6ed9c49ce",
+    "usage": {
+      "input_tokens": 1343,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 479
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1686
+    },
+    "status": "PASS",
+    "outputSha256": "21896b5c82687d63e9e5fe8165d2e52c7bbe8f0b800aa0f0731ede4a0b5afa23",
+    "elapsedMs": 39405,
+    "spell": "An enchanted silver teapot with a smiling face and two little feet, detailed magical realism on a simple background.",
+    "anchors": {
+      "body": "broad round body centered below middle",
+      "spout": "long diagonal spout upper-left",
+      "handle": "loop right side, open hole",
+      "face": "two circular eyes and smile, two feet below body, lid and knob above"
+    },
+    "prompt": "Treat this sketch as a binding geometry contract. Fully render THIS drawing. A more beautiful, centered, or canonical scene of the same subject is a failure.\n\nREGISTRATION TEST: if the sketch were laid as a transparent overlay on the result, major contours, centroids, silhouettes, gaps, and the frame would still line up.\n\nLOCK THESE ANCHORS:\n\u2022 Frame \u2014 crop, camera, horizon, perspective cues.\n\u2022 Inventory \u2014 how many of each depicted thing, including repeated parts (windows, limbs, peaks, objects), and the identity of every major form (building, creature, figure, landform, plant, object, mass).\n\u2022 Placement \u2014 each form's canvas position, center, ground/contact points, and spacing from neighbors.\n\u2022 Envelope \u2014 silhouette, relative size, proportions, orientation, pose/gesture, facing, and handmade irregularities (lean, asymmetry, uneven gaps).\n\u2022 Depth \u2014 occlusion order and the shapes of important negative spaces.\nDo not add, remove, merge, split, move, resize, or redesign a major form. Keep empty regions empty.\n\nSPELL:\nAn enchanted silver teapot with a smiling face and two little feet, detailed magical realism on a simple background.\n\nThe spell is the appearance layer only: style, medium, materials, color, light, weather, mood, and surface detail. Shade and texture the locked geometry. If the spell suggests a different layout, keep the sketch's geometry and apply the requested look to it. If the spell explicitly names a structural change, alter only that named property on the named form, using the smallest local edit; every other anchor stays fixed.\n\nFINISH THE VOLUMES:\nTurn rough strokes into coherent solids, edges, and surfaces that occupy the original envelopes. Read ambiguous or stray marks as the interpretation that changes geometry least; never promote construction lines or scratches into extra subjects. Complete hidden parts only from adjacent marks, already-implied local symmetry, and perspective. Add only subordinate detail that does not cover, compete with, or shift locked forms. Do not straighten, symmetrize, or \"correct\" the drawing.\n\nOutput one finished image. No captions, watermarks, UI, or lettering unless the spell asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P07-walking-teapot-1.png"
+  },
+  {
+    "id": "P07-walking-teapot-2",
+    "candidate": "P07",
+    "case": "walking-teapot",
+    "repeat": 2,
+    "date": "2026-09-11T05:38:26.376Z",
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1024x1536",
+    "inputSha256": "df211ba4d0244630014d42b20c401af587389bcdd300f015bfa3012fab934fc6",
+    "promptSha256": "cb5f6f4d347a9de70580e302264bd00ab6304dd97328df7e20613b92c36c4573",
+    "httpStatus": 200,
+    "requestId": "req_c7f30e28cc4a40659067e79a62b0e27e",
+    "usage": {
+      "input_tokens": 1343,
+      "input_tokens_details": {
+        "image_tokens": 864,
+        "text_tokens": 479
+      },
+      "output_tokens": 343,
+      "output_tokens_details": {
+        "image_tokens": 343,
+        "text_tokens": 0
+      },
+      "total_tokens": 1686
+    },
+    "status": "PASS",
+    "outputSha256": "f4febfce991cb475ecab6f065ccc93a3ab3ec2471a7f1a8f41a7aff554b4c65e",
+    "elapsedMs": 37490,
+    "spell": "An enchanted silver teapot with a smiling face and two little feet, detailed magical realism on a simple background.",
+    "anchors": {
+      "body": "broad round body centered below middle",
+      "spout": "long diagonal spout upper-left",
+      "handle": "loop right side, open hole",
+      "face": "two circular eyes and smile, two feet below body, lid and knob above"
+    },
+    "prompt": "Treat this sketch as a binding geometry contract. Fully render THIS drawing. A more beautiful, centered, or canonical scene of the same subject is a failure.\n\nREGISTRATION TEST: if the sketch were laid as a transparent overlay on the result, major contours, centroids, silhouettes, gaps, and the frame would still line up.\n\nLOCK THESE ANCHORS:\n\u2022 Frame \u2014 crop, camera, horizon, perspective cues.\n\u2022 Inventory \u2014 how many of each depicted thing, including repeated parts (windows, limbs, peaks, objects), and the identity of every major form (building, creature, figure, landform, plant, object, mass).\n\u2022 Placement \u2014 each form's canvas position, center, ground/contact points, and spacing from neighbors.\n\u2022 Envelope \u2014 silhouette, relative size, proportions, orientation, pose/gesture, facing, and handmade irregularities (lean, asymmetry, uneven gaps).\n\u2022 Depth \u2014 occlusion order and the shapes of important negative spaces.\nDo not add, remove, merge, split, move, resize, or redesign a major form. Keep empty regions empty.\n\nSPELL:\nAn enchanted silver teapot with a smiling face and two little feet, detailed magical realism on a simple background.\n\nThe spell is the appearance layer only: style, medium, materials, color, light, weather, mood, and surface detail. Shade and texture the locked geometry. If the spell suggests a different layout, keep the sketch's geometry and apply the requested look to it. If the spell explicitly names a structural change, alter only that named property on the named form, using the smallest local edit; every other anchor stays fixed.\n\nFINISH THE VOLUMES:\nTurn rough strokes into coherent solids, edges, and surfaces that occupy the original envelopes. Read ambiguous or stray marks as the interpretation that changes geometry least; never promote construction lines or scratches into extra subjects. Complete hidden parts only from adjacent marks, already-implied local symmetry, and perspective. Add only subordinate detail that does not cover, compete with, or shift locked forms. Do not straighten, symmetrize, or \"correct\" the drawing.\n\nOutput one finished image. No captions, watermarks, UI, or lettering unless the spell asks for lettering.\nUse clear silhouettes and value contrast so the image remains legible on a grayscale display.",
+    "comparisonImage": "P07-walking-teapot-2.png"
+  }
+]

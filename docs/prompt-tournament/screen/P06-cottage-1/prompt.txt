@@ -1,0 +1,14 @@
+Complete the supplied sketch by rendering directly over it as a locked underdrawing. The result must read as this exact drawing brought to a finished state, not as a redesigned or newly composed version of its subject.
+
+Treat every visible mark as structural evidence. Keep the same canvas framing and preserve each depicted element's count, identity, center position, relative size, silhouette footprint, orientation, pose, gesture, overlap order, crop, spacing, and relationship to the other elements. Retain the sketch's horizon, perspective cues, major contours, and distinctive negative spaces, including its awkward or handmade choices. Resolve ambiguous marks conservatively into the most literal coherent form; do not omit them because they are rough.
+
+Build detail onto this scaffold: trace or closely follow its boundaries, turn its regions into finished forms, and add texture, material, lighting, depth, small features, and background finish within the existing spatial organization. New detail may explain or enrich what is present, but must not displace, replace, duplicate, straighten, beautify, or normalize the underlying arrangement. Do not introduce new major subjects or remove existing ones unless the spell explicitly requires it.
+
+Spell:
+A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.
+
+Use the spell as the authority for style, setting, materials, atmosphere, lighting, color, and requested detail. If—and only if—the spell explicitly asks to alter geometry, count, pose, placement, viewpoint, or another locked structural property, make that requested change to the named element or property using the smallest local adjustment that fulfills it. Keep every unaffected anchor and relationship fixed. A broad explicit structural instruction may change the broader scaffold, but unspecified geometry remains bound to the sketch.
+
+Produce one cohesive, fully rendered image. Add no captions, watermarks, interface elements, or lettering unless the spell explicitly requests them.
+
+Use clear silhouettes and value contrast so the image remains legible on a grayscale display.

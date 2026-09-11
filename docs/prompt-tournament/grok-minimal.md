@@ -1,0 +1,1 @@
+Locks the sketch's structure, then uses the spell only for appearance and named edits. Conservative reading of messy marks keeps the result the user's drawing, finished—not a prettier replacement.

@@ -1,0 +1,15 @@
+{
+  "date": "2026-09-11T05:45:07.758Z",
+  "url": "https://incant-web-production.up.railway.app",
+  "health": 200,
+  "unauthenticatedCast": 401,
+  "wrongPassphrase": 401,
+  "correctPassphrase": 200,
+  "cookieSecure": true,
+  "serverProviders": {
+    "unlocked": true,
+    "imageReady": true,
+    "voiceReady": true
+  },
+  "offlineDraft": true
+}

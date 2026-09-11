@@ -1,0 +1,10 @@
+{
+  "requestedModel": "gpt-5.6-sol",
+  "effort": "high",
+  "agents": [
+    "sol_fidelity_prompt",
+    "sol_completion_prompt"
+  ],
+  "source": "Codex spawn_agent results",
+  "usage": "unavailable"
+}

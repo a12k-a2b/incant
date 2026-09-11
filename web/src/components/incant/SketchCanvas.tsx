@@ -1,12 +1,13 @@
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
-
+  DRAFT_KEY,
+  hasInk,
+  validDrawing,
+  type Drawing,
+  type Point,
+  type Stroke,
+} from "@/lib/drawing";
 export type Tool = "quill" | "rubber";
-
 export type SketchCanvasHandle = {
   exportPng: () => string | null;
   clear: () => void;
@@ -16,252 +17,182 @@ export type SketchCanvasHandle = {
   canUndo: () => boolean;
   canRedo: () => boolean;
 };
-
-type Point = { x: number; y: number; p: number };
-
 type Props = {
   tool: Tool;
   locked: boolean;
   className?: string;
   onChange?: () => void;
+  onStorageError?: (message: string) => void;
 };
-
-function isDrawPointer(e: PointerEvent) {
-  if (e.pointerType === "touch") return false;
-  return e.pointerType === "pen" || e.pointerType === "mouse";
-}
-
-function isEraserEvent(e: PointerEvent, tool: Tool) {
-  if (tool === "rubber") return true;
-  if (e.button === 5) return true;
-  if ((e.buttons & 32) === 32) return true;
-  return false;
-}
-
+const W = 1024,
+  H = 1536,
+  PAPER = "#f7f3e8",
+  INK = "#292820";
 export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
-  function SketchCanvas({ tool, locked, className, onChange }, ref) {
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const overlayRef = useRef<HTMLCanvasElement | null>(null);
-    const strokes = useRef<ImageData[]>([]);
-    const future = useRef<ImageData[]>([]);
-    const drawing = useRef(false);
-    const last = useRef<Point | null>(null);
-    const empty = useRef(true);
-    const onChangeRef = useRef(onChange);
-    onChangeRef.current = onChange;
-
-    const sizeCanvas = () => {
-      const canvas = canvasRef.current;
-      const overlay = overlayRef.current;
-      if (!canvas || !overlay) return;
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const rect = parent.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const nextW = Math.max(1, Math.floor(rect.width * dpr));
-      const nextH = Math.max(1, Math.floor(rect.height * dpr));
-      if (canvas.width === nextW && canvas.height === nextH) return;
-
-      const keep = canvas.width > 0 && canvas.height > 0 ? canvas.toDataURL() : null;
-
-      for (const node of [canvas, overlay]) {
-        node.width = nextW;
-        node.height = nextH;
-        node.style.width = `${rect.width}px`;
-        node.style.height = `${rect.height}px`;
-        const ctx = node.getContext("2d");
-        if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      fillPaper(canvas);
-
-      if (keep) {
-        const img = new Image();
-        img.onload = () => {
-          const ctx = canvas.getContext("2d");
-          if (!ctx) return;
-          ctx.drawImage(img, 0, 0, rect.width, rect.height);
-          snapshot();
-        };
-        img.src = keep;
-      } else {
-        strokes.current = [];
-        future.current = [];
-        snapshot();
-      }
-    };
-
-    const fillPaper = (canvas: HTMLCanvasElement) => {
-      const ctx = canvas.getContext("2d");
+  function SketchCanvas(
+    { tool, locked, className, onChange, onStorageError },
+    ref,
+  ) {
+    const canvas = useRef<HTMLCanvasElement>(null),
+      strokes = useRef<Drawing>([]),
+      future = useRef<Drawing>([]);
+    const current = useRef<Stroke | null>(null),
+      pointer = useRef<number | null>(null);
+    const callbacks = useRef({ onChange, onStorageError });
+    callbacks.current = { onChange, onStorageError };
+    const segment = (a: Point, b: Point, eraser: boolean) => {
+      const ctx = canvas.current?.getContext("2d");
       if (!ctx) return;
-      const { width, height } = canvas.getBoundingClientRect();
-      ctx.save();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.fillStyle = "#f3efe4";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.restore();
-      ctx.fillStyle = "#f3efe4";
-      ctx.fillRect(0, 0, width, height);
+      ctx.strokeStyle = ctx.fillStyle = eraser ? PAPER : INK;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = eraser ? 40 + (a.p + b.p) * 20 : 2 + (a.p + b.p) * 3;
+      ctx.beginPath();
+      ctx.moveTo(a.x * W, a.y * H);
+      ctx.lineTo(b.x * W, b.y * H);
+      ctx.stroke();
+      if (a.x === b.x && a.y === b.y) {
+        ctx.beginPath();
+        ctx.arc(a.x * W, a.y * H, ctx.lineWidth / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
     };
-
-    const snapshot = () => {
-      const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
-      if (!canvas || !ctx) return;
-      const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      strokes.current.push(data);
-      if (strokes.current.length > 28) strokes.current.shift();
-      future.current = [];
+    const paint = () => {
+      const ctx = canvas.current?.getContext("2d");
+      if (!ctx) return;
+      ctx.fillStyle = PAPER;
+      ctx.fillRect(0, 0, W, H);
+      for (const s of strokes.current)
+        s.points.forEach((p, i) =>
+          segment(s.points[Math.max(0, i - 1)], p, s.eraser),
+        );
     };
-
-    const restore = (data: ImageData) => {
-      const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
-      if (!canvas || !ctx) return;
-      ctx.putImageData(data, 0, 0);
+    const changed = () => {
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(strokes.current));
+      } catch {
+        callbacks.current.onStorageError?.(
+          "This browser could not save your draft. Download the sketch before leaving.",
+        );
+      }
+      callbacks.current.onChange?.();
     };
-
+    useEffect(() => {
+      try {
+        const saved = JSON.parse(localStorage.getItem(DRAFT_KEY) || "[]");
+        if (validDrawing(saved)) strokes.current = saved;
+      } catch {
+        /* keep blank page */
+      }
+      paint();
+      callbacks.current.onChange?.();
+    }, []);
     useImperativeHandle(ref, () => ({
-      exportPng: () => canvasRef.current?.toDataURL("image/png") ?? null,
+      exportPng: () => canvas.current?.toDataURL("image/png") ?? null,
       clear: () => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        fillPaper(canvas);
-        empty.current = true;
-        snapshot();
-        onChangeRef.current?.();
+        future.current = [];
+        strokes.current = [];
+        paint();
+        changed();
       },
       undo: () => {
-        if (strokes.current.length < 2) return;
-        const current = strokes.current.pop();
-        if (current) future.current.push(current);
-        const prev = strokes.current[strokes.current.length - 1];
-        if (prev) restore(prev);
-        onChangeRef.current?.();
+        const s = strokes.current.pop();
+        if (s) future.current.push(s);
+        paint();
+        changed();
       },
       redo: () => {
-        const next = future.current.pop();
-        if (!next) return;
-        restore(next);
-        strokes.current.push(next);
-        onChangeRef.current?.();
+        const s = future.current.pop();
+        if (s) strokes.current.push(s);
+        paint();
+        changed();
       },
-      isEmpty: () => empty.current,
-      canUndo: () => strokes.current.length > 1,
+      isEmpty: () => !hasInk(strokes.current),
+      canUndo: () => strokes.current.length > 0,
       canRedo: () => future.current.length > 0,
     }));
-
     useEffect(() => {
-      sizeCanvas();
-      const parent = canvasRef.current?.parentElement;
-      if (!parent) return;
-      const observer = new ResizeObserver(() => {
-        sizeCanvas();
-        onChangeRef.current?.();
-      });
-      observer.observe(parent);
-      return () => observer.disconnect();
-    }, []);
-
-    useEffect(() => {
-      const canvas = overlayRef.current;
-      const ink = canvasRef.current;
-      if (!canvas || !ink) return;
-
-      const pointFrom = (e: PointerEvent): Point => {
-        const rect = canvas.getBoundingClientRect();
+      const node = canvas.current;
+      if (!node) return;
+      const point = (e: PointerEvent): Point => {
+        const r = node.getBoundingClientRect();
         return {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-          p: e.pressure > 0 ? e.pressure : 0.45,
+          x: Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)),
+          y: Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)),
+          p: e.pressure || 0.45,
         };
       };
-
-      const strokeWidth = (p: number, eraser: boolean) => {
-        if (eraser) return 14 + p * 28;
-        return 1.15 + p * 5.4;
-      };
-
-      const drawSegment = (
-        ctx: CanvasRenderingContext2D,
-        a: Point,
-        b: Point,
-        eraser: boolean,
-      ) => {
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.strokeStyle = eraser ? "#f3efe4" : "#1a1814";
-        ctx.globalCompositeOperation = "source-over";
-        ctx.lineWidth = strokeWidth((a.p + b.p) / 2, eraser);
-        ctx.beginPath();
-        const mx = (a.x + b.x) / 2;
-        const my = (a.y + b.y) / 2;
-        ctx.moveTo(a.x, a.y);
-        ctx.quadraticCurveTo(a.x, a.y, mx, my);
-        ctx.stroke();
-      };
-
-      const onDown = (e: PointerEvent) => {
-        if (locked) return;
-        if (!isDrawPointer(e)) return;
-        e.preventDefault();
-        canvas.setPointerCapture(e.pointerId);
-        drawing.current = true;
-        last.current = pointFrom(e);
-        empty.current = false;
-      };
-
-      const onMove = (e: PointerEvent) => {
-        if (!drawing.current || !last.current) return;
-        if (!isDrawPointer(e)) return;
-        e.preventDefault();
-        const next = pointFrom(e);
-        const inkCtx = ink.getContext("2d");
-        if (!inkCtx) return;
-        drawSegment(inkCtx, last.current, next, isEraserEvent(e, tool));
-        last.current = next;
-      };
-
-      const onUp = (e: PointerEvent) => {
-        if (!drawing.current) return;
-        drawing.current = false;
-        last.current = null;
-        try {
-          canvas.releasePointerCapture(e.pointerId);
-        } catch {
-          /* already released */
+      const down = (e: PointerEvent) => {
+        if (
+          locked ||
+          pointer.current !== null ||
+          !["pen", "mouse"].includes(e.pointerType) ||
+          (e.pointerType === "mouse" && e.button !== 0)
+        )
+          return;
+        if (strokes.current.length >= 2000) {
+          callbacks.current.onStorageError?.(
+            "This parchment is full. Save your sketch before starting another page.",
+          );
+          return;
         }
-        snapshot();
-        onChangeRef.current?.();
+        e.preventDefault();
+        node.setPointerCapture(e.pointerId);
+        pointer.current = e.pointerId;
+        current.current = {
+          eraser: tool === "rubber" || e.button === 5 || (e.buttons & 32) !== 0,
+          points: [point(e)],
+        };
+        segment(
+          current.current.points[0],
+          current.current.points[0],
+          current.current.eraser,
+        );
       };
-
-      canvas.addEventListener("pointerdown", onDown);
-      canvas.addEventListener("pointermove", onMove);
-      canvas.addEventListener("pointerup", onUp);
-      canvas.addEventListener("pointercancel", onUp);
-      canvas.addEventListener("lostpointercapture", onUp);
-
+      const move = (e: PointerEvent) => {
+        const s = current.current;
+        if (e.pointerId !== pointer.current || !s) return;
+        e.preventDefault();
+        for (const sample of e.getCoalescedEvents?.().length
+          ? e.getCoalescedEvents()
+          : [e]) {
+          if (s.points.length >= 20000) break;
+          const next = point(sample);
+          segment(s.points[s.points.length - 1], next, s.eraser);
+          s.points.push(next);
+        }
+      };
+      const finish = (e?: PointerEvent) => {
+        if (!current.current || (e && e.pointerId !== pointer.current)) return;
+        strokes.current.push(current.current);
+        future.current = [];
+        current.current = null;
+        pointer.current = null;
+        changed();
+      };
+      node.addEventListener("pointerdown", down);
+      node.addEventListener("pointermove", move);
+      node.addEventListener("pointerup", finish);
+      node.addEventListener("pointercancel", finish);
+      node.addEventListener("lostpointercapture", finish);
       return () => {
-        canvas.removeEventListener("pointerdown", onDown);
-        canvas.removeEventListener("pointermove", onMove);
-        canvas.removeEventListener("pointerup", onUp);
-        canvas.removeEventListener("pointercancel", onUp);
-        canvas.removeEventListener("lostpointercapture", onUp);
+        finish();
+        node.removeEventListener("pointerdown", down);
+        node.removeEventListener("pointermove", move);
+        node.removeEventListener("pointerup", finish);
+        node.removeEventListener("pointercancel", finish);
+        node.removeEventListener("lostpointercapture", finish);
       };
     }, [tool, locked]);
-
     return (
-      <div className={className}>
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 h-full w-full"
-          aria-hidden
-        />
-        <canvas
-          ref={overlayRef}
-          className="absolute inset-0 h-full w-full touch-none"
-          style={{ touchAction: "none" }}
-        />
-      </div>
+      <canvas
+        ref={canvas}
+        width={W}
+        height={H}
+        className={className}
+        style={{ touchAction: "none" }}
+        aria-label="Drawing parchment. Use your stylus or mouse; fingers are ignored."
+      />
     );
   },
 );

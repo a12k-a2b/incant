@@ -12,7 +12,14 @@ export function ChamberShell() {
         <span className="chamber-flame" />
       </div>
       <svg className="chamber-crest" viewBox="0 0 64 64" fill="none">
-        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="1.4" opacity="0.7" />
+        <circle
+          cx="32"
+          cy="32"
+          r="28"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          opacity="0.7"
+        />
         <path
           d="M32 10 L36 22 H48 L38 30 L42 42 L32 34 L22 42 L26 30 L16 22 H28 Z"
           fill="currentColor"

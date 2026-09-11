@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "projects": [
+    {
+      "id": "incant-web",
+      "path": "incant/web",
+      "kind": "pwa-and-private-image-backend",
+      "checks": [
+        {
+          "id": "production-build",
+          "description": "TypeScript and production PWA build",
+          "command": [
+            "npm",
+            "run",
+            "build"
+          ],
+          "profiles": [
+            "pr",
+            "nightly",
+            "release"
+          ],
+          "timeout_seconds": 180,
+          "required": true
+        },
+        {
+          "id": "unit-contracts",
+          "description": "Malformed image/network handling and room authentication negative controls",
+          "command": [
+            "npm",
+            "test"
+          ],
+          "profiles": [
+            "pr",
+            "nightly",
+            "release"
+          ],
+          "timeout_seconds": 120,
+          "required": true
+        },
+        {
+          "id": "browser-flows",
+          "description": "Synthetic browser ink, recovery, cast, voice-race, dialog and responsive checks; requires local server on port5173",
+          "command": [
+            "npm",
+            "run",
+            "test:e2e"
+          ],
+          "profiles": [
+            "pr",
+            "nightly",
+            "release"
+          ],
+          "timeout_seconds": 240,
+          "required": true
+        }
+      ]
+    }
+  ],
+  "apps": []
+}

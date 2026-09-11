@@ -113,10 +113,7 @@ export function Wand({
             fill="var(--color-parchment)"
             opacity="0.85"
           />
-          <path
-            d="M32 6 L33.5 12 L32 11 L30.5 12 Z"
-            fill="currentColor"
-          />
+          <path d="M32 6 L33.5 12 L32 11 L30.5 12 Z" fill="currentColor" />
         </svg>
 
         {held ? (

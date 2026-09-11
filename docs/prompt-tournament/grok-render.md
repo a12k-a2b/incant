@@ -1,0 +1,1 @@
+Treats the sketch as a locked underdrawing so the model may only densify materials, light, and style inside existing contours. That spatial rule preserves layout better than a generic keep-the-composition request. Conservative mark-reading plus scoped spell edits block extra objects and unsolicited redesign while still applying the spoken finish.

@@ -1,0 +1,36 @@
+{
+  "requestedModel": "claude-fable-5-1",
+  "route": "existing Claude Code Max subscription",
+  "isError": false,
+  "turns": 11,
+  "servedModelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 1360,
+      "outputTokens": 15,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.001435,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "thinkingTokens": 0,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-fable-5-1": {
+      "inputTokens": 98,
+      "outputTokens": 16273,
+      "cacheReadInputTokens": 54875,
+      "cacheCreationInputTokens": 37601,
+      "webSearchRequests": 0,
+      "costUSD": 1.5803687499999999,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 10836,
+      "canonicalModel": "claude-fable-5-1",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  }
+}

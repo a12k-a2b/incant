@@ -1,0 +1,227 @@
+{
+  "status": "PASS",
+  "observations": [
+    {
+      "id": "P01-cottage-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 4,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Verified anchors against sketch pixels: roof peak sits left of center (~23% of panel width vs ~28% in sketch) with the longer right slope and chimney on the right slope; door on the left wall and round window on the right wall as drawn. Tree crown is a narrow tall oval right of the house (crown ~29% of panel width, closest of all candidates to the sketch's ~25%), trunk widens to the ground. Moon is a small disc at ~78% x / 17% y matching the sketch circle. Upper-left sky left open with only cloud wash. Counts exact: one cottage, one tree, one moon; only grass texture added. Rendered entirely in monochrome ink-wash; watercolor storybook mood is present but no color, so spell fidelity slightly reduced."
+    },
+    {
+      "id": "P01-cup-books-1",
+      "composition_placement": 4,
+      "proportions_silhouette": 3.5,
+      "subjects_counts_pose": 3,
+      "spell_fidelity": 4.5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Mug trapezoid (wide top, narrow base, oval rim) at lower-left center matches the sketch footprint (~34% x center vs ~39% in sketch, top ~46% y, base ~78% y). Steam wisp present above the mug. Two books upper right with the upper book standing upright on a flat lower book, matching the sketch's tall parallelogram over flatter shape. DEVIATION: the sketch's angular handle on the right side of the mug with an empty central hole is entirely absent; the mug is a handleless cup. Books are enlarged and run off the right crop (sketch books end at ~95% width). Leaf-shadow window light and wooden table are supported atmosphere."
+    },
+    {
+      "id": "P01-dragon-1",
+      "composition_placement": 5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Head at upper left with two horns, single eye dot, and diagonal beak/mouth line exactly as sketched; bent neck descends to a large horizontal oval body (~46% panel width vs 44% in sketch). Single kite-shaped folded wing above middle-right of body with top-left corner at ~44% x / 31% y (sketch ~48% / 32%). Tail exits body right, dips, then bends upward to a tip at ~91% x / 42% y (sketch ~94% / 43%). Two legs below body, both feet pointing right like the sketch's L-shaped feet. Clay texture with spots is finish inside the forms; cream background retained. Body slightly rounder than the sketch oval."
+    },
+    {
+      "id": "P02-cottage-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 4,
+      "subjects_counts_pose": 4.5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Asymmetric roof with peak left of center and chimney on the longer right slope matches; door left, round lit window right on the house body; moon small at upper right ~78% x. Tree stands right of house with trunk reaching the ground and crown top at ~y 27% like the sketch. Crown is rounder and broader (~39% of panel width vs ~25% in sketch). Unsupported subordinate additions: distant treeline/hills behind the tree, bushes flanking the house, small rocks. Upper-left sky remains open. Full color watercolor storybook treatment."
+    },
+    {
+      "id": "P02-cup-books-1",
+      "composition_placement": 4,
+      "proportions_silhouette": 3,
+      "subjects_counts_pose": 2.5,
+      "spell_fidelity": 4.5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Mug placed at the sketch's lower-left position with matching trapezoid taper and oval rim. DEVIATIONS: handle absent (sketch shows an angular loop with an empty hole on the mug's right); the steam line is only a barely perceptible wisp above the rim; both books are rendered as thick brick-like blocks stacked flat rather than the sketch's tall thin upper book over a flatter lower one, and both run off the right crop. Window-bar shadows and wooden table are supported atmosphere."
+    },
+    {
+      "id": "P02-dragon-1",
+      "composition_placement": 5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Registration with the sketch is close: horned head upper left with eye and beak line, bent neck, large horizontal oval body spanning ~660-890 px of the right panel, single folded kite wing above middle-right body, tail exiting right then bending upward to ~91% x / 42% y. Two legs with right-pointing feet below the body. Smooth grey clay on cream background; nothing added. Body slightly rounder than the sketch oval."
+    },
+    {
+      "id": "P03-cottage-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 4,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Cottage lower left with peak-left asymmetric roof, chimney on right slope, door left and round window right; moon small upper right; tree right of house with trunk to ground; upper-left sky open. Counts exact with no extra objects beyond grass and a dark bush at the left corner. Crown is broad and round (~42% of panel width) versus the sketch's narrow oval (~25%), the main proportion deviation. Blue night watercolor with storybook glow fulfills the spell."
+    },
+    {
+      "id": "P03-cup-books-1",
+      "composition_placement": 4,
+      "proportions_silhouette": 3,
+      "subjects_counts_pose": 3,
+      "spell_fidelity": 4,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Mug at the sketch position with correct taper and rim; steam wisp visible above the rim. DEVIATIONS: handle absent; books rendered as two thick flat volumes stacked with an offset, not the tall standing upper book the sketch's parallelogram implies, and they run off the right crop. Rendered in monochrome on a stone slab; realistic tactile surfaces are present but the greyscale and stone table diverge from 'soft morning light' warmth, so spell fidelity slightly lower."
+    },
+    {
+      "id": "P03-dragon-1",
+      "composition_placement": 5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 4.5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Head, horns, eye, beak line, bent neck, oval body, single folded wing above middle-right body, and upward-bending tail all sit on the sketch's coordinates (wing top ~31% y, tail tip ~42% y). DEVIATION: the left foot points backward/left, whereas the sketch's left foot L points right like the right foot. Cream paper replaced by a grey studio gradient backdrop, an acceptable atmosphere fill. Clay surface finish is convincing."
+    },
+    {
+      "id": "P04-cottage-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Roof peak left of center with longer right slope and chimney at ~34-41% x (sketch ~39-45%); door left, round window right; moon at ~78% x / 17% y. Tree crown is a tall narrow oval (~31% of panel width, close to the sketch's ~25%) with trunk widening to the ground, the closest crown match among the color candidates. Upper-left sky open; nothing added beyond grass and a small bush at lower left. Red brick chimney cap and glowing window are finish inside drawn shapes."
+    },
+    {
+      "id": "P04-cup-books-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 3.5,
+      "subjects_counts_pose": 3,
+      "spell_fidelity": 4.5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Mug trapezoid at the sketch's lower-left position with matching rim height (~47% y) and base (~79% y); clear steam wisp above. Two books at upper right fully inside the frame ending at ~94% width (sketch ~95%), upper book standing tilted on a flat lower book, reproducing the sketch's diagonal edges. DEVIATION: handle absent from the mug's right side. Wall light patches and wooden table are supported atmosphere."
+    },
+    {
+      "id": "P04-dragon-1",
+      "composition_placement": 5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Horned head upper left with eye and beak, bent neck into a large horizontal oval body, one folded quadrilateral wing above middle-right of body (top ~y 30%), tail exiting right and bending upward to ~91% x / 41% y, two legs with right-pointing feet. Cream background kept; no additions. Grey clay reads as 'detailed clay creature'. Body slightly rounder than sketch."
+    },
+    {
+      "id": "P05-cottage-1",
+      "composition_placement": 4,
+      "proportions_silhouette": 4,
+      "subjects_counts_pose": 4.5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Cottage, tree, and moon occupy the sketch's positions: peak-left roof with right-slope chimney, door left, round window right, moon upper right. DEVIATIONS: the tree crown is much larger and rounder than the sketch oval (crown bottom near 64% y vs 58% in sketch) with spreading branches; unsupported additions include chimney smoke, stars, distant hills at right, a path, flowers and bushes. Upper-left sky still mostly open. Rich color watercolor storybook rendering."
+    },
+    {
+      "id": "P05-cup-books-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 3.5,
+      "subjects_counts_pose": 3,
+      "spell_fidelity": 4.5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Mug at the sketch position with correct taper; steam wisp present. Two books upper right, upper book standing tilted on a flat lower book, edges diagonal as sketched, ending near the right margin. DEVIATION: handle absent from the mug's right side. Warm window light and wood table match 'soft morning light'."
+    },
+    {
+      "id": "P05-dragon-1",
+      "composition_placement": 5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "All sketch anchors register: horned head upper left, bent neck, horizontal oval body, single folded wing above middle-right body with visible inner fold like the sketch's V line, tail exiting right and bending upward to ~92% x / 40% y, two legs with both feet pointing right. Cream paper replaced by grey gradient studio backdrop; no added objects."
+    },
+    {
+      "id": "P06-cottage-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 4,
+      "subjects_counts_pose": 4.5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Cottage lower left with peak-left roof, chimney on right slope, door left, round window right; moon small at upper right; tree right of house with trunk to ground; upper-left sky open. Crown broader and rounder (~39% of panel width) than the sketch oval. Unsupported additions: chimney smoke, stars, distant hills, bushes and flowers around the house. Color watercolor storybook look fulfills the spell."
+    },
+    {
+      "id": "P06-cup-books-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 3.5,
+      "subjects_counts_pose": 3,
+      "spell_fidelity": 4.5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Mug at the sketch's lower-left position with correct trapezoid taper and oval rim; clear steam wisp. Two books upper right, upper standing slightly tilted on a flat lower book, matching diagonal edges, ending inside the frame. DEVIATION: handle absent. Leaf shadows and wooden table are supported atmosphere."
+    },
+    {
+      "id": "P06-dragon-1",
+      "composition_placement": 5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Head with two horns, eye, and beak at upper left; bent neck; large horizontal oval body; one folded quadrilateral wing above middle-right body (top ~y 31%); tail exits right, dips, then rises to ~91% x / 42% y; two legs with right-pointing feet. Cream paper replaced by grey gradient backdrop; no added objects."
+    },
+    {
+      "id": "P07-cottage-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Peak-left asymmetric roof with chimney on the right slope, door left and round window right, moon at ~78% x / 17% y all match sketch pixels. Tree crown is a tall narrow oval (~31% of panel width) with trunk widening to the ground, close to the sketch. Upper-left sky open. Small subordinate additions: stars, distant treeline, a path from the door. Color watercolor storybook rendering."
+    },
+    {
+      "id": "P07-cup-books-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 3.5,
+      "subjects_counts_pose": 3,
+      "spell_fidelity": 4.5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Mug at the sketch position with matching taper and rim height; a thin but visible steam wisp above. Two books upper right, upper standing tilted on a flat lower book with diagonal edges, contained inside the frame. DEVIATION: handle absent from the mug's right side. Leaf shadows on the wall and wooden table are supported atmosphere."
+    },
+    {
+      "id": "P07-dragon-1",
+      "composition_placement": 5,
+      "proportions_silhouette": 4,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Horned head upper left with eye and cream beak wedge, bent neck, single folded wing with cream membrane above middle-right body, tail exiting right and bending upward to ~92% x / 38% y, two legs with right-pointing feet. DEVIATIONS in proportion: body is rounder and sits higher (top ~43% y vs ~48% in sketch) and the wing top rises to ~27% y versus ~32% in the sketch. Cream background kept; green clay is a plausible reading of 'clay creature'."
+    },
+    {
+      "id": "P08-cottage-1",
+      "composition_placement": 0.5,
+      "proportions_silhouette": 0.5,
+      "subjects_counts_pose": 0.5,
+      "spell_fidelity": 2.5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": true,
+      "evidence": "Control case; result is a replacement picture. Sketch has one cottage at lower left, one tree right of it, one small moon upper right, and open upper-left sky. Result places a large castle centered on a hill, a snow mountain filling the upper left, a river across the foreground with a stone bridge, two moons in the sky, a cottage relocated to the lower right, and a tree at the far right edge. Cottage roof asymmetry and door/window layout are not preserved. Beautifully finished watercolor but nothing registers with the sketch; severe geometry failure, capped at 50."
+    }
+  ],
+  "ranking": ["P04", "P07", "P06", "P01", "P05", "P02", "P03", "P08"],
+  "summary": "All 22 comparison images were read and inspected; no results were missing. Weighted totals per case (0-100): cottage P01 91.5, P02 90, P03 92, P04 94.5, P05 87, P06 90, P07 94.5, P08 25 (capped 50 but severe); cup-books P01 77, P02 72.5, P03 73, P04 80, P05 80, P06 80, P07 80; dragon P01 97.5, P02 97.5, P03 94, P04 97.5, P05 97.5, P06 97.5, P07 95. Candidate sums: P04 272, P07 269.5, P06 267.5, P01 266, P05 264.5, P02 260, P03 259. P08 is the misleading control: its prompt tells the model to ignore the sketch and the output confirms it (castle, mountain, river, two moons), so it is the only severe geometry failure. Key systematic finding: every one of the seven cup-books outputs omits the mug handle that the sketch clearly draws as an angular loop with an empty hole on the mug's right side; this is a component omission rather than a missing major subject, so I did not flag it as severe, but if the tournament treats the handle as a major form all seven cup-books rows should be capped at 50 and the ranking is unchanged since the omission is uniform. Cup-books therefore discriminates mainly on book shape (P02 and P03 rendered flat brick stacks that run off the crop; P04-P07 rendered the sketch's standing-upper-book reading inside the frame) and steam visibility (P02 nearly invisible). Cottage discriminates on tree-crown proportion (P01, P04, P07 kept the narrow oval; P02, P03, P05, P06 broadened it) and on unsupported additions (P05 and P06 added smoke, stars, hills, paths). Dragon outputs are near-identical across candidates; only P03's reversed left foot and P07's raised body and wing separate them. Uncertainties: pixel coordinate estimates are visual approximations from the downscaled comparison panels, so differences under roughly 5% of panel width should be treated as ties; P01 and P03 monochrome renderings were judged as slightly weaker spell matches for color-implying spells, which is a judgment call. The separation between P04, P07, P06, and P01 is within a few points and would need repeats to confirm."
+}

@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-11T05:45:08.902Z",
+  "type": "live-provider-synthetic-sketch",
+  "model": "gpt-image-2.5-flare",
+  "elapsedMs": 13639,
+  "httpStatus": 200,
+  "imageCast": "PASS",
+  "voiceToken": "PASS",
+  "voiceTokenStatus": 200,
+  "voiceSetup": "PASS"
+}

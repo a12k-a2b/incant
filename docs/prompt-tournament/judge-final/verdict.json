@@ -1,0 +1,87 @@
+{
+  "status": "PASS",
+  "observations": [
+    {
+      "id": "P04-mountain-boat-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 4,
+      "subjects_counts_pose": 4,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Left peak apex sits at ~30% across / ~21% down and right peak at ~59% / ~29%, matching the sketch's apexes (29%/21% and 60%/31%); left peak remains tallest with the sketch's interior ridge crease visible. Sun is upper right at ~82%/15% versus sketch ~81%/16%, but enlarged with a wide glow halo. Waterline at ~67% down (sketch 68%). Sail is a right-pointing triangle on a vertical mast whose top (~51% down) crosses the horizon as drawn. Deviations: hull is a rounded white dinghy rather than the sketch's flat-bottomed trapezoid and sits ~5% higher (hull centre ~81% down vs 86%); a forested hill strip and clouds are added in the region the sketch leaves empty between mountain bases and waterline (unsupported additions)."
+    },
+    {
+      "id": "P04-mountain-boat-2",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 4,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Peak apexes at ~30%/21% and ~59%/30% register on the sketch; valley between peaks at ~47% down matches the sketch valley (~48%). Sun small at ~82%/15% with a modest glow, closest to the sketch's small oval. Waterline ~66% down. Hull centre at ~83.5% down, the closest of the four boat renders to the sketch's 86%, and the hull keeps a trapezoidal profile with visible gunwale. Sail points right from a vertical mast. Deviations: forested shoreline and clouds added in an empty region; hull slightly wider than drawn."
+    },
+    {
+      "id": "P07-mountain-boat-1",
+      "composition_placement": 4.5,
+      "proportions_silhouette": 4,
+      "subjects_counts_pose": 4,
+      "spell_fidelity": 5,
+      "finished_rendering": 4.5,
+      "severe_geometry_failure": false,
+      "evidence": "Left peak apex ~30% across but ~18% down (sketch 21%), so the left summit is pushed slightly taller and narrower than drawn; right peak ~61%/29% matches. Sun ~83%/14% with a large glow. Waterline ~66% down; hull centre ~82% down (sketch 86%); sail is a right-pointing triangle, mast top at ~51% down. Deviations: an angular dark facet between the two peaks near the valley reads as an unresolved shading seam; a wooden hull with a pointed bow replaces the symmetric trapezoid; forest, a rocky shoreline and clouds are added where the sketch is empty."
+    },
+    {
+      "id": "P07-mountain-boat-2",
+      "composition_placement": 4,
+      "proportions_silhouette": 4,
+      "subjects_counts_pose": 3.5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Peak apexes at ~30%/19% and ~59%/28% and the small sun at ~82%/15% register with the sketch; left peak tallest. Waterline sits at ~71% down (sketch 68%) because layered foothills and a foreground hillside on the left are added, filling the empty band under the peaks and pushing the shore lower; this is the most added scenery of the four boat renders and conflicts with the sketch's empty region. Boat: hull centre ~82% down (sketch 86%), hull narrower and slimmer than the drawn trapezoid, sail triangle narrower but still pointing right from a vertical mast. Counts of peaks (2), sun (1), boat (1) are correct."
+    },
+    {
+      "id": "P04-walking-teapot-1",
+      "composition_placement": 5,
+      "proportions_silhouette": 4,
+      "subjects_counts_pose": 4.5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Body sphere centred ~51%/54% with ~40% panel-width diameter, matching the sketch circle (52%/55%, 40%). Two vertical black oval eyes at ~46% and ~58% across and a V chevron mouth at ~60% down match the sketch's ovals and V. Two trapezoid feet at ~35-44% and ~58-68% across match sketch feet (36-45%, 59-68%). Spout tip at ~12%/38% matches sketch tip (11%/39%); lid trapezoid and ball knob above. Deviation: the handle's outer pentagon envelope is in place (~71-90% across) but its interior is cut open into a loop hole; the sketch draws a closed solid pentagon with no inner contour, so this follows the anchor note rather than the pixels. Silver body with engraved flourishes on a plain background."
+    },
+    {
+      "id": "P04-walking-teapot-2",
+      "composition_placement": 5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Body sphere centred ~51%/53%, diameter ~42%, registering on the sketch circle. Handle rendered as a solid pentagonal blade at ~71-90% across with no hole, matching the sketch's closed contour exactly. Spout tip at ~11.5%/36% (sketch 11%/39%), tapering to a wide base on the body's left. Eyes at ~46%/58% across, V mouth at ~58-61% down, two trapezoid feet at ~36-46% and ~58-68% across all align. Minor deviation: lid and knob sit ~3% higher than drawn. Silver with engraved sparkles, plain background, no additions."
+    },
+    {
+      "id": "P07-walking-teapot-1",
+      "composition_placement": 5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 4,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Body sphere centred ~51%/54%, diameter ~42%; solid pentagonal handle at ~71-90% across with no hole, matching the sketch's closed shape; spout is a solid tapering wedge with tip at ~10%/37%, the closest of the four to the sketch's wedge silhouette. Eyes at ~46%/58% across, V chevron mouth, two trapezoid feet at ~34-44% and ~59-69% across, lid trapezoid and ball knob all register. Minor deviation: lid ~3% higher than drawn. Spell fidelity: plain brushed silver with no enchanted or ornamental detail beyond the face, which under-delivers on 'enchanted' and 'detailed magical realism' though the silver material and simple background are honoured."
+    },
+    {
+      "id": "P07-walking-teapot-2",
+      "composition_placement": 5,
+      "proportions_silhouette": 4.5,
+      "subjects_counts_pose": 5,
+      "spell_fidelity": 4.5,
+      "finished_rendering": 5,
+      "severe_geometry_failure": false,
+      "evidence": "Body sphere centred ~51%/54%, diameter ~43%; solid pentagonal handle at ~71-91% across with gold trim and no hole, matching the sketch's closed contour. Spout tip at ~11.5%/36%; eyes at ~46%/58% across; V chevron mouth at ~58-61% down; two trapezoid feet at ~35-46% and ~58-69% across; lid trapezoid and ball knob above. Minor deviation: lid and knob ~3% higher than drawn. Spell: silver body with gold engraved flourishes and gold rims on eyes and feet; the gold is an added material beyond the requested silver but the enchanted, detailed look is delivered. Plain background."
+    }
+  ],
+  "ranking": ["P04", "P07"],
+  "summary": "All eight result images were read and scored from pixels; no result is missing, so status is PASS. Weighted totals (out of 100): P04-walking-teapot-2 97.5, P07-walking-teapot-2 96, P07-walking-teapot-1 94.5, P04-walking-teapot-1 93, P04-mountain-boat-2 90.5, P04-mountain-boat-1 88, P07-mountain-boat-1 87, P07-mountain-boat-2 83. Candidate means: P04 92.25, P07 90.1, so P04 ranks first by a narrow margin driven by the mountain-boat case, where P07-mountain-boat-2 added the most unsupported foothill scenery and P07-mountain-boat-1 showed a shading seam between peaks; on the teapot case the candidates are effectively tied. No severe geometry failures: every render keeps all major forms in place with correct counts and pose. Anchor verification: the teapot anchor note 'loop right side, open hole' is not supported by the sketch, which draws a closed solid pentagon with no inner contour; three of four teapot renders correctly kept it solid, while P04-walking-teapot-1 opened a hole and was docked for following the note over the pixels. The teapot 'circular eyes' note is loose (the sketch eyes are vertical ovals) and the 'smile' is a V chevron; all renders matched the ovals and chevron. Mountain-boat anchors (left peak tallest, sun small upper right, waterline ~68% down, right-pointing sail on vertical mast) are supported by the sketch and honoured by all four renders. Common deviations across all boat renders: hull raised ~4-5% above its drawn position and forest/cloud scenery inserted into the empty band between mountain bases and waterline; suns enlarged with glow halos. Uncertainties: positions are estimated by eye from the side-by-side composites at reduced resolution (about 500x757 per panel), so placement figures carry roughly +/-2% error; I cannot verify provenance or that each image was produced by the stated prompt, only what the pixels show; the two repeats per candidate are too few to separate prompt effect from sampling variance, and the P04/P07 gap on mountain-boat is within that noise."
+}

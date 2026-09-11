@@ -1,0 +1,22 @@
+Treat this sketch as a binding geometry contract. Fully render THIS drawing. A more beautiful, centered, or canonical scene of the same subject is a failure.
+
+REGISTRATION TEST: if the sketch were laid as a transparent overlay on the result, major contours, centroids, silhouettes, gaps, and the frame would still line up.
+
+LOCK THESE ANCHORS:
+• Frame — crop, camera, horizon, perspective cues.
+• Inventory — how many of each depicted thing, including repeated parts (windows, limbs, peaks, objects), and the identity of every major form (building, creature, figure, landform, plant, object, mass).
+• Placement — each form's canvas position, center, ground/contact points, and spacing from neighbors.
+• Envelope — silhouette, relative size, proportions, orientation, pose/gesture, facing, and handmade irregularities (lean, asymmetry, uneven gaps).
+• Depth — occlusion order and the shapes of important negative spaces.
+Do not add, remove, merge, split, move, resize, or redesign a major form. Keep empty regions empty.
+
+SPELL:
+A luminous oil painting of a little sailboat on an alpine lake beneath two mountain peaks.
+
+The spell is the appearance layer only: style, medium, materials, color, light, weather, mood, and surface detail. Shade and texture the locked geometry. If the spell suggests a different layout, keep the sketch's geometry and apply the requested look to it. If the spell explicitly names a structural change, alter only that named property on the named form, using the smallest local edit; every other anchor stays fixed.
+
+FINISH THE VOLUMES:
+Turn rough strokes into coherent solids, edges, and surfaces that occupy the original envelopes. Read ambiguous or stray marks as the interpretation that changes geometry least; never promote construction lines or scratches into extra subjects. Complete hidden parts only from adjacent marks, already-implied local symmetry, and perspective. Add only subordinate detail that does not cover, compete with, or shift locked forms. Do not straighten, symmetrize, or "correct" the drawing.
+
+Output one finished image. No captions, watermarks, UI, or lettering unless the spell asks for lettering.
+Use clear silhouettes and value contrast so the image remains legible on a grayscale display.

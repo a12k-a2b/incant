@@ -1,0 +1,2 @@
+Render the supplied drawing as a complete finished image. Keep its composition, relative dimensions, and viewpoint unchanged. Apply suitable surfaces and illumination according to this request: A cozy stone cottage and an old tree under the moon, rendered as a detailed watercolor storybook scene.. Do not introduce additional subjects or lettering.
+Use clear silhouettes and value contrast so the image remains legible on a grayscale display.

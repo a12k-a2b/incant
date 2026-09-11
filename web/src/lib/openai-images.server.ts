@@ -17,8 +17,6 @@ export type CastResult =
   | { ok: true; imageBase64: string; mime: string }
   | { ok: false; error: string; status?: number };
 
-const FALLBACK_MODEL = "gpt-image-2";
-
 function stripDataUrl(raw: string): string {
   const trimmed = raw.trim();
   const comma = trimmed.indexOf(",");
@@ -28,20 +26,10 @@ function stripDataUrl(raw: string): string {
   return trimmed;
 }
 
-function isModelUnavailable(status: number, message: string): boolean {
-  const m = message.toLowerCase();
-  return (
-    status === 404 ||
-    m.includes("does not exist") ||
-    m.includes("model_not_found") ||
-    m.includes("invalid model") ||
-    (m.includes("model") && m.includes("not found")) ||
-    m.includes("must be verified") ||
-    m.includes("verify organization")
-  );
-}
-
-async function postEdit(key: string, form: FormData): Promise<{
+async function postEdit(
+  key: string,
+  form: FormData,
+): Promise<{
   status: number;
   body: {
     error?: { message?: string };
@@ -54,9 +42,13 @@ async function postEdit(key: string, form: FormData): Promise<{
       method: "POST",
       headers: { Authorization: `Bearer ${key}` },
       body: form,
+      signal: AbortSignal.timeout(165000),
     });
   } catch {
-    return { status: 0, body: { error: { message: "The circle could not reach OpenAI." } } };
+    return {
+      status: 0,
+      body: { error: { message: "The circle could not reach OpenAI." } },
+    };
   }
   const body = (await res.json().catch(() => null)) as {
     error?: { message?: string };
@@ -96,7 +88,11 @@ export async function editSketchToImage(
   }
 
   const bytes = Buffer.from(png, "base64");
-  if (bytes.length < 32) {
+  if (
+    bytes.length < 32 ||
+    bytes.length > 8 * 1024 * 1024 ||
+    !bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))
+  ) {
     return { ok: false, error: "The sketch could not be read." };
   }
 
@@ -107,25 +103,13 @@ export async function editSketchToImage(
   });
 
   const requested: string = input.model;
-  let { status, body } = await postEdit(
+  const { status, body } = await postEdit(
     key,
     buildForm(input, prompt, bytes, requested),
   );
 
   if (!body && status === 0) {
     return { ok: false, error: "The circle could not reach OpenAI." };
-  }
-
-  const firstMessage = body?.error?.message ?? "";
-  if (
-    !body?.data?.[0] &&
-    requested !== FALLBACK_MODEL &&
-    isModelUnavailable(status, firstMessage)
-  ) {
-    ({ status, body } = await postEdit(
-      key,
-      buildForm(input, prompt, bytes, FALLBACK_MODEL),
-    ));
   }
 
   if (status === 0) {
@@ -142,19 +126,6 @@ export async function editSketchToImage(
   const first = body?.data?.[0];
   if (first?.b64_json) {
     return { ok: true, imageBase64: first.b64_json, mime: "image/png" };
-  }
-  if (first?.url) {
-    try {
-      const imgRes = await fetch(first.url);
-      const buf = Buffer.from(await imgRes.arrayBuffer());
-      return {
-        ok: true,
-        imageBase64: buf.toString("base64"),
-        mime: imgRes.headers.get("content-type") || "image/png",
-      };
-    } catch {
-      return { ok: false, error: "The manifestation slipped away." };
-    }
   }
 
   return { ok: false, error: "OpenAI returned no image." };

@@ -76,7 +76,11 @@ export async function sendByOwl(opts: {
   };
 
   try {
-    if (file && typeof nav.share === "function" && nav.canShare?.({ files: [file] })) {
+    if (
+      file &&
+      typeof nav.share === "function" &&
+      nav.canShare?.({ files: [file] })
+    ) {
       await nav.share({ title: subject, text, files: [file] });
       return "shared";
     }
