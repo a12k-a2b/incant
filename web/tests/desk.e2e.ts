@@ -183,7 +183,8 @@ test("spellbook keyboard focus and honest setup", async ({ page }) => {
   await page.keyboard.press("Escape");
   await expect(page.locator("dialog[open]")).not.toBeVisible();
 });
-test("voice uses final speech rather than the previous typed spell", async ({
+for (const input of ["keyboard", "touch-hold", "tap"] as const) {
+test(`voice ${input} uses final speech rather than the previous typed spell`, async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -250,16 +251,39 @@ test("voice uses final speech rather than the previous typed spell", async ({
   await page
     .getByLabel("THE INCANTATION", { exact: true })
     .fill("An old typed cottage");
-  const b = page.getByRole("button", { name: /Hold to speak/ });
-  await b.focus();
-  await page.keyboard.down("Space");
+  const b = page.locator(".voice-wand");
+  const session = input === "touch-hold" ? await page.context().newCDPSession(page) : null;
+  const box = (await b.boundingBox())!;
+  if (session) {
+    await session.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: box.x + box.width / 2, y: box.y + box.height / 2 }] });
+  } else if (input === "tap") {
+    await b.click();
+  } else {
+    await b.focus();
+    await page.keyboard.down("Space");
+  }
   await expect(
-    page.getByRole("button", { name: /Listening… release/ }),
+    page.getByRole("button", { name: /Listening… (release|tap)/ }),
   ).toBeVisible();
-  await page.keyboard.up("Space");
+  if (session) {
+    await page.waitForTimeout(1200);
+    expect(await b.evaluate(el => el.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true })))).toBe(false);
+    await b.dispatchEvent("pointerup", { pointerId: 999, pointerType: "touch" });
+    await expect(page.getByRole("button", { name: /Listening… release/ })).toBeVisible();
+    expect(await page.evaluate(() => window.getSelection()?.toString())).toBe("");
+    await session.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  } else if (input === "tap") {
+    await expect(page.getByRole("button", { name: /Listening… tap to cast/ })).toBeVisible();
+    await page.getByLabel("THE WAND IS LISTENING", { exact: true }).click({ force: true });
+    await expect(page.getByRole("button", { name: /Listening… tap to cast/ })).toBeVisible();
+    await page.getByRole("button", { name: /Listening… tap to cast/ }).click();
+  } else {
+    await page.keyboard.up("Space");
+  }
   await expect(page.getByRole("alert")).toContainText("Synthetic stop");
   expect(sent).toBe("A final spoken dragon");
 });
+}
 test("early voice release discards a late microphone grant", async ({
   page,
 }) => {
@@ -279,7 +303,7 @@ test("early voice release discards a late microphone grant", async ({
                   },
                 ],
               }),
-            400,
+            900,
           ),
         ),
     });
@@ -291,17 +315,18 @@ test("early voice release discards a late microphone grant", async ({
   });
   await page.goto("/");
   await draw(page);
-  const b = page.getByRole("button", { name: /Hold to speak/ });
+  const b = page.locator(".voice-wand");
   const box = (await b.boundingBox())!;
   await page.mouse.move(box.x + 20, box.y + 20);
   await page.mouse.down();
+  await page.waitForTimeout(350);
   await page.mouse.up();
   await expect
     .poll(() => page.evaluate(() => (window as any).__stopped))
     .toBe(true);
   expect(tokens).toBe(0);
   await expect(
-    page.getByRole("button", { name: /Hold to speak/ }),
+    page.getByRole("button", { name: /[Hh]old to speak/ }),
   ).toBeEnabled();
 });
 test("resizing preserves the drawing's original proportions and pixels", async ({
@@ -330,3 +355,51 @@ test("resizing preserves the drawing's original proportions and pixels", async (
     .evaluate((c: HTMLCanvasElement) => c.toDataURL());
   expect(after).toBe(before.png);
 });
+
+for (const mode of ["pen-button", "pen-bitmask", "toolbar"] as const) {
+  test(`pixel eraser ${mode}: partial line, undo, redo, reload, and draw again`, async ({ page }) => {
+    await page.goto("/");
+    const canvas = page.locator("canvas");
+    const r = (await canvas.boundingBox())!;
+    const x = (f: number) => r.x + r.width * f;
+    const y = (f: number) => r.y + r.height * f;
+    const pixels = () => canvas.evaluate((c: HTMLCanvasElement) => {
+      const ctx = c.getContext("2d")!;
+      return [0.25, 0.5, 0.75].map(f =>
+        ctx.getImageData(Math.floor(c.width * f), Math.floor(c.height * 0.5), 1, 1).data[0]);
+    });
+    await page.mouse.move(x(0.2), y(0.5));
+    await page.mouse.down();
+    await page.mouse.move(x(0.8), y(0.5), { steps: 16 });
+    await page.mouse.up();
+    const original = await pixels();
+    expect(original.every(v => v < 100)).toBe(true);
+    if (mode === "toolbar") {
+      await page.getByRole("button", { name: "Eraser", exact: true }).click();
+      await page.mouse.move(x(0.5), y(0.4));
+      await page.mouse.down();
+      await page.mouse.move(x(0.5), y(0.6), { steps: 8 });
+      await page.mouse.up();
+    } else {
+      // Synthetic browser contract only: dispatched events cannot capture a native pointer.
+      await canvas.evaluate((c) => { c.setPointerCapture = () => {}; });
+      const event = { pointerType: "pen", pointerId: 71, pressure: 0.5,
+        button: mode === "pen-button" ? 5 : 0,
+        buttons: mode === "pen-bitmask" ? 32 : 0, clientX: x(0.5) };
+      await canvas.dispatchEvent("pointerdown", { ...event, clientY: y(0.4) });
+      await canvas.dispatchEvent("pointermove", { ...event, clientY: y(0.6) });
+      await canvas.dispatchEvent("pointerup", { ...event, buttons: 0, clientY: y(0.6) });
+    }
+    const erased = await pixels();
+    expect(erased).toEqual([original[0], 255, original[2]]);
+    await page.getByRole("button", { name: "Undo", exact: true }).click();
+    expect(await pixels()).toEqual(original);
+    await page.getByRole("button", { name: "Redo", exact: true }).click();
+    expect(await pixels()).toEqual(erased);
+    await page.reload();
+    expect(await pixels()).toEqual(erased);
+    await page.getByRole("button", { name: "Quill", exact: true }).click();
+    await page.mouse.click(x(0.5), y(0.5));
+    expect((await pixels())[1]).toBeLessThan(100);
+  });
+}

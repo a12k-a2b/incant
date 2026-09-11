@@ -52,6 +52,10 @@ export function IncantApp({
   imageReady?: boolean;
   voiceReady?: boolean;
 }) {
+  const voiceButton = useRef<HTMLButtonElement>(null);
+  const voicePointer = useRef<number | null>(null);
+  const voicePress = useRef({ started: 0, stopping: false });
+  const [handsFree, setHandsFree] = useState(false);
   const sketch = useRef<SketchCanvasHandle>(null),
     voice = useRef<Voice | null>(null),
     operation = useRef<AbortController | null>(null),
@@ -76,6 +80,21 @@ export function IncantApp({
   const [elapsed, setElapsed] = useState(0),
     [progress, setProgress] = useState(""),
     [last, setLast] = useState<{ sketch: string; words: string } | null>(null);
+  useEffect(() => {
+    const button = voiceButton.current;
+    if (!button) return;
+    // React touch handlers are passive in Chrome. Cancel native text selection
+    // on this control only; pointer events still own the hold/release lifecycle.
+    const preventNativeHold = (event: Event) => event.preventDefault();
+    button.addEventListener("touchstart", preventNativeHold, { passive: false });
+    button.addEventListener("contextmenu", preventNativeHold);
+    button.addEventListener("selectstart", preventNativeHold);
+    return () => {
+      button.removeEventListener("touchstart", preventNativeHold);
+      button.removeEventListener("contextmenu", preventNativeHold);
+      button.removeEventListener("selectstart", preventNativeHold);
+    };
+  }, []);
   const busy = phase !== "idle",
     empty = sketch.current?.isEmpty() ?? true;
   useEffect(() => {
@@ -121,7 +140,10 @@ export function IncantApp({
     s.stream?.getTracks().forEach((t) => t.stop());
     void s.ctx?.close().catch(() => {});
     s.live.disconnect();
-    if (voice.current === s) voice.current = null;
+    if (voice.current === s) {
+      voice.current = null;
+      setHandsFree(false);
+    }
   };
   const cancel = () => {
     serial.current++;
@@ -611,19 +633,43 @@ export function IncantApp({
                 Say what your drawing should become.
               </span>
               <button
+                ref={voiceButton}
                 className={`voice-wand ${phase === "listening" ? "listening" : ""}`}
                 disabled={phase === "casting" || phase === "finishing"}
                 onPointerDown={(e) => {
+                  if (voicePointer.current !== null || e.button !== 0) return;
                   e.preventDefault();
+                  voicePointer.current = e.pointerId;
+                  voicePress.current = { started: performance.now(), stopping: handsFree };
                   e.currentTarget.setPointerCapture(e.pointerId);
-                  void beginVoice();
+                  if (!handsFree) void beginVoice();
                 }}
-                onPointerUp={() => void endVoice()}
-                onPointerCancel={() => void endVoice(true)}
-                onLostPointerCapture={() => {
-                  if (voice.current?.ready) void endVoice(true);
+                onPointerUp={(e) => {
+                  if (voicePointer.current !== e.pointerId) return;
+                  voicePointer.current = null;
+                  if (!voicePress.current.stopping && performance.now() - voicePress.current.started < 300 && voice.current) {
+                    setHandsFree(true);
+                  } else {
+                    setHandsFree(false);
+                    void endVoice();
+                  }
+                }}
+                onPointerCancel={(e) => {
+                  if (voicePointer.current !== e.pointerId) return;
+                  voicePointer.current = null;
+                  void endVoice(true);
+                }}
+                onLostPointerCapture={(e) => {
+                  if (voicePointer.current !== e.pointerId) return;
+                  voicePointer.current = null;
+                  void endVoice(true);
                 }}
                 onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    void endVoice(true);
+                    return;
+                  }
                   if ((e.key === " " || e.key === "Enter") && !e.repeat) {
                     e.preventDefault();
                     void beginVoice();
@@ -636,19 +682,19 @@ export function IncantApp({
                   }
                 }}
                 onBlur={() => {
-                  if (voice.current?.ready || phase === "connecting")
+                  if (!handsFree && (voice.current?.ready || phase === "connecting"))
                     void endVoice(true);
                 }}
                 onContextMenu={(e) => e.preventDefault()}
               >
                 <Volume2 size={17} />
                 {phase === "connecting"
-                  ? "Connecting… keep holding"
+                  ? handsFree ? "Connecting… tap to cancel" : "Connecting… keep holding"
                   : phase === "listening"
-                    ? "Listening… release to cast"
+                    ? handsFree ? "Listening… tap to cast" : "Listening… release to cast"
                     : phase === "finishing"
                       ? "Finishing your spell…"
-                      : "Hold to speak"}
+                      : "Tap or hold to speak"}
                 <span className="wand-glyph">⟋✧</span>
               </button>
             </div>
@@ -836,8 +882,8 @@ function Help({ onClose }: { onClose: () => void }) {
         palm on the parchment.
       </p>
       <p>
-        Hold <strong>Hold to speak</strong>, wait for “Listening”, then describe
-        your idea. Release to cast. You can also type your words and choose{" "}
+        Tap the wand to start and tap again to cast, or hold it and release to cast. Wait for “Listening”, then describe
+        your idea. You can also type your words and choose{" "}
         <strong>Cast spell</strong>.
       </p>
       <p>

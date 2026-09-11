@@ -26,6 +26,9 @@ textarea {
   font: inherit;
 }
 button {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   cursor: pointer;
   color: inherit;
   border: 0;
@@ -388,6 +391,14 @@ textarea {
   background: transparent;
   font-size: 12px;
   touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.voice-wand {
+  -webkit-touch-callout: none;
+}
+.voice-wand > * {
+  pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
 }

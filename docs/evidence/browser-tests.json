@@ -5,7 +5,7 @@
       "/Users/anjan/Documents/SolOS/incant/web/node_modules/.bin/playwright",
       "test",
       "--grep",
-      "layout dc1-portrait"
+      "voice|layout phone"
     ],
     "configFile": "/Users/anjan/Documents/SolOS/incant/web/playwright.config.ts",
     "rootDir": "/Users/anjan/Documents/SolOS/incant/web/tests",
@@ -73,7 +73,7 @@
       "line": 0,
       "specs": [
         {
-          "title": "layout dc1-portrait",
+          "title": "layout phone",
           "ok": true,
           "tags": [],
           "tests": [
@@ -88,12 +88,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3372,
+                  "duration": 1590,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-11T06:12:50.670Z",
+                  "startTime": "2026-09-11T06:31:10.297Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -101,19 +101,155 @@
               "status": "expected"
             }
           ],
-          "id": "a58455fa5bbf677dcbeb-f3ce89ecf3914a7e8fd8",
+          "id": "a58455fa5bbf677dcbeb-91a1da273e70bc445f0d",
           "file": "desk.e2e.ts",
           "line": 151,
           "column": 3
+        },
+        {
+          "title": "voice keyboard uses final speech rather than the previous typed spell",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4791,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:31:12.980Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-0cf95ef8c257c2d39616",
+          "file": "desk.e2e.ts",
+          "line": 187,
+          "column": 1
+        },
+        {
+          "title": "voice touch-hold uses final speech rather than the previous typed spell",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5526,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:31:17.791Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-2358cdd27b799b8570ff",
+          "file": "desk.e2e.ts",
+          "line": 187,
+          "column": 1
+        },
+        {
+          "title": "voice tap uses final speech rather than the previous typed spell",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4231,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:31:23.335Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-dc593cdc883d87bef833",
+          "file": "desk.e2e.ts",
+          "line": 187,
+          "column": 1
+        },
+        {
+          "title": "early voice release discards a late microphone grant",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3427,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:31:27.579Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-bdaa981e7063f4e4ab89",
+          "file": "desk.e2e.ts",
+          "line": 287,
+          "column": 1
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-11T06:12:49.636Z",
-    "duration": 6751.401000000001,
-    "expected": 1,
+    "startTime": "2026-09-11T06:31:09.663Z",
+    "duration": 22465.471,
+    "expected": 5,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
