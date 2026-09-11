@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="0" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="12.938"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1591 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-D4Gz77uX.css   40.63 kB │ gzip:  9.93 kB
+dist/assets/index-D7bnmV9o.js   288.00 kB │ gzip: 91.23 kB
+✓ built in 4.29s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="3.335"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (6 tests) 31ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  00:04:56
+   Duration  1.65s (transform 251ms, setup 0ms, collect 333ms, tests 31ms, environment 0ms, prepare 328ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="78.646"><system-out>  ✓   5 tests/desk.e2e.ts:182:3 › layout desktop (2.4s)
+  ✓   6 tests/desk.e2e.ts:182:3 › layout dc1-portrait (2.7s)
+  ✓   7 tests/desk.e2e.ts:182:3 › layout dc1-landscape (2.6s)
+  ✓   8 tests/desk.e2e.ts:182:3 › layout tablet-portrait (1.9s)
+  ✓   9 tests/desk.e2e.ts:182:3 › layout tablet-landscape (2.6s)
+  ✓  10 tests/desk.e2e.ts:182:3 › layout phone (1.7s)
+  ✓  11 tests/desk.e2e.ts:202:1 › resize retains exact original drawing pixels (1.7s)
+  ✓  12 tests/desk.e2e.ts:211:1 › reduced motion disables fog motion and image reveal animation (1.8s)
+  ✓  13 tests/desk.e2e.ts:237:3 › voice keyboard uses final speech rather than the previous typed spell (6.7s)
+  ✓  14 tests/desk.e2e.ts:237:3 › voice touch-hold uses final speech rather than the previous typed spell (7.4s)
+  ✓  15 tests/desk.e2e.ts:237:3 › voice tap uses final speech rather than the previous typed spell (5.2s)
+  ✓  16 tests/desk.e2e.ts:364:1 › early voice release discards a late microphone grant (2.7s)
+  ✓  17 tests/desk.e2e.ts:411:3 › pixel eraser pen-button: partial line, undo, redo, reload, and draw again (2.3s)
+  ✓  18 tests/desk.e2e.ts:411:3 › pixel eraser pen-bitmask: partial line, undo, redo, reload, and draw again (2.4s)
+  ✓  19 tests/desk.e2e.ts:411:3 › pixel eraser toolbar: partial line, undo, redo, reload, and draw again (2.9s)
+  ✓  20 tests/desk.e2e.ts:484:1 › typewriter focuses the bubble, retains words, and casts once (2.3s)
+  ✓  21 tests/desk.e2e.ts:505:1 › typewriter bubble fits narrow keyboard-sized viewport (1.2s)
+  ✓  22 tests/desk.e2e.ts:515:1 › immersive mode keeps the wand and illustrated typewriter, including while casting (6.3s)
+
+  22 passed (1.3m)</system-out></testcase></testsuite>

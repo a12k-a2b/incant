@@ -7,9 +7,10 @@ try {
  await page.getByLabel('Room passphrase').fill((await readFile('.env.access','utf8')).trim().split('=')[1]);
  await page.getByRole('button',{name:'Open the room',exact:true}).click();
  await page.locator('.immersive-mode').waitFor();
- if(await page.getByRole('button').count()!==1)throw new Error('Unexpected visible controls');
- if(await page.locator('.typewriter-key').isVisible() || await page.locator('.desk-latch').isVisible())throw new Error('Extra UI visible');
+ if(await page.getByRole('button').count()!==2)throw new Error('Unexpected visible controls');
+ if(!await page.locator('.typewriter-key').isVisible() || await page.locator('.desk-latch').isVisible())throw new Error('Extra UI visible');
+ await page.locator('.typewriter-key img').evaluate(async (img: HTMLImageElement) => img.decode());
  await page.screenshot({path:'../docs/evidence/immersive-mode-hosted.png'});
- const result={date:new Date().toISOString(),mode:'immersive',visibleControls:1,frameParchmentWandOnly:'PASS'};
+ const result={date:new Date().toISOString(),mode:'immersive',visibleControls:2,frameParchmentWandAndTypewriter:'PASS'};
  await writeFile('../docs/evidence/immersive-mode-hosted.json',JSON.stringify(result,null,2)+'\n');console.log(result);
 } finally {await browser.close();}

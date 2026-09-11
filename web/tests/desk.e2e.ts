@@ -482,7 +482,7 @@ for (const mode of ["pen-button", "pen-bitmask", "toolbar"] as const) {
 }
 
 test('typewriter focuses the bubble, retains words, and casts once', async ({page}) => {
-  await page.goto('/?mode=desk'); await draw(page);
+  await page.goto('/'); await draw(page);
   await page.getByRole('button',{name:'Type a spell',exact:true}).click();
   const field=page.getByRole('textbox',{name:'Type your spell',exact:true});
   await expect(field).toBeFocused();
@@ -503,7 +503,7 @@ test('typewriter focuses the bubble, retains words, and casts once', async ({pag
   expect(requests).toBe(1);
 });
 test('typewriter bubble fits narrow keyboard-sized viewport',async({page})=>{
-  await page.setViewportSize({width:390,height:500});await page.goto('/?mode=desk');
+  await page.setViewportSize({width:390,height:500});await page.goto('/');
   await page.getByRole('button',{name:'Type a spell',exact:true}).click();
   await expect(page.getByRole('textbox',{name:'Type your spell',exact:true})).toBeInViewport();
   await expect(page.getByRole('button',{name:'Cast typed spell',exact:true})).toBeInViewport();
@@ -512,11 +512,11 @@ test('typewriter bubble fits narrow keyboard-sized viewport',async({page})=>{
 });
 
 
-test('immersive mode shows only the frame, parchment and wand, including while casting', async ({page}) => {
+test('immersive mode keeps the wand and illustrated typewriter, including while casting', async ({page}) => {
  await page.goto('/');
  await expect(page.locator('.immersive-mode')).toBeVisible();
- await expect(page.getByRole('button')).toHaveCount(1);
- await expect(page.locator('.typewriter-key')).not.toBeVisible();
+ await expect(page.getByRole('button')).toHaveCount(2);
+ await expect(page.locator('.typewriter-key')).toBeVisible();
  await expect(page.locator('.desk-latch')).not.toBeVisible();
  await expect(page.locator('.empty-parchment')).not.toBeVisible();
  await draw(page);
@@ -530,14 +530,14 @@ test('immersive mode shows only the frame, parchment and wand, including while c
  // Set up casting independently of the separately tested speech adapter.
  await page.locator('.cast-button').evaluate((b:HTMLButtonElement)=>b.click());
  await expect(page.locator('.phase-casting')).toBeVisible();
- await expect(page.getByRole('button')).toHaveCount(1);
+ await expect(page.getByRole('button')).toHaveCount(2);
  await page.locator('.voice-wand').click();
  await expect(page.locator('.spell-fog')).toHaveCount(0);
  await page.waitForTimeout(1300);
  await expect(page.locator('.manifestation')).toHaveCount(0);
  await page.locator('.cast-button').evaluate((b:HTMLButtonElement)=>b.click());
  await expect(page.locator('.manifestation.image-ready')).toBeVisible();
- await expect(page.getByRole('button')).toHaveCount(1);
+ await expect(page.getByRole('button')).toHaveCount(2);
  await page.locator('.voice-wand').click();
  await expect(page.locator('.manifestation')).toHaveCount(0);
  expect(await png(page)).toBe(original);

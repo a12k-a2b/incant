@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-11T06:59:11.043Z",
+  "date": "2026-09-11T07:06:35.712Z",
   "mode": "immersive",
-  "visibleControls": 1,
-  "frameParchmentWandOnly": "PASS"
+  "visibleControls": 2,
+  "frameParchmentWandAndTypewriter": "PASS"
 }

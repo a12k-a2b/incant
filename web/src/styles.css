@@ -1845,7 +1845,6 @@ dialog::backdrop {
 @media (max-height: 500px) { .type-bubble { bottom: max(20px, var(--keyboard-inset, 0px)); padding: 12px 18px; } .type-bubble textarea { min-height: 50px; } }
 /* Immersive mode: the frame, parchment and wand are the entire visible interface. */
 .immersive-mode .desk-latch,
-.immersive-mode .typewriter-key,
 .immersive-mode .ritual-cancel,
 .immersive-mode .empty-parchment,
 .immersive-mode .room-message button { display: none; }
