@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="0" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="5.383"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1598 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-BzaLe3fX.css   52.85 kB │ gzip: 12.28 kB
+dist/assets/index-DjcaSECr.js   313.77 kB │ gzip: 99.54 kB
+✓ built in 2.24s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="2.184"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (7 tests) 25ms
+ ✓ tests/backup.test.ts (2 tests) 226ms
+
+ Test Files  2 passed (2)
+      Tests  9 passed (9)
+   Start at  12:41:26
+   Duration  1.35s (transform 260ms, setup 0ms, collect 578ms, tests 251ms, environment 0ms, prepare 535ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="93.077"><system-out>  ✓  32 tests/desk.e2e.ts:494:1 › typewriter focuses the bubble, retains words, and casts once (1.6s)
+  ✓  33 tests/desk.e2e.ts:536:1 › typewriter bubble fits narrow keyboard-sized viewport (613ms)
+  ✓  34 tests/desk.e2e.ts:555:1 › immersive mode keeps the wand and illustrated typewriter, including while casting (4.2s)
+  ✓  35 tests/desk.e2e.ts:605:1 › typewriter focuses only the writing field and releases its viewport lock on close (595ms)
+  ✓  36 tests/immersive-affordances.e2e.ts:25:1 › peel compares exact saved source without changing drawing or result (3.6s)
+  ✓  37 tests/immersive-affordances.e2e.ts:58:1 › illustrated books expose saved creations and share exact image bytes (3.7s)
+  ✓  38 tests/immersive-affordances.e2e.ts:100:1 › hourglass cancels late image and respects reduced motion (4.7s)
+  ✓  39 tests/native-interactions.e2e.ts:7:1 › room blocks native menu and image drag, while editing and external controls remain native (480ms)
+  ✓  40 tests/native-interactions.e2e.ts:72:1 › real Chromium pen barrel-only press changes neither pixels nor saved draft; tip remains functional (799ms)
+  ✓  41 tests/native-interactions.e2e.ts:126:1 › barrel-first chord starts only at contact and stops at tip lift, with no hover trail (605ms)
+  ✓  42 tests/native-interactions.e2e.ts:169:1 › anomalous barrel button zero cannot ink; tip-first chord and cancel preserve real ink (602ms)
+  ✓  43 tests/native-interactions.e2e.ts:213:1 › legacy tools dialog still scrolls and allows plain-text selection (597ms)
+  ✓  44 tests/onboarding.e2e.ts:2:1 › first visit is skippable, stays dismissed across reload, and help replays it (693ms)
+  ✓  45 tests/onboarding.e2e.ts:34:1 › four pages support back and completion without modifying the sketch (857ms)
+  ✓  46 tests/onboarding.e2e.ts:73:3 › guide fits dc1-portrait and remains usable with reduced motion (1.7s)
+  ✓  47 tests/onboarding.e2e.ts:73:3 › guide fits dc1-landscape and remains usable with reduced motion (1.7s)
+  ✓  48 tests/onboarding.e2e.ts:73:3 › guide fits phone and remains usable with reduced motion (754ms)
+  ✓  49 tests/onboarding.e2e.ts:73:3 › guide fits short and remains usable with reduced motion (815ms)
+
+  49 passed (1.5m)</system-out></testcase></testsuite>

@@ -174,6 +174,18 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
           p: e.pressure || 0.45,
         };
       };
+      // A hovering barrel button is an active pointer, but is not pen contact.
+      // Chorded tip contact may arrive as pointermove rather than pointerdown.
+      let pendingPen: number | null = null;
+      const penContact = (e: PointerEvent) => {
+        if ((e.buttons & 32) !== 0 || e.button === 5) return 32;
+        if ((e.buttons & 1) !== 0) return 1;
+        if ((e.buttons & 2) !== 0 || e.button === 2) return 0;
+        // Retain first-sample/legacy button-only contact compatibility.
+        if (e.button === 0 && (e.type === "pointerdown" || e.pressure > 0))
+          return 1;
+        return 0;
+      };
       const down = (e: PointerEvent) => {
         if (
           locked ||
@@ -182,6 +194,11 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
           (e.pointerType === "mouse" && e.button !== 0)
         )
           return;
+        if (e.pointerType === "pen" && !penContact(e)) {
+          pendingPen = (e.buttons & 2) !== 0 ? e.pointerId : null;
+          return;
+        }
+        pendingPen = null;
         if (strokes.current.length >= 2000) {
           callbacks.current.onStorageError?.(
             "This parchment is full. Save your sketch before starting another page.",
@@ -202,6 +219,22 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         );
       };
       const move = (e: PointerEvent) => {
+        if (e.pointerType === "pen") {
+          const contact = penContact(e);
+          if (e.pointerId === pointer.current && !contact) {
+            finish(e); // Keep legitimate ink, but never append a hover sample.
+            pendingPen = (e.buttons & 2) !== 0 ? e.pointerId : null;
+            return;
+          }
+          if (
+            pointer.current === null &&
+            pendingPen === e.pointerId &&
+            contact
+          ) {
+            down(e);
+            return;
+          }
+        }
         const s = current.current;
         if (e.pointerId !== pointer.current || !s) return;
         e.preventDefault();
@@ -215,6 +248,7 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         }
       };
       const finish = (e?: PointerEvent) => {
+        if (!e || e.pointerId === pendingPen) pendingPen = null;
         if (!current.current || (e && e.pointerId !== pointer.current)) return;
         strokes.current.push(current.current);
         future.current = [];

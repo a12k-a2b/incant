@@ -78,3 +78,5 @@ The current illustrated parchment revision includes an installable Chrome-based 
 ## Next version: speak and point
 
 [Saved V2 design](docs/V2-SPEAK-AND-POINT.md): combine timed stylus references with spoken explanation to communicate an idea. Deferred until after owner testing of the installed V1; no V2 runtime changes are deployed.
+
+DC-1 browser input findings and reusable PWA guidance: [Pen and browser gestures](docs/DC1-PWA-INPUT.md).

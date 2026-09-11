@@ -1,3 +1,4 @@
+import { useNativeInteractionGuard } from "@/lib/native-interactions";
 import { Onboarding, needsIntroduction } from "./Onboarding";
 import { startCloudBackup } from "@/lib/cloud-backup";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -114,6 +115,7 @@ export function IncantApp({
   );
   const panelRef = useRef<HTMLDialogElement>(null);
   const room = useRef<HTMLElement>(null);
+  useNativeInteractionGuard(room);
   const typeDialog = useRef<HTMLDialogElement>(null);
   const typeField = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
@@ -558,6 +560,7 @@ export function IncantApp({
   return (
     <main
       ref={room}
+      data-native-interactions
       data-frame={frame}
       data-frame-layer={frameLayer}
       className={`drawing-room immersive-room ${turning ? "turning-moon" : ""} ${immersiveMode ? "immersive-mode" : ""} phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
@@ -587,6 +590,7 @@ export function IncantApp({
               {active && (
                 <img
                   key={active.id}
+                  draggable={false}
                   className={`manifestation ${loadedImage === active.id ? "image-ready" : ""}`}
                   src={active.image}
                   alt={active.spell}
@@ -797,7 +801,7 @@ export function IncantApp({
               : phase === "listening"
                 ? handsFree
                   ? "Listening · tap to cast"
-                  : "Listening"
+                  : "Listening · speak your spell"
                 : phase === "finishing"
                   ? "Gathering your words…"
                   : phase === "casting"
@@ -1193,6 +1197,21 @@ function Wand() {
         />
         <path d="M84 81 L174 31" stroke="#eadabd" />
         <circle cx="184" cy="26" r="4" fill="#fff9e5" />
+      </g>
+      <g
+        className="wand-feedback"
+        fill="none"
+        stroke="#45341f"
+        strokeWidth="2.5"
+        aria-hidden="true"
+      >
+        <circle className="wand-wave wand-wave-one" cx="184" cy="26" r="19" />
+        <circle className="wand-wave wand-wave-two" cx="184" cy="26" r="19" />
+        <path
+          className="wand-ready-sigil"
+          d="M184 12l4 10 10 4-10 4-4 10-4-10-10-4 10-4z"
+          fill="#fff4d6"
+        />
       </g>
       <g className="wand-sparks" fill="none" stroke="#695539" strokeWidth="1.5">
         <path d="M184 8v9 M184 35v9 M166 26h9 M193 26h9 M171 13l6 6 M193 35l6 6" />

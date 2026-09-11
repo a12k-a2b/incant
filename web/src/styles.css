@@ -1979,3 +1979,33 @@ dialog::backdrop {
 @media(max-height:560px){.incant-introduction{padding:12px 22px;}.introduction-picture{height:95px;}.typewriter-lesson img{height:70px;}.introduction-page h2{font-size:24px;margin:6px 0 10px;}.introduction-page p{font-size:15px;}.introduction-page .introduction-hint{margin-top:8px;}.incant-introduction footer{margin-top:12px;}}
 @media(prefers-reduced-motion:reduce){.introduction-page,.incant-introduction svg *,.typewriter-lesson span{animation:none!important;}.lesson-ink{stroke-dashoffset:0;}}
 .room-help span {color:#f8eed9;-webkit-text-stroke:.5px #3c3022;paint-order:stroke fill;text-shadow:none;}
+
+/* Keep Chrome's image/selection UI out of the drawing room, while preserving
+   ordinary text editing and scroll gestures in native input fields/dialogs. */
+[data-native-interactions] .desk {user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;}
+[data-native-interactions] :is(input,textarea,select,option,a[href],audio,video,[contenteditable="true"],[contenteditable="plaintext-only"],[data-native-context-menu]) {user-select:text;-webkit-user-select:text;-webkit-touch-callout:default;}
+[data-native-interactions] img {-webkit-user-drag:none;}
+
+/* Immediate acknowledgement, then a distinct microphone-ready signal. */
+.enchanted-wand {transition:transform 130ms ease-out;}
+.wand-feedback {opacity:0;pointer-events:none;}
+.wand-wave {transform-origin:184px 26px;}
+.wand-wave-two,.wand-ready-sigil {opacity:0;}
+.phase-idle .voice-wand:active .enchanted-wand,
+.phase-connecting .enchanted-wand {transform:rotate(-16deg) translateY(-4px);}
+.phase-listening .enchanted-wand {transform:rotate(-28deg) translateY(-8px);}
+.phase-idle .voice-wand:active .wand-feedback,
+.phase-connecting .wand-feedback,
+.phase-listening .wand-feedback {opacity:1;}
+.phase-idle .voice-wand:active .wand-wave-one,
+.phase-connecting .wand-wave-one {stroke-dasharray:3 4;animation:wand-press-ripple 1.25s ease-out infinite;}
+.phase-listening .wand-wave {stroke-dasharray:none;stroke-width:3;animation:wand-listening-ripple 1.8s ease-out infinite;}
+.phase-listening .wand-wave-two {animation-delay:-.9s;}
+.phase-listening .wand-ready-sigil {opacity:1;}
+.immersive-mode.phase-connecting .wand-status,
+.immersive-mode.phase-listening .wand-status {display:block;width:max-content;max-width:260%;left:50%;transform:translateX(-50%);bottom:2px;padding:3px 9px;border-radius:9px;background:#f8efdb;color:#35291b;font-size:14px;line-height:1.3;}
+@keyframes wand-press-ripple {0%{transform:scale(.7);opacity:1;}85%,100%{transform:scale(2.2);opacity:0;}}
+@keyframes wand-listening-ripple {0%{transform:scale(.7);opacity:.95;}90%,100%{transform:scale(2.8);opacity:0;}}
+@media(prefers-reduced-motion:reduce){.enchanted-wand{transition:none;}.wand-wave{animation:none!important;transform:scale(1.25);opacity:1;}.wand-wave-two{display:none;}.phase-connecting .wand-wave-one{stroke-dasharray:3 4;}.phase-listening .wand-wave-one{stroke-dasharray:none;}}
+.immersive-mode.phase-connecting .wand-status,
+.immersive-mode.phase-listening .wand-status {height:auto;margin:0;overflow:visible;clip-path:none;}

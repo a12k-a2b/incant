@@ -1,0 +1,9 @@
+{
+  "time": "2026-09-11T19:52:54.797Z",
+  "deployment": "3b608094-4a0b-49ff-bbca-9c4a5f878d14",
+  "contextMenuGuard": "PASS",
+  "immediatePressFeedback": "PASS",
+  "providerRequests": 0,
+  "archive": "mocked; no production archive writes",
+  "physicalDevice": "BLOCKED: not connected"
+}
