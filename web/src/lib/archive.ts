@@ -1,14 +1,26 @@
 // Independent archive: do not change the existing gallery database or draft format.
 export type Pair = {
   id?: number;
+  bundleId?: string;
+  sessionId?: string;
+  sessionStarted?: number;
+  created?: number;
+  updated?: number;
+  day?: string;
   sketch: string;
   spell: string;
   sealed: boolean;
-  images: { id: string; image: string; spell: string }[];
+  images: { id: string; image: string; spell: string; created?: number }[];
 };
 type Directory = FileSystemDirectoryHandle & {
   queryPermission(o: { mode: string }): Promise<PermissionState>;
 };
+export const SESSION_GAP_MS = 45 * 60 * 1000;
+export function localDay(time: number) {
+  const d = new Date(time);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+type Session = { id: string; started: number; lastActivity: number };
 const DATABASE = "incant-pairs-v1";
 function open(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -54,6 +66,7 @@ export async function archiveSketch(
   sketch: string,
   spell: string,
   seal = false,
+  now = Date.now(),
 ): Promise<Pair> {
   const d = await open();
   try {
@@ -62,24 +75,49 @@ export async function archiveSketch(
         p = t.objectStore("pairs"),
         m = t.objectStore("meta");
       let saved: Pair;
+      let session: Session;
       const save = (old?: Pair) => {
         const same = old?.sketch === sketch;
         saved =
           old && (!old.sealed || same)
             ? { ...old, sketch, spell, sealed: old.sealed || seal }
             : { sketch, spell, sealed: seal, images: [] };
+        saved = {
+          ...saved,
+          bundleId: old?.bundleId ?? `sketch-${crypto.randomUUID()}`,
+          sessionId: old?.sessionId ?? session.id,
+          sessionStarted: old?.sessionStarted ?? session.started,
+          created: saved.created ?? now,
+          updated: now,
+          day: old?.day ?? localDay(now),
+        };
+        m.put({ ...session, lastActivity: now }, "session");
         const r = p.put(saved);
         r.onsuccess = () => {
           saved.id = Number(r.result);
           m.put(saved.id, "current");
         };
       };
-      const r = m.get("current");
-      r.onsuccess = () => {
-        if (r.result) {
-          const q = p.get(r.result);
-          q.onsuccess = () => save(q.result);
-        } else save();
+      const sr = m.get("session");
+      sr.onsuccess = () => {
+        const oldSession = sr.result as Session | undefined;
+        session =
+          oldSession &&
+          now >= oldSession.lastActivity &&
+          now - oldSession.lastActivity <= SESSION_GAP_MS
+            ? oldSession
+            : {
+                id: `session-${crypto.randomUUID()}`,
+                started: now,
+                lastActivity: now,
+              };
+        const r = m.get("current");
+        r.onsuccess = () => {
+          if (r.result) {
+            const q = p.get(r.result);
+            q.onsuccess = () => save(q.result);
+          } else save();
+        };
       };
       t.oncomplete = () => resolve(saved);
       t.onabort = () => reject(t.error);
@@ -107,7 +145,8 @@ export async function archiveImage(
           return;
         }
         if (!pair.images.some((i) => i.id === image.id))
-          pair.images.push(image);
+          pair.images.push({ ...image, created: Date.now() });
+        pair.updated = Date.now();
         s.put(pair);
       };
       t.oncomplete = () => resolve(pair);
@@ -120,7 +159,13 @@ export async function archiveImage(
 }
 // Backfill existing saved casts once; keep the active drawing's pair untouched.
 export async function archiveExisting(
-  items: { id: string; image: string; spell: string; sketch?: string }[],
+  items: {
+    id: string;
+    image: string;
+    spell: string;
+    sketch?: string;
+    created?: number;
+  }[],
 ) {
   const d = await open();
   try {
@@ -130,6 +175,20 @@ export async function archiveExisting(
         m = t.objectStore("meta");
       const r = p.getAll();
       r.onsuccess = () => {
+        // Existing archives predate timestamps. Recover known generation times
+        // from the gallery, leaving unknown sessions explicitly unassigned.
+        for (const pair of r.result as Pair[]) {
+          if (pair.created) continue;
+          const times = pair.images
+            .map((image) => items.find((c) => c.id === image.id)?.created)
+            .filter((n): n is number => typeof n === "number");
+          if (times.length) {
+            pair.created = Math.min(...times);
+            pair.updated = Math.max(...times);
+            pair.day = localDay(pair.created);
+            p.put(pair);
+          }
+        }
         const known = new Set(
           (r.result as Pair[]).flatMap((p) => p.images.map((i) => i.id)),
         );
@@ -137,6 +196,10 @@ export async function archiveExisting(
           if (!item.sketch || known.has(item.id)) continue;
           known.add(item.id);
           p.add({
+            bundleId: `legacy-${item.id}`,
+            created: item.created,
+            updated: item.created,
+            day: item.created ? localDay(item.created) : undefined,
             sketch: item.sketch,
             spell: item.spell,
             sealed: true,
@@ -240,8 +303,15 @@ export function pairFiles(pair: Pair): [string, Uint8Array][] {
         JSON.stringify(
           {
             pair: pair.id,
+            bundleId: pair.bundleId,
+            sessionId: pair.sessionId,
+            sessionStarted: pair.sessionStarted,
+            day: pair.day,
+            created: pair.created,
+            updated: pair.updated,
             spell: pair.spell,
-            images: pair.images.map(({ id, spell }, n) => ({
+            images: pair.images.map(({ id, spell, created }, n) => ({
+              created,
               id,
               spell,
               file:
@@ -358,7 +428,22 @@ export function zipFiles(files: [string, Uint8Array][]): Blob {
   });
 }
 export async function downloadArchive() {
-  const blob = zipFiles((await allPairs()).flatMap(pairFiles)),
+  const blob = zipFiles(
+      (await allPairs()).flatMap((pair) => {
+        const safe = (v: string) => v.replace(/[^a-zA-Z0-9_-]/g, "_");
+        const folder = [
+          pair.day || "earlier-undated",
+          pair.sessionId || "session-unknown",
+          pair.bundleId || `sketch-${pair.id}`,
+        ]
+          .map(safe)
+          .join("/");
+        return pairFiles(pair).map(([name, bytes]): [string, Uint8Array] => [
+          folder + "/" + name,
+          bytes,
+        ]);
+      }),
+    ),
     url = URL.createObjectURL(blob),
     a = document.createElement("a");
   a.href = url;

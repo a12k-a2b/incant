@@ -18,6 +18,10 @@ try {
  const focus=await page.evaluate(()=>(window as any).focusTrail);
  if(JSON.stringify(focus)!==JSON.stringify(['Type your spell']))throw new Error('Unexpected focus sequence: '+JSON.stringify(focus));
  await page.getByRole('button',{name:'Close typed spell'}).click();
- const result={singleTypewriterFocus:'PASS',namedFrameSwitch:'PASS',date:new Date().toISOString(),mode:'immersive',visibleControls:3,frameParchmentWandAndTypewriter:'PASS'};
+ await page.goto('https://incant-web-production.up.railway.app/?layer=foreground');await page.locator('main[data-frame-layer=foreground]').waitFor();
+ if(await page.locator('.paper-wrap').evaluate(e=>getComputedStyle(e,'::after').opacity)!=='0.9')throw new Error('Foreground opacity mismatch');
+ await page.getByRole('button',{name:'New spell — turn the moon'}).click();await page.locator('.turning-moon').waitFor();
+ if(await page.getByRole('dialog',{name:'Keep your spell pairs'}).isVisible())throw new Error('Unexpected save popup');
+ const result={automaticMoon:'PASS',foregroundOpacity:'PASS',singleTypewriterFocus:'PASS',namedFrameSwitch:'PASS',date:new Date().toISOString(),mode:'immersive',visibleControls:3,frameParchmentWandAndTypewriter:'PASS'};
  await writeFile('../docs/evidence/immersive-mode-hosted.json',JSON.stringify(result,null,2)+'\n');console.log(result);
 } finally {await browser.close();}

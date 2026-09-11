@@ -32,6 +32,7 @@ import {
   endPage,
   syncArchive,
 } from "@/lib/archive";
+import { ArchiveLibrary } from "./ArchiveLibrary";
 import { Grimoire } from "./Grimoire";
 import { Sigil } from "./DeskArt";
 type Phase =
@@ -87,7 +88,26 @@ export function IncantApp({
       return "balanced";
     }
   });
-  const [panel, setPanel] = useState(false);
+  const [frameLayer] = useState(() => {
+    const requested = new URLSearchParams(window.location.search).get("layer");
+    if (requested === "see-through" || requested === "foreground") {
+      try {
+        localStorage.setItem("incant-frame-layer", requested);
+      } catch {}
+      return requested;
+    }
+    try {
+      return localStorage.getItem("incant-frame-layer") === "see-through"
+        ? "see-through"
+        : "foreground";
+    } catch {
+      return "foreground";
+    }
+  });
+  const [panel, setPanel] = useState(
+    () =>
+      new URLSearchParams(window.location.search).get("view") === "spellbook",
+  );
   const panelRef = useRef<HTMLDialogElement>(null);
   const room = useRef<HTMLElement>(null);
   const typeDialog = useRef<HTMLDialogElement>(null);
@@ -171,7 +191,9 @@ export function IncantApp({
       if (png)
         void archiveSketch(png, words)
           .then(async (pair) => {
-            if (await archiveFolderReady()) await syncArchive(pair.id);
+            void archiveFolderReady()
+              .then((ready) => (ready ? syncArchive(pair.id) : undefined))
+              .catch(() => {});
           })
           .catch(() =>
             setArchiveError(
@@ -292,7 +314,9 @@ export function IncantApp({
     try {
       if (draftTimer.current) clearTimeout(draftTimer.current);
       const pair = await archiveSketch(png, text, true);
-      if (await archiveFolderReady()) await syncArchive(pair.id);
+      void archiveFolderReady()
+        .then((ready) => (ready ? syncArchive(pair.id) : undefined))
+        .catch(() => {});
       if (id !== serial.current) return;
       const count = again ? 1 : settings.fourfold ? 4 : 1;
       const results = await Promise.allSettled(
@@ -322,7 +346,9 @@ export function IncantApp({
               image: item.image,
               spell: item.spell,
             });
-            if (await archiveFolderReady()) await syncArchive(pair.id);
+            void archiveFolderReady()
+              .then((ready) => (ready ? syncArchive(pair.id) : undefined))
+              .catch(() => {});
             await saveCreation(item);
           } catch {
             setNotice(
@@ -482,7 +508,7 @@ export function IncantApp({
       }
     }
   }
-  const newPage = async (allowBrowserOnly = false) => {
+  const newPage = async () => {
     if (busy || renewal.current) return;
     renewal.current = true;
     if (draftTimer.current) clearTimeout(draftTimer.current);
@@ -490,13 +516,11 @@ export function IncantApp({
       const png = sketch.current?.exportPng();
       if (png && !sketch.current?.isEmpty())
         await archiveSketch(png, words, true);
-      if (!allowBrowserOnly && !(await archiveFolderReady())) {
-        archiveDialog.current?.showModal();
-        renewal.current = false;
-        return;
-      }
-      if (!allowBrowserOnly) await syncArchive();
       await endPage();
+      // An optional Files mirror must never interrupt an already-saved new page.
+      void archiveFolderReady()
+        .then((ready) => (ready ? syncArchive() : undefined))
+        .catch(() => {});
       setPanel(false);
       archiveDialog.current?.close();
       setPhase("renewing");
@@ -530,6 +554,7 @@ export function IncantApp({
     <main
       ref={room}
       data-frame={frame}
+      data-frame-layer={frameLayer}
       className={`drawing-room immersive-room ${turning ? "turning-moon" : ""} ${immersiveMode ? "immersive-mode" : ""} phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
     >
       <section className="desk" aria-label="Wizard's drawing desk">
@@ -921,35 +946,23 @@ export function IncantApp({
             </button>
           </div>
         </div>
-        {creations.length > 0 && (
-          <section className="collection" aria-label="Saved manifestations">
-            <p className="eyebrow">
-              YOUR SPELLBOOK <span>{creations.length} saved</span>
-            </p>
-            <div className="collection-strip">
-              {creations
-                .slice()
-                .reverse()
-                .map((c) => (
-                  <button
-                    key={c.id}
-                    disabled={busy}
-                    aria-label={"Open image: " + c.spell}
-                    aria-pressed={active?.id === c.id}
-                    onClick={() => {
-                      setActive(c);
-                      setLast(
-                        c.sketch ? { sketch: c.sketch, words: c.spell } : null,
-                      );
-                    }}
-                  >
-                    <img src={c.image} alt="" />
-                    <span>{c.spell}</span>
-                  </button>
-                ))}
-            </div>
-          </section>
-        )}
+        <button
+          onClick={() => {
+            setArchiveError("");
+            archiveDialog.current?.showModal();
+          }}
+        >
+          Export spellbook
+        </button>
+        <ArchiveLibrary
+          open={panel}
+          creations={creations}
+          busy={busy}
+          onOpen={(c) => {
+            setActive(c);
+            setLast(c.sketch ? { sketch: c.sketch, words: c.spell } : null);
+          }}
+        />
       </dialog>
       <dialog
         ref={typeDialog}
@@ -998,12 +1011,21 @@ export function IncantApp({
         className="archive-dialog"
         aria-label="Keep your spell pairs"
       >
-        <h2>A home for your spells</h2>
+        <h2>
+          {archiveError ? "Your sketch is still here" : "Export your spellbook"}
+        </h2>
         <p>
-          Choose a folder once to keep numbered sketch and image pairs in Files.
-          Your current drawing will be saved before the moon turns.
+          Sketches and their generations save automatically inside Incant on
+          this device. Export a copy whenever you want.
         </p>
-        {archiveError && <p role="alert">{archiveError}</p>}
+        {archiveError && (
+          <>
+            <p role="alert">{archiveError}</p>
+            <button onClick={() => void newPage()}>
+              Retry saving &amp; turn the moon
+            </button>
+          </>
+        )}
         {directorySupported() ? (
           <button
             disabled={archiveWorking}
@@ -1012,7 +1034,7 @@ export function IncantApp({
               setArchiveError("");
               try {
                 await chooseArchiveFolder();
-                await newPage();
+                archiveDialog.current?.close();
               } catch (e) {
                 setArchiveError(describe(e));
               } finally {
@@ -1020,7 +1042,7 @@ export function IncantApp({
               }
             }}
           >
-            Choose folder &amp; turn the moon
+            Choose export folder
           </button>
         ) : (
           <p>
@@ -1034,7 +1056,7 @@ export function IncantApp({
             setArchiveWorking(true);
             try {
               await downloadArchive();
-              await newPage(true);
+              archiveDialog.current?.close();
             } catch (e) {
               setArchiveError(describe(e));
             } finally {
@@ -1042,7 +1064,7 @@ export function IncantApp({
             }
           }}
         >
-          Download pairs &amp; turn the moon
+          Download spellbook ZIP
         </button>
         <button
           disabled={archiveWorking}

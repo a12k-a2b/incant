@@ -1,7 +1,9 @@
 {
+  "automaticMoon": "PASS",
+  "foregroundOpacity": "PASS",
   "singleTypewriterFocus": "PASS",
   "namedFrameSwitch": "PASS",
-  "date": "2026-09-11T07:39:35.906Z",
+  "date": "2026-09-11T07:55:52.874Z",
   "mode": "immersive",
   "visibleControls": 3,
   "frameParchmentWandAndTypewriter": "PASS"

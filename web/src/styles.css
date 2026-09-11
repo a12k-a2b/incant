@@ -1894,3 +1894,19 @@ dialog::backdrop {
 /* One keyboard entrance: keep the desk still and ease the bubble above the IME. */
 .type-bubble { transition:bottom 180ms ease-out; }
 @media(prefers-reduced-motion:reduce) { .type-bubble {transition:none;} }
+
+.archive-library h3 {margin:20px 0 8px;font-size:21px;}
+.archive-library h4 {margin:12px 0;font-size:15px;font-weight:normal;}
+.archive-library article {border-top:1px solid #b6aa91;padding:12px 0;}
+.archive-source {display:flex;align-items:center;gap:12px;margin-bottom:10px;font-size:13px;}
+.archive-source img {width:72px;height:88px;object-fit:contain;background:#fffaf0;border:1px solid #c5b99e;}
+
+/* Foreground treatment: the illustration remains 90% opaque across each corner.
+   A narrow falloff joins it to the open center; See-through retains the old masks. */
+.immersive-room[data-frame-layer="foreground"] .paper-wrap::after {
+ opacity:.9;
+ mask-image:linear-gradient(to right,#000 10%,transparent 15%,transparent 85%,#000 90%),linear-gradient(to bottom,#000 6%,transparent 10%,transparent 88%,#000 96%),radial-gradient(ellipse 37% 24% at 0 0,#000 85%,transparent 100%),radial-gradient(ellipse 33% 22% at 100% 0,#000 85%,transparent 100%),radial-gradient(ellipse 43% 29% at 0 100%,#000 85%,transparent 100%),radial-gradient(ellipse 32% 31% at 100% 100%,#000 85%,transparent 100%);
+}
+.immersive-room[data-frame="big"][data-frame-layer="foreground"] .paper-wrap::after {
+ mask-image:linear-gradient(to right,#000 14%,transparent 20%,transparent 80%,#000 86%),linear-gradient(to bottom,#000 7%,transparent 12%,transparent 85%,#000 95%),radial-gradient(ellipse 43% 28% at 0 0,#000 85%,transparent 100%),radial-gradient(ellipse 39% 26% at 100% 0,#000 85%,transparent 100%),radial-gradient(ellipse 49% 33% at 0 100%,#000 85%,transparent 100%),radial-gradient(ellipse 39% 35% at 100% 100%,#000 85%,transparent 100%);
+}

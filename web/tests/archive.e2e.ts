@@ -38,7 +38,7 @@ test("archive preserves exact sealed source and numbered pairing through edits a
     }),
   ).toBe(2);
 });
-test("moon writes files before clearing; next drawing gets next pair", async ({
+test("moon saves automatically without a popup; file export is optional", async ({
   page,
 }) => {
   // OPFS exercises real browser file handles but is NOT user-visible Android Files evidence.
@@ -46,20 +46,12 @@ test("moon writes files before clearing; next drawing gets next pair", async ({
     (window as any).showDirectoryPicker = () =>
       navigator.storage.getDirectory();
   });
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   const original = await line(page);
   await page.getByRole("button", { name: "New spell — turn the moon" }).click();
   await expect(
     page.getByRole("dialog", { name: "Keep your spell pairs" }),
-  ).toBeVisible();
-  expect(
-    await page
-      .locator("canvas")
-      .evaluate((c: HTMLCanvasElement) => c.toDataURL()),
-  ).toBe(original);
-  await page
-    .getByRole("button", { name: "Choose folder & turn the moon" })
-    .click();
+  ).not.toBeVisible();
   await expect(page.locator(".turning-moon")).toBeVisible();
   await expect(page.locator(".day-cycle")).toBeVisible();
   await expect(page.locator(".turning-moon")).toHaveCount(0, { timeout: 8000 });
@@ -68,6 +60,17 @@ test("moon writes files before clearing; next drawing gets next pair", async ({
       .locator("canvas")
       .evaluate((c: HTMLCanvasElement) => c.toDataURL()),
   ).not.toBe(original);
+  await page
+    .getByRole("button", { name: "Open desk tools", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Export spellbook", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Choose export folder" }).click();
+  await expect(
+    page.getByRole("dialog", { name: "Keep your spell pairs" }),
+  ).not.toBeVisible();
+  await page.getByRole("button", { name: "Close desk tools" }).click();
   const files = await page.evaluate(async () => {
     const root = await navigator.storage.getDirectory();
     const result: any = {};
@@ -93,12 +96,15 @@ test("folder denial cannot clear the sketch", async ({ page }) => {
     (window as any).showDirectoryPicker = () =>
       Promise.reject(new DOMException("Folder denied", "NotAllowedError"));
   });
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   const original = await line(page);
-  await page.getByRole("button", { name: "New spell — turn the moon" }).click();
   await page
-    .getByRole("button", { name: "Choose folder & turn the moon" })
+    .getByRole("button", { name: "Open desk tools", exact: true })
     .click();
+  await page
+    .getByRole("button", { name: "Export spellbook", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Choose export folder" }).click();
   await expect(page.getByRole("alert")).toContainText("Folder denied");
   await expect(page.locator(".turning-moon")).toHaveCount(0);
   expect(
@@ -150,13 +156,16 @@ test("unresponsive native picker recovers without clearing", async ({
   await page.addInitScript(() => {
     (window as any).showDirectoryPicker = () => new Promise(() => {});
   });
-  await page.goto("/");
+  await page.goto("/?mode=desk");
   const original = await line(page);
   await page.clock.install();
-  await page.getByRole("button", { name: "New spell — turn the moon" }).click();
   await page
-    .getByRole("button", { name: "Choose folder & turn the moon" })
+    .getByRole("button", { name: "Open desk tools", exact: true })
     .click();
+  await page
+    .getByRole("button", { name: "Export spellbook", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Choose export folder" }).click();
   await page.clock.runFor(31000);
   await expect(page.getByRole("alert")).toContainText("did not respond");
   await expect(
@@ -224,4 +233,82 @@ test("different spells reuse the exact sketch and archive both results", async (
     "Hot weather",
     "Cold weather",
   ]);
+});
+
+test("sessions group activity, preserve revision bundles, and separate new pages after inactivity", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const p = await page.evaluate(async () => {
+    const path = "/src/lib/archive.ts",
+      a = await import(path),
+      t = new Date(2026, 8, 11, 18).getTime();
+    const one = await a.archiveSketch("one", "hot", true, t);
+    const revision = await a.archiveSketch("two", "cold", true, t + 1000);
+    await a.endPage();
+    const second = await a.archiveSketch("three", "party", true, t + 60000);
+    await a.endPage();
+    const later = await a.archiveSketch(
+      "four",
+      "later",
+      true,
+      t + 60000 + a.SESSION_GAP_MS + 1,
+    );
+    return { one, revision, second, later };
+  });
+  expect(p.one.bundleId).toBe(p.revision.bundleId);
+  expect(p.second.bundleId).not.toBe(p.one.bundleId);
+  expect(p.second.sessionId).toBe(p.one.sessionId);
+  expect(p.later.sessionId).not.toBe(p.one.sessionId);
+  expect(p.later.day).toBe("2026-09-11");
+  await page.reload();
+  const stored = await page.evaluate(async () => {
+    const path = "/src/lib/archive.ts";
+    return (await import(path)).allPairs();
+  });
+  expect(stored).toHaveLength(4);
+  expect(stored[0].bundleId).toBe(p.one.bundleId);
+});
+
+test("foreground frame is 90 percent and See-through is a persistent rollback", async ({
+  page,
+}) => {
+  await page.goto("/?layer=foreground");
+  await expect(page.locator("main")).toHaveAttribute(
+    "data-frame-layer",
+    "foreground",
+  );
+  expect(
+    await page
+      .locator(".paper-wrap")
+      .evaluate((e) => getComputedStyle(e, "::after").opacity),
+  ).toBe("0.9");
+  await page.goto("/?layer=see-through");
+  await page.reload();
+  await expect(page.locator("main")).toHaveAttribute(
+    "data-frame-layer",
+    "see-through",
+  );
+  expect(
+    await page
+      .locator(".paper-wrap")
+      .evaluate((e) => getComputedStyle(e, "::after").opacity),
+  ).toBe("1");
+});
+test("a session can cross midnight while sketches remain grouped by their local creation day", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const p = await page.evaluate(async () => {
+    const path = "/src/lib/archive.ts",
+      a = await import(path),
+      t = new Date(2026, 8, 11, 23, 50).getTime();
+    const before = await a.archiveSketch("before", "", false, t);
+    await a.endPage();
+    const after = await a.archiveSketch("after", "", false, t + 20 * 60000);
+    return { before, after };
+  });
+  expect(p.before.sessionId).toBe(p.after.sessionId);
+  expect(p.before.day).toBe("2026-09-11");
+  expect(p.after.day).toBe("2026-09-12");
 });
