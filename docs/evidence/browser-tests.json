@@ -3,9 +3,7 @@
     "argv": [
       "/opt/homebrew/Cellar/node/26.5.0/bin/node",
       "/Users/anjan/Documents/SolOS/incant/web/node_modules/.bin/playwright",
-      "test",
-      "--grep",
-      "voice|layout phone"
+      "test"
     ],
     "configFile": "/Users/anjan/Documents/SolOS/incant/web/playwright.config.ts",
     "rootDir": "/Users/anjan/Documents/SolOS/incant/web/tests",
@@ -73,6 +71,312 @@
       "line": 0,
       "specs": [
         {
+          "title": "immersive desk keeps tools tucked away and palm input ignored",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3105,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:06.997Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-7809a549d081046c6610",
+          "file": "desk.e2e.ts",
+          "line": 46,
+          "column": 1
+        },
+        {
+          "title": "failed cast clears fog and preserves original sketch and retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1755,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:11.403Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-c184a2f455da844d750e",
+          "file": "desk.e2e.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "casting fog reveals a saved image and historical reroll keeps its source",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6231,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:13.183Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-f1277a978967cbeb6a7d",
+          "file": "desk.e2e.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "cancelled spell cannot replace drawing with a late result",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2917,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:19.431Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-a17bc35ce789f5142216",
+          "file": "desk.e2e.ts",
+          "line": 148,
+          "column": 1
+        },
+        {
+          "title": "layout desktop",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2459,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:22.384Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-f2b18778b69bd9fddfb6",
+          "file": "desk.e2e.ts",
+          "line": 182,
+          "column": 3
+        },
+        {
+          "title": "layout dc1-portrait",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3222,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:24.868Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-f3ce89ecf3914a7e8fd8",
+          "file": "desk.e2e.ts",
+          "line": 182,
+          "column": 3
+        },
+        {
+          "title": "layout dc1-landscape",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2560,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:28.122Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-244109fb7ab7d15642ba",
+          "file": "desk.e2e.ts",
+          "line": 182,
+          "column": 3
+        },
+        {
+          "title": "layout tablet-portrait",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2209,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:30.719Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-9c0214c580ef97a3b215",
+          "file": "desk.e2e.ts",
+          "line": 182,
+          "column": 3
+        },
+        {
+          "title": "layout tablet-landscape",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2667,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:32.986Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-c9f9ae92e1b75652277d",
+          "file": "desk.e2e.ts",
+          "line": 182,
+          "column": 3
+        },
+        {
           "title": "layout phone",
           "ok": true,
           "tags": [],
@@ -88,12 +392,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1590,
+                  "duration": 1412,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-11T06:31:10.297Z",
+                  "startTime": "2026-09-11T06:52:35.672Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -103,8 +407,76 @@
           ],
           "id": "a58455fa5bbf677dcbeb-91a1da273e70bc445f0d",
           "file": "desk.e2e.ts",
-          "line": 151,
+          "line": 182,
           "column": 3
+        },
+        {
+          "title": "resize retains exact original drawing pixels",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1537,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:37.100Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-20ccd6511c31ac3e799a",
+          "file": "desk.e2e.ts",
+          "line": 202,
+          "column": 1
+        },
+        {
+          "title": "reduced motion disables fog motion and image reveal animation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1711,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:38.665Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-879ed41e4c24272dc411",
+          "file": "desk.e2e.ts",
+          "line": 211,
+          "column": 1
         },
         {
           "title": "voice keyboard uses final speech rather than the previous typed spell",
@@ -122,12 +494,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4791,
+                  "duration": 5381,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-11T06:31:12.980Z",
+                  "startTime": "2026-09-11T06:52:40.399Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -137,8 +509,8 @@
           ],
           "id": "a58455fa5bbf677dcbeb-0cf95ef8c257c2d39616",
           "file": "desk.e2e.ts",
-          "line": 187,
-          "column": 1
+          "line": 237,
+          "column": 3
         },
         {
           "title": "voice touch-hold uses final speech rather than the previous typed spell",
@@ -156,12 +528,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5526,
+                  "duration": 6262,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-11T06:31:17.791Z",
+                  "startTime": "2026-09-11T06:52:45.798Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -171,8 +543,8 @@
           ],
           "id": "a58455fa5bbf677dcbeb-2358cdd27b799b8570ff",
           "file": "desk.e2e.ts",
-          "line": 187,
-          "column": 1
+          "line": 237,
+          "column": 3
         },
         {
           "title": "voice tap uses final speech rather than the previous typed spell",
@@ -190,12 +562,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4231,
+                  "duration": 4718,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-11T06:31:23.335Z",
+                  "startTime": "2026-09-11T06:52:52.091Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -205,8 +577,8 @@
           ],
           "id": "a58455fa5bbf677dcbeb-dc593cdc883d87bef833",
           "file": "desk.e2e.ts",
-          "line": 187,
-          "column": 1
+          "line": 237,
+          "column": 3
         },
         {
           "title": "early voice release discards a late microphone grant",
@@ -224,12 +596,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3427,
+                  "duration": 2810,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-11T06:31:27.579Z",
+                  "startTime": "2026-09-11T06:52:56.831Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -239,7 +611,177 @@
           ],
           "id": "a58455fa5bbf677dcbeb-bdaa981e7063f4e4ab89",
           "file": "desk.e2e.ts",
-          "line": 287,
+          "line": 364,
+          "column": 1
+        },
+        {
+          "title": "pixel eraser pen-button: partial line, undo, redo, reload, and draw again",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2401,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:52:59.672Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-a4680293730898fff877",
+          "file": "desk.e2e.ts",
+          "line": 411,
+          "column": 3
+        },
+        {
+          "title": "pixel eraser pen-bitmask: partial line, undo, redo, reload, and draw again",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1936,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:53:02.098Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-ae0ebba1581004f4d78f",
+          "file": "desk.e2e.ts",
+          "line": 411,
+          "column": 3
+        },
+        {
+          "title": "pixel eraser toolbar: partial line, undo, redo, reload, and draw again",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2341,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:53:04.048Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-a97c099bf2595738678c",
+          "file": "desk.e2e.ts",
+          "line": 411,
+          "column": 3
+        },
+        {
+          "title": "typewriter focuses the bubble, retains words, and casts once",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1876,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:53:06.405Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-d82bc8038838b207683e",
+          "file": "desk.e2e.ts",
+          "line": 484,
+          "column": 1
+        },
+        {
+          "title": "typewriter bubble fits narrow keyboard-sized viewport",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1025,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-11T06:53:08.298Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a58455fa5bbf677dcbeb-84947f6fb822d4e5b650",
+          "file": "desk.e2e.ts",
+          "line": 505,
           "column": 1
         }
       ]
@@ -247,9 +789,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-11T06:31:09.663Z",
-    "duration": 22465.471,
-    "expected": 5,
+    "startTime": "2026-09-11T06:52:05.986Z",
+    "duration": 70820.75899999999,
+    "expected": 21,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

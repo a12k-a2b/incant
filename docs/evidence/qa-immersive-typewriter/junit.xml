@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="10.058"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1591 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-CWs15T25.css   40.27 kB │ gzip:  9.89 kB
+dist/assets/index-DbkgycBy.js   287.66 kB │ gzip: 91.17 kB
+✓ built in 3.65s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="4.348"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (6 tests) 22ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  23:48:12
+   Duration  2.68s (transform 178ms, setup 0ms, collect 181ms, tests 22ms, environment 0ms, prepare 344ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="99.803"><failure message="command exited 1">    Expected: true
+    Received: false
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      401 |   await expect
+      402 |     .poll(() =&gt; page.evaluate(() =&gt; (window as any).__stopped))
+    &gt; 403 |     .toBe(true);
+          |      ^
+      404 |   expect(tokens).toBe(0);
+      405 |   await expect(
+      406 |     page.getByRole("button", { name: /[Hh]old to speak/ }),
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:403:6
+
+    Error Context: test-results/desk.e2e.ts-early-voice-re-31519-rds-a-late-microphone-grant/error-context.md
+
+  1 failed
+    tests/desk.e2e.ts:364:1 › early voice release discards a late microphone grant ─────────────────
+  20 passed (1.6m)</failure><system-out>    Expected: true
+    Received: false
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      401 |   await expect
+      402 |     .poll(() =&gt; page.evaluate(() =&gt; (window as any).__stopped))
+    &gt; 403 |     .toBe(true);
+          |      ^
+      404 |   expect(tokens).toBe(0);
+      405 |   await expect(
+      406 |     page.getByRole("button", { name: /[Hh]old to speak/ }),
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:403:6
+
+    Error Context: test-results/desk.e2e.ts-early-voice-re-31519-rds-a-late-microphone-grant/error-context.md
+
+  1 failed
+    tests/desk.e2e.ts:364:1 › early voice release discards a late microphone grant ─────────────────
+  20 passed (1.6m)</system-out></testcase></testsuite>

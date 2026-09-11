@@ -9,9 +9,7 @@ import {
   Download,
   ArrowLeft,
   Sparkles,
-  Volume2,
   X,
-  CircleHelp,
   RotateCcw,
 } from "lucide-react";
 import { GeminiLiveTranscribe, downsampleTo16k } from "@/lib/gemini-live";
@@ -24,7 +22,7 @@ import {
   type Tool,
 } from "./SketchCanvas";
 import { Grimoire } from "./Grimoire";
-import { DeskArt, Sigil, ParchmentFrame } from "./DeskArt";
+import { Sigil } from "./DeskArt";
 type Phase = "idle" | "connecting" | "listening" | "finishing" | "casting";
 type Voice = {
   live: GeminiLiveTranscribe;
@@ -52,6 +50,29 @@ export function IncantApp({
   imageReady?: boolean;
   voiceReady?: boolean;
 }) {
+  const [panel, setPanel] = useState(false);
+  const panelRef = useRef<HTMLDialogElement>(null);
+  const typeDialog = useRef<HTMLDialogElement>(null);
+  const typeField = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    const fitKeyboard = () => typeDialog.current?.style.setProperty("--keyboard-inset", `${Math.max(0, window.innerHeight - (viewport?.height ?? window.innerHeight) - (viewport?.offsetTop ?? 0))}px`);
+    fitKeyboard();
+    viewport?.addEventListener("resize", fitKeyboard);
+    viewport?.addEventListener("scroll", fitKeyboard);
+    return () => { viewport?.removeEventListener("resize", fitKeyboard); viewport?.removeEventListener("scroll", fitKeyboard); };
+  }, []);
+  const [loadedImage, setLoadedImage] = useState<string | null>(null);
+  const [revealing, setRevealing] = useState(false);
+  useEffect(() => {
+    if (panel) panelRef.current?.showModal();
+    else panelRef.current?.close();
+  }, [panel]);
+  useEffect(() => {
+    if (!revealing) return;
+    const t = setTimeout(() => setRevealing(false), 2700);
+    return () => clearTimeout(t);
+  }, [revealing, loadedImage]);
   const voiceButton = useRef<HTMLButtonElement>(null);
   const voicePointer = useRef<number | null>(null);
   const voicePress = useRef({ started: 0, stopping: false });
@@ -86,7 +107,9 @@ export function IncantApp({
     // React touch handlers are passive in Chrome. Cancel native text selection
     // on this control only; pointer events still own the hold/release lifecycle.
     const preventNativeHold = (event: Event) => event.preventDefault();
-    button.addEventListener("touchstart", preventNativeHold, { passive: false });
+    button.addEventListener("touchstart", preventNativeHold, {
+      passive: false,
+    });
     button.addEventListener("contextmenu", preventNativeHold);
     button.addEventListener("selectstart", preventNativeHold);
     return () => {
@@ -150,6 +173,7 @@ export function IncantApp({
     if (voice.current) closeVoice(voice.current);
     operation.current?.abort();
     operation.current = null;
+    setRevealing(false);
     setPhase("idle");
     setProgress("");
   };
@@ -188,6 +212,8 @@ export function IncantApp({
     setLast({ sketch: png, words: text });
     setWords(text);
     setError("");
+    setPanel(false);
+    setRevealing(false);
     setPhase("casting");
     setProgress("Sending your sketch…");
     const timer = setTimeout(() => control.abort(), 180000);
@@ -394,436 +420,378 @@ export function IncantApp({
   };
   return (
     <main
-      className={`drawing-room ${settings.chamber ? "with-room" : "quiet-room"} ${settings.livePaper ? "live-paper" : ""}`}
+      className={`drawing-room immersive-room phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
     >
-      <header className="room-header">
-        <a className="wordmark" href="/" aria-label="Incant drawing room">
-          <span className="brand-star">✧</span> incant
-          <span className="edition">THE DRAWING ROOM</span>
-        </a>
-        <div className="header-actions">
+      <section className="desk" aria-label="Wizard's drawing desk">
+        <div className="drawing-area">
+          <div className="paper-wrap">
+            <div
+              className={`paper ${active && loadedImage === active.id ? "has-manifestation" : ""}`}
+              aria-busy={phase === "casting"}
+            >
+              <SketchCanvas
+                ref={sketch}
+                tool={tool}
+                locked={busy || !!active}
+                className="drawing-canvas"
+                onChange={() => setRevision((n) => n + 1)}
+                onStorageError={setNotice}
+              />
+              {empty && !active && phase === "idle" && (
+                <div className="empty-parchment">
+                  <Sigil />
+                  <p>Begin with a scribble</p>
+                  <span>A creature, a cottage, a place only you know.</span>
+                </div>
+              )}
+              {active && (
+                <img
+                  key={active.id}
+                  className={`manifestation ${loadedImage === active.id ? "image-ready" : ""}`}
+                  src={active.image}
+                  alt={active.spell}
+                  onLoad={() => {
+                    setLoadedImage(active.id);
+                    setRevealing(true);
+                  }}
+                  onError={() => {
+                    setError(
+                      "The image could not be displayed. Your sketch is safe; reopen the image from the spellbook.",
+                    );
+                    setLoadedImage(null);
+                    setActive(null);
+                  }}
+                />
+              )}
+              {(phase === "casting" ||
+                revealing ||
+                (!!active && loadedImage !== active.id)) && (
+                <div
+                  className={`spell-fog ${revealing ? "fog-clearing" : ""}`}
+                  aria-hidden="true"
+                >
+                  <i />
+                  <i />
+                  <i />
+                </div>
+              )}
+            </div>
+          </div>
+          {(phase === "finishing" || phase === "casting") && (
+            <svg
+              className="spell-flight"
+              viewBox="0 0 1000 1000"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path className="spell-trail" d="M540 950 Q650 730 500 480" />
+              <g className="spell-impact">
+                <path d="M500 480 l-65 -70 25 5 -45 -80 M500 480 l75 -50 -10 -35 65 -45 M500 480 l-100 35 15 25 -75 40 M500 480 l65 75 -20 15 40 60" />
+                <circle cx="500" cy="480" r="80" />
+              </g>
+            </svg>
+          )}
+        </div>
+        <div className="wand-rest">
           <button
-            className="plain-button"
-            onClick={() => setHelp(true)}
-            disabled={busy}
+            ref={voiceButton}
+            aria-label={
+              phase === "connecting"
+                ? handsFree
+                  ? "Connecting… tap to cancel"
+                  : "Connecting… keep holding"
+                : phase === "listening"
+                  ? handsFree
+                    ? "Listening… tap to cast"
+                    : "Listening… release to cast"
+                  : phase === "finishing"
+                    ? "Finishing your spell…"
+                    : "Tap or hold to speak"
+            }
+            aria-describedby="wand-status"
+            className={`voice-wand ${phase === "listening" ? "listening" : ""}`}
+            disabled={phase === "casting" || phase === "finishing"}
+            onPointerDown={(e) => {
+              if (voicePointer.current !== null || e.button !== 0) return;
+              e.preventDefault();
+              voicePointer.current = e.pointerId;
+              voicePress.current = {
+                started: performance.now(),
+                stopping: handsFree,
+              };
+              e.currentTarget.setPointerCapture(e.pointerId);
+              if (!handsFree) void beginVoice();
+            }}
+            onPointerUp={(e) => {
+              if (voicePointer.current !== e.pointerId) return;
+              voicePointer.current = null;
+              if (
+                !voicePress.current.stopping &&
+                performance.now() - voicePress.current.started < 300 &&
+                voice.current
+              ) {
+                setHandsFree(true);
+              } else {
+                setHandsFree(false);
+                void endVoice();
+              }
+            }}
+            onPointerCancel={(e) => {
+              if (voicePointer.current !== e.pointerId) return;
+              voicePointer.current = null;
+              void endVoice(true);
+            }}
+            onLostPointerCapture={(e) => {
+              if (voicePointer.current !== e.pointerId) return;
+              voicePointer.current = null;
+              void endVoice(true);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                void endVoice(true);
+                return;
+              }
+              if ((e.key === " " || e.key === "Enter") && !e.repeat) {
+                e.preventDefault();
+                void beginVoice();
+              }
+            }}
+            onKeyUp={(e) => {
+              if (e.key === " " || e.key === "Enter") {
+                e.preventDefault();
+                void endVoice();
+              }
+            }}
+            onBlur={() => {
+              if (
+                !handsFree &&
+                (voice.current?.ready || phase === "connecting")
+              )
+                void endVoice(true);
+            }}
+            onContextMenu={(e) => e.preventDefault()}
           >
-            <CircleHelp size={18} />
-            <span>How to cast</span>
+            <Wand />
           </button>
-          <button
-            className="book-button"
-            onClick={() => setBook(true)}
-            disabled={busy}
+
+          <p
+            id="wand-status"
+            className="wand-status"
+            role="status"
+            aria-live="polite"
           >
-            <BookOpen size={18} /> Spellbook
+            {phase === "connecting"
+              ? "Waking the wand…"
+              : phase === "listening"
+                ? handsFree
+                  ? "Listening · tap to cast"
+                  : "Listening"
+                : phase === "finishing"
+                  ? "Gathering your words…"
+                  : phase === "casting"
+                    ? "Your sketch is becoming…"
+                    : ""}
+          </p>
+        </div>
+        {busy && (
+          <button
+            className="ritual-cancel"
+            onClick={() => {
+              cancel();
+              setNotice("Stopped. Your original sketch is safe.");
+            }}
+          >
+            Stop waiting
+          </button>
+        )}
+        <button
+          className="desk-latch"
+          aria-label="Open desk tools"
+          onClick={() => setPanel(true)}
+          disabled={busy}
+        >
+          <BookOpen size={24} />
+        </button>
+        <button className="typewriter-key" aria-label="Type a spell" disabled={busy}
+          onContextMenu={e => e.preventDefault()}
+          onClick={() => { typeDialog.current?.showModal(); typeField.current?.focus(); }}>
+          <img src="/wizard-typewriter.png" alt="" draggable={false}/>
+        </button>
+        {(error || notice) && (
+          <div className="room-message" role={error ? "alert" : "status"}>
+            <p>{error || notice}</p>
+            <button
+              aria-label="Dismiss message"
+              onClick={() => {
+                setError("");
+                setNotice("");
+              }}
+            >
+              <X size={18} />
+            </button>
+            <button onClick={() => setPanel(true)}>Open spellbook</button>
+          </div>
+        )}
+      </section>
+      <dialog
+        ref={panelRef}
+        className="desk-drawer"
+        onCancel={() => setPanel(false)}
+        onClose={() => setPanel(false)}
+      >
+        <div className="drawer-heading">
+          <h2>The spellbook</h2>
+          <button aria-label="Close desk tools" onClick={() => setPanel(false)}>
+            <X />
           </button>
         </div>
-      </header>
-      <div className="workspace">
-        <aside className="room-aside">
-          <div className="aside-intro">
-            <p className="eyebrow">A SMALL PRACTICE IN WONDER</p>
-            <h1>
-              A little ink.
-              <br />A few words.
-              <br />
-              <em>
-                A world of
-                <br />
-                your own.
-              </em>
-            </h1>
-            <p>
-              Draw the beginning.
-              <br />
-              Let a spell do the rest.
-            </p>
-          </div>
-          <DeskArt />
-          <div className="margin-note">
-            <span>✧</span>
-            <p>
-              No perfect lines required.
-              <br />
-              Even wizards begin
-              <br />
-              with a scribble.
-            </p>
-          </div>
-        </aside>
-        <section className="desk" aria-label="Wizard's drawing desk">
-          <div className="desk-top">
-            <div>
-              <span className="eyebrow">YOUR PARCHMENT</span>
-              <span className="page-caption">
-                {active
-                  ? "An idea, made visible."
-                  : "Something wonderful starts here."}
-              </span>
-            </div>
-            <button className="plain-button" onClick={newPage} disabled={busy}>
-              <Plus size={17} /> New page
-            </button>
-          </div>
-          <div className="drawing-area">
-            <div
-              className="tool-rail"
-              role="toolbar"
-              aria-label="Drawing tools"
-            >
-              <ToolButton
-                label="Quill"
-                selected={tool === "quill"}
-                disabled={busy || !!active}
-                onClick={() => setTool("quill")}
-              >
-                <Feather />
-              </ToolButton>
-              <ToolButton
-                label="Eraser"
-                selected={tool === "rubber"}
-                disabled={busy || !!active}
-                onClick={() => setTool("rubber")}
-              >
-                <Eraser />
-              </ToolButton>
-              <span className="tool-divider" />
-              <ToolButton
-                label="Undo"
-                disabled={busy || !!active || !sketch.current?.canUndo()}
-                onClick={() => sketch.current?.undo()}
-              >
-                <Undo2 />
-              </ToolButton>
-              <ToolButton
-                label="Redo"
-                disabled={busy || !!active || !sketch.current?.canRedo()}
-                onClick={() => sketch.current?.redo()}
-              >
-                <Redo2 />
-              </ToolButton>
-              <span className="tool-divider" />
-              <ToolButton
-                label="Save sketch"
-                disabled={empty || busy}
-                onClick={() => {
-                  const png = sketch.current?.exportPng();
-                  if (png) download(png, "incant-sketch.png");
-                }}
-              >
-                <Download />
-              </ToolButton>
-            </div>
-            <div className="paper-wrap">
-              <div className="paper" aria-busy={phase === "casting"}>
-                <ParchmentFrame />
-                <SketchCanvas
-                  ref={sketch}
-                  tool={tool}
-                  locked={busy || !!active}
-                  className="drawing-canvas"
-                  onChange={() => setRevision((n) => n + 1)}
-                  onStorageError={setNotice}
-                />
-                {empty && !active && phase === "idle" && (
-                  <div className="empty-parchment">
-                    <Sigil />
-                    <p>Begin with a scribble</p>
-                    <span>A creature, a cottage, a place only you know.</span>
-                    <small>DRAW WITH YOUR STYLUS</small>
-                  </div>
-                )}
-                {active && (
-                  <img
-                    className="manifestation"
-                    src={active.image}
-                    alt={active.spell}
-                  />
-                )}
-                {phase === "casting" && (
-                  <div
-                    className={`cast-veil ${active ? "has-result" : ""}`}
-                    role="status"
-                  >
-                    <Sigil />
-                    <p>
-                      {active
-                        ? "Another world is taking shape"
-                        : "Your sketch is becoming…"}
-                    </p>
-                    <span>
-                      {progress} · {elapsed}s
-                    </span>
-                    <small>Your original drawing is safe.</small>
-                    <button
-                      className="plain-button"
-                      onClick={() => {
-                        cancel();
-                        setNotice(
-                          "Stopped waiting. A request already sent may still be billed.",
-                        );
-                      }}
-                    >
-                      Stop waiting
-                    </button>
-                  </div>
-                )}
-              </div>
-              <div className="paper-foot">
-                <span>✦</span>
-                <span>
-                  {active ? "A world summoned by you" : "INK & IMAGINATION"}
-                </span>
-                <span>✦</span>
-              </div>
-            </div>
-          </div>
-          <div className="spell-area">
-            {active && (
-              <div className="result-actions">
-                <button
-                  className="plain-button"
-                  disabled={busy}
-                  onClick={() => setActive(null)}
-                >
-                  <ArrowLeft size={16} /> Back to sketch
-                </button>
-                <button
-                  className="plain-button"
-                  disabled={busy || !last}
-                  onClick={() => void cast("", true)}
-                >
-                  <RotateCcw size={16} /> Another
-                </button>
-                <button
-                  className="plain-button"
-                  onClick={() =>
-                    download(active.image, "incant-" + active.created + ".png")
-                  }
-                >
-                  <Download size={16} /> Save image
-                </button>
-              </div>
-            )}
-            <label className="eyebrow" htmlFor="spell">
-              {phase === "listening"
-                ? "THE WAND IS LISTENING"
-                : "THE INCANTATION"}
-            </label>
-            <div className="spell-input-row">
-              <textarea
-                id="spell"
-                maxLength={4000}
-                rows={2}
-                value={words}
-                disabled={busy}
-                onChange={(e) => setWords(e.target.value)}
-                placeholder="“A tiny cottage in a forest of enormous mushrooms…”"
-              />
-              <button
-                className="cast-button"
-                disabled={busy || !words.trim() || empty}
-                onClick={() => void cast()}
-              >
-                <Sparkles size={19} /> Cast spell
-              </button>
-            </div>
-            <div className="voice-row">
-              <span className="spell-hint">
-                Say what your drawing should become.
-              </span>
-              <button
-                ref={voiceButton}
-                className={`voice-wand ${phase === "listening" ? "listening" : ""}`}
-                disabled={phase === "casting" || phase === "finishing"}
-                onPointerDown={(e) => {
-                  if (voicePointer.current !== null || e.button !== 0) return;
-                  e.preventDefault();
-                  voicePointer.current = e.pointerId;
-                  voicePress.current = { started: performance.now(), stopping: handsFree };
-                  e.currentTarget.setPointerCapture(e.pointerId);
-                  if (!handsFree) void beginVoice();
-                }}
-                onPointerUp={(e) => {
-                  if (voicePointer.current !== e.pointerId) return;
-                  voicePointer.current = null;
-                  if (!voicePress.current.stopping && performance.now() - voicePress.current.started < 300 && voice.current) {
-                    setHandsFree(true);
-                  } else {
-                    setHandsFree(false);
-                    void endVoice();
-                  }
-                }}
-                onPointerCancel={(e) => {
-                  if (voicePointer.current !== e.pointerId) return;
-                  voicePointer.current = null;
-                  void endVoice(true);
-                }}
-                onLostPointerCapture={(e) => {
-                  if (voicePointer.current !== e.pointerId) return;
-                  voicePointer.current = null;
-                  void endVoice(true);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Escape") {
-                    e.preventDefault();
-                    void endVoice(true);
-                    return;
-                  }
-                  if ((e.key === " " || e.key === "Enter") && !e.repeat) {
-                    e.preventDefault();
-                    void beginVoice();
-                  }
-                }}
-                onKeyUp={(e) => {
-                  if (e.key === " " || e.key === "Enter") {
-                    e.preventDefault();
-                    void endVoice();
-                  }
-                }}
-                onBlur={() => {
-                  if (!handsFree && (voice.current?.ready || phase === "connecting"))
-                    void endVoice(true);
-                }}
-                onContextMenu={(e) => e.preventDefault()}
-              >
-                <Volume2 size={17} />
-                {phase === "connecting"
-                  ? handsFree ? "Connecting… tap to cancel" : "Connecting… keep holding"
-                  : phase === "listening"
-                    ? handsFree ? "Listening… tap to cast" : "Listening… release to cast"
-                    : phase === "finishing"
-                      ? "Finishing your spell…"
-                      : "Tap or hold to speak"}
-                <span className="wand-glyph">⟋✧</span>
-              </button>
-            </div>
-            {error && (
-              <div role="alert" className="desk-message">
-                <p>{error}</p>
-                <button aria-label="Dismiss error" onClick={() => setError("")}>
-                  <X size={16} />
-                </button>
-              </div>
-            )}
-            {notice && (
-              <div role="status" className="desk-message">
-                <p>{notice}</p>
-                <button
-                  aria-label="Dismiss notice"
-                  onClick={() => setNotice("")}
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
-        <aside className="ritual-aside">
-          <div className="ritual-heading">
-            THE RITUAL <span>✧</span>
-          </div>
-          <ol>
-            <li>
-              <span>01</span>
-              <div>
-                <h2>Make a mark</h2>
-                <p>
-                  Give your idea a shape.
-                  <br />A few lines will do.
-                </p>
-              </div>
-            </li>
-            <li>
-              <span>02</span>
-              <div>
-                <h2>Speak a spell</h2>
-                <p>
-                  Hold the wand. Describe
-                  <br />
-                  what you imagine.
-                </p>
-              </div>
-            </li>
-            <li>
-              <span>03</span>
-              <div>
-                <h2>Let it become</h2>
-                <p>
-                  Release, and watch your
-                  <br />
-                  drawing find its world.
-                </p>
-              </div>
-            </li>
-          </ol>
-          <div className="spell-example">
-            <p className="eyebrow">A SPELL TO BORROW</p>
-            <p>
-              “An ancient tree with
-              <br />a door in its trunk,
-              <br />
-              drawn in storybook ink.”
-            </p>
+        <div className="drawer-links">
+          <button className="plain-button" onClick={newPage} disabled={busy}>
+            <Plus size={18} />
+            New page
+          </button>
+          <button className="plain-button" onClick={() => setHelp(true)}>
+            How to cast
+          </button>
+          <button className="plain-button" onClick={() => setBook(true)}>
+            <BookOpen size={18} />
+            Spellbook
+          </button>
+        </div>
+        <div className="tool-rail" role="toolbar" aria-label="Drawing tools">
+          <ToolButton
+            label="Quill"
+            selected={tool === "quill"}
+            disabled={busy || !!active}
+            onClick={() => setTool("quill")}
+          >
+            <Feather />
+          </ToolButton>
+          <ToolButton
+            label="Eraser"
+            selected={tool === "rubber"}
+            disabled={busy || !!active}
+            onClick={() => setTool("rubber")}
+          >
+            <Eraser />
+          </ToolButton>
+          <span className="tool-divider" />
+          <ToolButton
+            label="Undo"
+            disabled={busy || !!active || !sketch.current?.canUndo()}
+            onClick={() => sketch.current?.undo()}
+          >
+            <Undo2 />
+          </ToolButton>
+          <ToolButton
+            label="Redo"
+            disabled={busy || !!active || !sketch.current?.canRedo()}
+            onClick={() => sketch.current?.redo()}
+          >
+            <Redo2 />
+          </ToolButton>
+          <span className="tool-divider" />
+          <ToolButton
+            label="Save sketch"
+            disabled={empty || busy}
+            onClick={() => {
+              const png = sketch.current?.exportPng();
+              if (png) download(png, "incant-sketch.png");
+            }}
+          >
+            <Download />
+          </ToolButton>
+        </div>
+        {active && (
+          <div className="result-actions">
             <button
               className="plain-button"
               disabled={busy}
+              onClick={() => setActive(null)}
+            >
+              <ArrowLeft size={16} /> Back to sketch
+            </button>
+            <button
+              className="plain-button"
+              disabled={busy || !last}
+              onClick={() => void cast("", true)}
+            >
+              <RotateCcw size={16} /> Another
+            </button>
+            <button
+              className="plain-button"
               onClick={() =>
-                setWords(
-                  "An ancient tree with a door in its trunk, drawn in storybook ink.",
-                )
+                download(active.image, "incant-" + active.created + ".png")
               }
             >
-              Use these words <span>↗</span>
+              <Download size={16} /> Save image
             </button>
           </div>
-          <div className="desk-seal">
-            <Sigil />
-            <span>
-              MADE FOR
-              <br />
-              DAYLIGHT
-            </span>
+        )}
+        <div className="spell-area">
+          <label className="eyebrow" htmlFor="spell">
+            {phase === "listening"
+              ? "THE WAND IS LISTENING"
+              : "THE INCANTATION"}
+          </label>
+          <div className="spell-input-row">
+            <textarea
+              id="spell"
+              maxLength={4000}
+              rows={2}
+              value={words}
+              disabled={busy}
+              onChange={(e) => setWords(e.target.value)}
+              placeholder="“A tiny cottage in a forest of enormous mushrooms…”"
+            />
+            <button
+              className="cast-button"
+              disabled={busy || !words.trim() || empty}
+              onClick={() => void cast()}
+            >
+              <Sparkles size={19} /> Cast spell
+            </button>
           </div>
-        </aside>
-      </div>
-      <footer className="room-footer">
-        <span>
-          INCANT <i>·</i> An ordinary desk for extraordinary things.
-        </span>
-        <span>
-          {empty ? "Your next world awaits." : "Draft kept on this device."}
-        </span>
-      </footer>
-      {creations.length > 0 && (
-        <section className="collection" aria-label="Saved manifestations">
-          <p className="eyebrow">
-            YOUR SPELLBOOK <span>{creations.length} saved</span>
-          </p>
-          <div className="collection-strip">
-            {creations
-              .slice()
-              .reverse()
-              .map((c) => (
-                <button
-                  key={c.id}
-                  disabled={busy}
-                  aria-label={"Open image: " + c.spell}
-                  aria-pressed={active?.id === c.id}
-                  onClick={() => {
-                    setActive(c);
-                    setLast(
-                      c.sketch ? { sketch: c.sketch, words: c.spell } : null,
-                    );
-                  }}
-                >
-                  <img src={c.image} alt="" />
-                  <span>{c.spell}</span>
-                </button>
-              ))}
-          </div>
-        </section>
-      )}
+        </div>
+        {creations.length > 0 && (
+          <section className="collection" aria-label="Saved manifestations">
+            <p className="eyebrow">
+              YOUR SPELLBOOK <span>{creations.length} saved</span>
+            </p>
+            <div className="collection-strip">
+              {creations
+                .slice()
+                .reverse()
+                .map((c) => (
+                  <button
+                    key={c.id}
+                    disabled={busy}
+                    aria-label={"Open image: " + c.spell}
+                    aria-pressed={active?.id === c.id}
+                    onClick={() => {
+                      setActive(c);
+                      setLast(
+                        c.sketch ? { sketch: c.sketch, words: c.spell } : null,
+                      );
+                    }}
+                  >
+                    <img src={c.image} alt="" />
+                    <span>{c.spell}</span>
+                  </button>
+                ))}
+            </div>
+          </section>
+        )}
+      </dialog>
+      <dialog ref={typeDialog} className="type-bubble" aria-label="Type a spell">
+        <form onSubmit={e => { e.preventDefault(); typeDialog.current?.close(); void cast(); }}>
+          <label htmlFor="typed-spell">What shall it become?</label>
+          <button type="button" className="bubble-close" aria-label="Close typed spell" onClick={() => typeDialog.current?.close()}><X size={18}/></button>
+          <textarea ref={typeField} id="typed-spell" aria-label="Type your spell" rows={3} maxLength={4000} value={words} onChange={e => setWords(e.target.value)} placeholder="A tiny cottage beneath an enormous moon…" />
+          <button type="submit" className="bubble-cast" aria-label="Cast typed spell" disabled={busy || empty || !words.trim()}><Sparkles size={23}/></button>
+        </form>
+      </dialog>
       <Grimoire
         imageReady={imageReady}
         voiceReady={voiceReady}
@@ -833,10 +801,49 @@ export function IncantApp({
         onClose={() => setBook(false)}
       />
       {help && <Help onClose={() => setHelp(false)} />}
-      <span hidden>{revision}</span>
+      <span hidden>
+        {revision}
+        {elapsed}
+        {progress}
+      </span>
     </main>
   );
 }
+function Wand() {
+  return (
+    <svg className="enchanted-wand" viewBox="0 0 240 120" aria-hidden="true">
+      <g
+        className="wand-body"
+        stroke="#322a20"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path
+          d="M49 93 L177 28 Q184 22 187 25 Q188 28 179 32 L55 103Z"
+          fill="#a48b61"
+          strokeWidth="2"
+        />
+        <path
+          d="M49 93 Q31 91 23 105 Q30 119 43 115 L66 96 59 87Z"
+          fill="#534632"
+          strokeWidth="2"
+        />
+        <path
+          d="M40 98 l9 13 M48 93 l9 12 M56 90 l8 10 M73 84 l4 6 M79 81 l4 6"
+          stroke="#dac7a2"
+          strokeWidth="2"
+        />
+        <path d="M84 81 L174 31" stroke="#eadabd" />
+        <circle cx="184" cy="26" r="4" fill="#fff9e5" />
+      </g>
+      <g className="wand-sparks" fill="none" stroke="#695539" strokeWidth="1.5">
+        <path d="M184 8v9 M184 35v9 M166 26h9 M193 26h9 M171 13l6 6 M193 35l6 6" />
+        <circle cx="184" cy="26" r="14" />
+      </g>
+    </svg>
+  );
+}
+
 function ToolButton({
   label,
   selected,
@@ -882,9 +889,9 @@ function Help({ onClose }: { onClose: () => void }) {
         palm on the parchment.
       </p>
       <p>
-        Tap the wand to start and tap again to cast, or hold it and release to cast. Wait for “Listening”, then describe
-        your idea. You can also type your words and choose{" "}
-        <strong>Cast spell</strong>.
+        Tap the wand to start and tap again to cast, or hold it and release to
+        cast. Wait for “Listening”, then describe your idea. You can also type
+        your words and choose <strong>Cast spell</strong>.
       </p>
       <p>
         Add image and voice keys in the Spellbook. Casting sends your sketch and

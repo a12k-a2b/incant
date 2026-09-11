@@ -7,3 +7,5 @@ Chrome long-press selection is prevented on the wand with non-passive native tou
 Validation: qa-voice-gestures/report.md records build, six unit contracts, and nineteen browser flows passing. Mock-provider browser coverage includes a sustained native Chromium touch sequence, explicit contextmenu cancellation, unrelated touch release, tap-start/tap-finish, keyboard hold, and release before microphone permission resolves. Five focused browser cases passed again after final button-selection protection and help/Escape edits. Hosted delivery checks are in evidence/voice-deployment.json. Desktop emulation is not physical Android confirmation; the owner must retry on the updated page.
 
 The owner screenshots showed Chrome's text-selection action menu and selection extending to the disabled Cast spell button. They were inspected from temporary local copies; their real sketch has not been added to repository fixtures.
+
+The immersive room subsequently replaced the visible wand labels with illustration and a small active-session status; accessible names and both gestures remain. See IMMERSIVE-ROOM.md for the typewriter alternative and current layout.

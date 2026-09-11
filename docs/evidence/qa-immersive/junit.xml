@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="0" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="10.731"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1591 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-Czzx_wE0.css   38.32 kB │ gzip:  9.41 kB
+dist/assets/index-C7HzbqZW.js   286.48 kB │ gzip: 90.82 kB
+✓ built in 4.29s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="4.158"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (6 tests) 39ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  23:41:20
+   Duration  1.86s (transform 246ms, setup 0ms, collect 262ms, tests 39ms, environment 0ms, prepare 255ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="57.397"><system-out>  ✓   2 tests/desk.e2e.ts:53:1 › failed cast clears fog and preserves original sketch and retry (1.6s)
+  ✓   3 tests/desk.e2e.ts:64:1 › casting fog reveals a saved image and historical reroll keeps its source (6.7s)
+  ✓   4 tests/desk.e2e.ts:85:1 › cancelled spell cannot replace drawing with a late result (2.9s)
+  ✓   5 tests/desk.e2e.ts:97:2 › layout desktop (2.1s)
+  ✓   6 tests/desk.e2e.ts:97:2 › layout dc1-portrait (2.0s)
+  ✓   7 tests/desk.e2e.ts:97:2 › layout dc1-landscape (2.1s)
+  ✓   8 tests/desk.e2e.ts:97:2 › layout tablet-portrait (1.4s)
+  ✓   9 tests/desk.e2e.ts:97:2 › layout tablet-landscape (1.6s)
+  ✓  10 tests/desk.e2e.ts:97:2 › layout phone (1.3s)
+  ✓  11 tests/desk.e2e.ts:108:1 › resize retains exact original drawing pixels (1.5s)
+  ✓  12 tests/desk.e2e.ts:112:1 › reduced motion disables fog motion and image reveal animation (1.5s)
+  ✓  13 tests/desk.e2e.ts:120:1 › voice keyboard uses final speech rather than the previous typed spell (5.4s)
+  ✓  14 tests/desk.e2e.ts:120:1 › voice touch-hold uses final speech rather than the previous typed spell (5.8s)
+  ✓  15 tests/desk.e2e.ts:120:1 › voice tap uses final speech rather than the previous typed spell (4.9s)
+  ✓  16 tests/desk.e2e.ts:219:1 › early voice release discards a late microphone grant (2.9s)
+  ✓  17 tests/desk.e2e.ts:265:3 › pixel eraser pen-button: partial line, undo, redo, reload, and draw again (2.0s)
+  ✓  18 tests/desk.e2e.ts:265:3 › pixel eraser pen-bitmask: partial line, undo, redo, reload, and draw again (2.3s)
+  ✓  19 tests/desk.e2e.ts:265:3 › pixel eraser toolbar: partial line, undo, redo, reload, and draw again (2.5s)
+
+  19 passed (55.9s)</system-out></testcase></testsuite>

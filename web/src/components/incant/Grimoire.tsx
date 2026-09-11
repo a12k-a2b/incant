@@ -169,13 +169,6 @@ export function Grimoire({
           </Field>
 
           <Toggle
-            label="Room illustrations"
-            hint="Books, a moonlit window, and a little encouragement in the margins."
-            on={settings.chamber}
-            onToggle={() => set("chamber", !settings.chamber)}
-          />
-
-          <Toggle
             label="Fourfold visages"
             hint="Cast four interpretations at once. The first to return becomes the large image; the rest wait as echoes. Slower, costs more."
             on={settings.fourfold}
