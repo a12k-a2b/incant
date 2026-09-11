@@ -26,7 +26,7 @@ const steps = [
   {
     title: "There is always another story.",
     copy: "Tap the moon for fresh parchment. Tap the books to revisit, save, or share your creations.",
-    hint: "Peel a finished image’s corner to see its original sketch.",
+    hint: "Tap the little sketch parchment beside the scrolls to compare with your original drawing.",
   },
 ];
 export function Onboarding({ onClose }: { onClose: () => void }) {

@@ -1,0 +1,14 @@
+{
+  "time": "2026-09-11T21:02:17.166Z",
+  "fixture": "synthetic cottage and speech",
+  "device": "not connected",
+  "voice": {
+    "ok": true,
+    "transcriptCharacters": 61
+  },
+  "image": {
+    "status": 200,
+    "ok": true,
+    "elapsedMs": 11705
+  }
+}

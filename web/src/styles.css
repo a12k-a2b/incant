@@ -2009,3 +2009,18 @@ dialog::backdrop {
 @media(prefers-reduced-motion:reduce){.enchanted-wand{transition:none;}.wand-wave{animation:none!important;transform:scale(1.25);opacity:1;}.wand-wave-two{display:none;}.phase-connecting .wand-wave-one{stroke-dasharray:3 4;}.phase-listening .wand-wave-one{stroke-dasharray:none;}}
 .immersive-mode.phase-connecting .wand-status,
 .immersive-mode.phase-listening .wand-status {height:auto;margin:0;overflow:visible;clip-path:none;}
+
+/* A failed spell must remain visible even in the immersive room. */
+.immersive-mode .room-message {
+  position:absolute;width:auto;height:auto;left:12%;right:12%;bottom:15%;
+  padding:14px;margin:0;overflow:visible;clip-path:none;white-space:normal;
+  border:1px solid #9b8968;border-radius:12px;
+}
+.immersive-mode .room-message button[aria-label="Dismiss message"] {
+  display:block;flex-shrink:0;min-width:44px;
+}
+/* A little sketch lying among the scrolls, rather than a bright image corner. */
+.parchment-peel {right:12%;bottom:10%;width:clamp(60px,8vw,96px);height:clamp(72px,9.6vw,115px);z-index:9;padding:0;transform:rotate(-14deg);background:none;}
+.parchment-peel svg {display:block;width:100%;height:100%;filter:drop-shadow(2px 3px 2px #241a1166);pointer-events:none;}
+.parchment-peel:active {transform:rotate(-10deg) translateY(2px);}
+.parchment-peel[aria-pressed="true"] svg {filter:drop-shadow(1px 1px 1px #241a1166);}

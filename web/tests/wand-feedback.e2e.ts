@@ -106,6 +106,10 @@ for (const reduced of [false, true])
         path: "../docs/evidence/wand-press-listening.png",
       });
     await page.mouse.up();
+    await expect(page.locator("main")).toHaveClass(/phase-finishing/);
+    await expect(page.locator(".spell-fog")).toBeVisible();
+    await expect(page.locator(".spell-flight")).toHaveCount(0);
     await expect(page.locator("main")).toHaveClass(/phase-idle/);
+    await expect(page.getByRole("alert")).toHaveCSS("clip-path", "none");
     await expect(page.locator(".wand-feedback")).toHaveCSS("opacity", "0");
   });

@@ -614,10 +614,12 @@ export function IncantApp({
                   <SketchPeel
                     key={"peel-" + active.id}
                     source={active.sketch}
+                    controlHost={room.current}
                   />
                 )}
               {turning && <div className="day-cycle" aria-hidden="true" />}
-              {(phase === "casting" ||
+              {(phase === "finishing" ||
+                phase === "casting" ||
                 revealing ||
                 (!!active && loadedImage !== active.id)) && (
                 <div
@@ -631,7 +633,7 @@ export function IncantApp({
               )}
             </div>
           </div>
-          {(phase === "finishing" || phase === "casting") && (
+          {phase === "casting" && (
             <svg
               className="spell-flight"
               viewBox="0 0 1000 1000"
