@@ -1890,3 +1890,7 @@ dialog::backdrop {
 /* Let night dissolve into the parchment edges instead of appearing as a hard panel. */
 .day-cycle { mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent),linear-gradient(to bottom,transparent,#000 6%,#000 94%,transparent); mask-composite:intersect; }
 .moon-orbit { clip-path:none; mask-image:radial-gradient(ellipse at center,#000 48%,transparent 72%); }
+
+/* One keyboard entrance: keep the desk still and ease the bubble above the IME. */
+.type-bubble { transition:bottom 180ms ease-out; }
+@media(prefers-reduced-motion:reduce) { .type-bubble {transition:none;} }

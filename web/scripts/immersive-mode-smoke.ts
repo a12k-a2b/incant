@@ -13,6 +13,11 @@ try {
  await page.screenshot({path:'../docs/evidence/immersive-mode-hosted.png'});
  await page.goto('https://incant-web-production.up.railway.app/?frame=big');await page.locator('main[data-frame=big]').waitFor();
  await page.goto('https://incant-web-production.up.railway.app/?frame=balanced');await page.locator('main[data-frame=balanced]').waitFor();
- const result={namedFrameSwitch:'PASS',date:new Date().toISOString(),mode:'immersive',visibleControls:3,frameParchmentWandAndTypewriter:'PASS'};
+ await page.evaluate(()=>{(window as any).focusTrail=[];document.addEventListener('focusin',e=>{const t=e.target as HTMLElement;if(t.closest('.type-bubble'))(window as any).focusTrail.push(t.getAttribute('aria-label'));});});
+ await page.getByRole('button',{name:'Type a spell',exact:true}).click();
+ const focus=await page.evaluate(()=>(window as any).focusTrail);
+ if(JSON.stringify(focus)!==JSON.stringify(['Type your spell']))throw new Error('Unexpected focus sequence: '+JSON.stringify(focus));
+ await page.getByRole('button',{name:'Close typed spell'}).click();
+ const result={singleTypewriterFocus:'PASS',namedFrameSwitch:'PASS',date:new Date().toISOString(),mode:'immersive',visibleControls:3,frameParchmentWandAndTypewriter:'PASS'};
  await writeFile('../docs/evidence/immersive-mode-hosted.json',JSON.stringify(result,null,2)+'\n');console.log(result);
 } finally {await browser.close();}

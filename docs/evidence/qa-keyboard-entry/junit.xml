@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="4.944"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1592 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-B-MmAcHi.css   43.76 kB │ gzip: 10.45 kB
+dist/assets/index-CTynsMWY.js   297.01 kB │ gzip: 94.03 kB
+✓ built in 1.91s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="1.506"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (7 tests) 15ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  00:34:06
+   Duration  601ms (transform 84ms, setup 0ms, collect 107ms, tests 15ms, environment 0ms, prepare 102ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="64.233"><failure message="command exited 1">
+      Array [
+    +   "Close typed spell",
+        "Type your spell",
+      ]
+
+      548 |  await page.evaluate(()=&gt;{(window as any).focusTrail=[];document.addEventListener('focusin',e=&gt;{const t=e.target as HTMLElement;if(t.closest('.type-bubble'))(window as any).focusTrail.push(t.getAttribute('aria-label'));});});
+      549 |  await page.getByRole('button',{name:'Type a spell',exact:true}).click();
+    &gt; 550 |  expect(await page.evaluate(()=&gt;(window as any).focusTrail)).toEqual(['Type your spell']);
+          |                                                              ^
+      551 |  const height=await page.locator('main').evaluate(e=&gt;e.style.height);expect(height).not.toBe('');
+      552 |  await page.getByRole('button',{name:'Close typed spell'}).click();await expect.poll(()=&gt;page.locator('main').evaluate(e=&gt;e.style.height)).toBe('');
+      553 | });
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:550:62
+
+    Error Context: test-results/desk.e2e.ts-typewriter-foc-0299d--its-viewport-lock-on-close/error-context.md
+
+  1 failed
+    tests/desk.e2e.ts:546:1 › typewriter focuses only the writing field and releases its viewport lock on close
+  30 passed (1.1m)</failure><system-out>
+      Array [
+    +   "Close typed spell",
+        "Type your spell",
+      ]
+
+      548 |  await page.evaluate(()=&gt;{(window as any).focusTrail=[];document.addEventListener('focusin',e=&gt;{const t=e.target as HTMLElement;if(t.closest('.type-bubble'))(window as any).focusTrail.push(t.getAttribute('aria-label'));});});
+      549 |  await page.getByRole('button',{name:'Type a spell',exact:true}).click();
+    &gt; 550 |  expect(await page.evaluate(()=&gt;(window as any).focusTrail)).toEqual(['Type your spell']);
+          |                                                              ^
+      551 |  const height=await page.locator('main').evaluate(e=&gt;e.style.height);expect(height).not.toBe('');
+      552 |  await page.getByRole('button',{name:'Close typed spell'}).click();await expect.poll(()=&gt;page.locator('main').evaluate(e=&gt;e.style.height)).toBe('');
+      553 | });
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:550:62
+
+    Error Context: test-results/desk.e2e.ts-typewriter-foc-0299d--its-viewport-lock-on-close/error-context.md
+
+  1 failed
+    tests/desk.e2e.ts:546:1 › typewriter focuses only the writing field and releases its viewport lock on close
+  30 passed (1.1m)</system-out></testcase></testsuite>

@@ -1,0 +1,79 @@
+{
+  "counts": {
+    "BLOCKED": 0,
+    "FAIL": 1,
+    "PASS": 2,
+    "SKIP": 0
+  },
+  "generated_at": "2026-09-11T07:35:11Z",
+  "kind": "repository-checks",
+  "metadata": {
+    "dry_run": false,
+    "harness_version": "0.1.0",
+    "profile": "pr",
+    "revisions": {
+      "incant-web": "921c21cb2fc89000d797d528e12a50bce61123e8"
+    }
+  },
+  "results": [
+    {
+      "check": "production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "incant/web",
+      "description": "TypeScript and production PWA build",
+      "duration_seconds": 4.944,
+      "exit_code": 0,
+      "id": "incant-web/production-build",
+      "log": "logs/incant-web_production-build.log",
+      "output_tail": "\n> incant@1.1.0 build\n> tsc --noEmit && vite build && node scripts/build-sw.mjs\n\nvite v7.3.6 building client environment for production...\ntransforming...\n\u2713 1592 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.70 kB \u2502 gzip:  0.42 kB\ndist/assets/index-B-MmAcHi.css   43.76 kB \u2502 gzip: 10.45 kB\ndist/assets/index-CTynsMWY.js   297.01 kB \u2502 gzip: 94.03 kB\n\u2713 built in 1.91s",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-11T07:34:00Z",
+      "status": "PASS"
+    },
+    {
+      "check": "unit-contracts",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "incant/web",
+      "description": "Malformed image/network handling and room authentication negative controls",
+      "duration_seconds": 1.506,
+      "exit_code": 0,
+      "id": "incant-web/unit-contracts",
+      "log": "logs/incant-web_unit-contracts.log",
+      "output_tail": "\n> incant@1.1.0 test\n> vitest run\n\n\n RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web\n\n \u2713 tests/contracts.test.ts (7 tests) 15ms\n\n Test Files  1 passed (1)\n      Tests  7 passed (7)\n   Start at  00:34:06\n   Duration  601ms (transform 84ms, setup 0ms, collect 107ms, tests 15ms, environment 0ms, prepare 102ms)\n",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-11T07:34:05Z",
+      "status": "PASS"
+    },
+    {
+      "check": "browser-flows",
+      "command": [
+        "npm",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "incant/web",
+      "description": "Synthetic browser ink, recovery, cast, voice-race, dialog and responsive checks; requires local server on port5173",
+      "duration_seconds": 64.233,
+      "exit_code": 1,
+      "id": "incant-web/browser-flows",
+      "log": "logs/incant-web_browser-flows.log",
+      "output_tail": "\n      Array [\n    +   \"Close typed spell\",\n        \"Type your spell\",\n      ]\n\n      548 |  await page.evaluate(()=>{(window as any).focusTrail=[];document.addEventListener('focusin',e=>{const t=e.target as HTMLElement;if(t.closest('.type-bubble'))(window as any).focusTrail.push(t.getAttribute('aria-label'));});});\n      549 |  await page.getByRole('button',{name:'Type a spell',exact:true}).click();\n    > 550 |  expect(await page.evaluate(()=>(window as any).focusTrail)).toEqual(['Type your spell']);\n          |                                                              ^\n      551 |  const height=await page.locator('main').evaluate(e=>e.style.height);expect(height).not.toBe('');\n      552 |  await page.getByRole('button',{name:'Close typed spell'}).click();await expect.poll(()=>page.locator('main').evaluate(e=>e.style.height)).toBe('');\n      553 | });\n        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:550:62\n\n    Error Context: test-results/desk.e2e.ts-typewriter-foc-0299d--its-viewport-lock-on-close/error-context.md\n\n  1 failed\n    tests/desk.e2e.ts:546:1 \u203a typewriter focuses only the writing field and releases its viewport lock on close \n  30 passed (1.1m)",
+      "project": "incant-web",
+      "reason": "command exited 1",
+      "required": true,
+      "started_at": "2026-09-11T07:34:07Z",
+      "status": "FAIL"
+    }
+  ],
+  "schema_version": 1,
+  "status": "FAIL"
+}

@@ -542,3 +542,12 @@ test('immersive mode keeps the wand and illustrated typewriter, including while 
  await expect(page.locator('.manifestation')).toHaveCount(0);
  expect(await png(page)).toBe(original);
 });
+
+test('typewriter focuses only the writing field and releases its viewport lock on close',async({page})=>{
+ await page.goto('/');
+ await page.evaluate(()=>{(window as any).focusTrail=[];document.addEventListener('focusin',e=>{const t=e.target as HTMLElement;if(t.closest('.type-bubble'))(window as any).focusTrail.push(t.getAttribute('aria-label'));});});
+ await page.getByRole('button',{name:'Type a spell',exact:true}).click();
+ expect(await page.evaluate(()=>(window as any).focusTrail)).toEqual(['Type your spell']);
+ const height=await page.locator('main').evaluate(e=>e.style.height);expect(height).not.toBe('');
+ await page.getByRole('button',{name:'Close typed spell'}).click();await expect.poll(()=>page.locator('main').evaluate(e=>e.style.height)).toBe('');
+});

@@ -89,6 +89,7 @@ export function IncantApp({
   });
   const [panel, setPanel] = useState(false);
   const panelRef = useRef<HTMLDialogElement>(null);
+  const room = useRef<HTMLElement>(null);
   const typeDialog = useRef<HTMLDialogElement>(null);
   const typeField = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
@@ -527,6 +528,7 @@ export function IncantApp({
   };
   return (
     <main
+      ref={room}
       data-frame={frame}
       className={`drawing-room immersive-room ${turning ? "turning-moon" : ""} ${immersiveMode ? "immersive-mode" : ""} phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
     >
@@ -768,8 +770,13 @@ export function IncantApp({
           disabled={busy}
           onContextMenu={(e) => e.preventDefault()}
           onClick={() => {
+            // Freeze the illustrated canvas while Android resizes for the IME.
+            if (room.current)
+              room.current.style.height = `${room.current.getBoundingClientRect().height}px`;
+            typeField.current?.setAttribute("autofocus", "");
             typeDialog.current?.showModal();
-            typeField.current?.focus();
+            if (document.activeElement !== typeField.current)
+              typeField.current?.focus({ preventScroll: true });
           }}
         >
           <img src="/wizard-typewriter.png" alt="" draggable={false} />
@@ -946,6 +953,7 @@ export function IncantApp({
       </dialog>
       <dialog
         ref={typeDialog}
+        onClose={() => room.current?.style.removeProperty("height")}
         className="type-bubble"
         aria-label="Type a spell"
       >
