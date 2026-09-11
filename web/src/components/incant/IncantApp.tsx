@@ -1,3 +1,4 @@
+import { Onboarding, needsIntroduction } from "./Onboarding";
 import { startCloudBackup } from "@/lib/cloud-backup";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -163,7 +164,7 @@ export function IncantApp({
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [book, setBook] = useState(false),
-    [help, setHelp] = useState(false),
+    [help, setHelp] = useState(needsIntroduction),
     [creations, setCreations] = useState<Creation[]>([]),
     [active, setActive] = useState<Creation | null>(null);
   const [elapsed, setElapsed] = useState(0),
@@ -855,6 +856,16 @@ export function IncantApp({
             <button onClick={() => setPanel(true)}>Open spellbook</button>
           </div>
         )}
+        {immersiveMode && (
+          <button
+            className="room-help"
+            aria-label="Show introduction"
+            disabled={busy}
+            onClick={() => setHelp(true)}
+          >
+            <span aria-hidden="true">?</span>
+          </button>
+        )}
       </section>
       <dialog
         ref={libraryDialog}
@@ -1147,7 +1158,7 @@ export function IncantApp({
         onChange={setSettings}
         onClose={() => setBook(false)}
       />
-      {help && <Help onClose={() => setHelp(false)} />}
+      {help && <Onboarding onClose={() => setHelp(false)} />}
       <span hidden>
         {revision}
         {elapsed}
@@ -1215,43 +1226,5 @@ function ToolButton({
     >
       {children}
     </button>
-  );
-}
-function Help({ onClose }: { onClose: () => void }) {
-  const ref = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    ref.current?.showModal();
-  }, []);
-  return (
-    <dialog
-      ref={ref}
-      className="help-dialog"
-      onCancel={onClose}
-      onClose={onClose}
-    >
-      <p className="eyebrow">WELCOME TO THE DRAWING ROOM</p>
-      <h2>A spell begins with you.</h2>
-      <p>
-        Sketch with a stylus or mouse. Fingers are ignored so you can rest your
-        palm on the parchment.
-      </p>
-      <p>
-        Tap the wand to start and tap again to cast, or hold it and release to
-        cast. Wait for “Listening”, then describe your idea. You can also type
-        your words and choose <strong>Cast spell</strong>.
-      </p>
-      <p>
-        Add image and voice keys in the Spellbook. Casting sends your sketch and
-        words through this app’s server to OpenAI; voice audio goes to Gemini.
-        Drawing works without a connection after the page has loaded.
-      </p>
-      <p>
-        Your draft and finished images are saved in this browser. Download keeps
-        a copy outside the app.
-      </p>
-      <button className="cast-button" onClick={onClose}>
-        Let’s make something
-      </button>
-    </dialog>
   );
 }

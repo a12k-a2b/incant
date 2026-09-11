@@ -1941,3 +1941,41 @@ dialog::backdrop {
 .typewriter-key:disabled, .spellbooks-key:disabled { opacity: 1; }
 .archive-cloud-actions {display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
 .archive-cloud-actions button {padding:10px 14px;border:1px solid #97836b;background:#f5eddd;border-radius:6px;}
+
+/* A small marginal question mark, outside the sleeping dragon's illustration. */
+.room-help {position:absolute;z-index:9;left:2px;bottom:max(2px,env(safe-area-inset-bottom));width:44px;height:44px;background:transparent;color:#483b2b;touch-action:manipulation;}
+.room-help span {font-family:Georgia,serif;font-size:22px;font-style:italic;text-shadow:0 1px #fff8e7;}
+.room-help:focus-visible {outline:2px solid #735c37;outline-offset:-5px;border-radius:50%;}
+.room-help:disabled {opacity:.5;}
+.incant-introduction {position:fixed;inset:0;margin:auto;width:min(460px,calc(100vw - 40px));max-height:calc(100dvh - 40px);overflow:auto;border:1px solid #9d8963;border-radius:4px 13px 5px 16px;padding:22px 28px;background:#f8f0dc;color:#413422;box-shadow:0 0 0 5px #d9c9a266,0 12px 70px #251e1944;}
+.incant-introduction::backdrop {background:#241d164d;}
+.incant-introduction button {background:transparent;min-height:44px;padding:8px 12px;color:inherit;}
+.incant-introduction button:focus-visible {outline:2px solid #75603d;outline-offset:2px;}
+.introduction-top {display:flex;justify-content:space-between;align-items:center;font-size:13px;letter-spacing:.08em;}
+.introduction-top>span {color:#796440;}
+.introduction-top button {font-size:14px;text-decoration:underline;text-underline-offset:4px;}
+.introduction-page {text-align:center;animation:lesson-enter 350ms ease-out;}
+.introduction-picture {display:block;width:100%;height:180px;margin:8px auto 6px;}
+.introduction-page h2 {font-family:Georgia,serif;font-size:29px;font-weight:normal;line-height:1.15;margin:10px 0 16px;}
+.introduction-page p {font-size:17px;line-height:1.5;margin:0;}
+.introduction-page .introduction-hint {font-size:14px;font-style:italic;color:#766447;line-height:1.5;margin-top:14px;}
+.incant-introduction footer {display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px;}
+.incant-introduction .introduction-next {border-bottom:1px solid #a38c62;font-size:17px;}
+.lesson-ink {stroke-dasharray:1;animation:lesson-draw 3s ease-in-out infinite;}
+.lesson-pen {transform-origin:220px 55px;animation:lesson-pen 3s ease-in-out infinite;}
+.lesson-wand {transform-origin:212px 137px;animation:lesson-cast 3.5s ease-in-out infinite;}
+.lesson-result,.lesson-sparks {animation:lesson-develop 3.5s ease-in-out infinite;}
+.lesson-moon {transform-origin:148px 78px;animation:lesson-moon 5s ease-in-out infinite;}
+.typewriter-lesson {position:relative;display:flex;justify-content:center;align-items:flex-end;padding-top:26px;}
+.typewriter-lesson img {height:135px;width:auto;object-fit:contain;}
+.typewriter-lesson span {position:absolute;top:7px;font-style:italic;font-size:16px;animation:lesson-type 3s ease-in-out infinite;}
+@keyframes lesson-enter {from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+@keyframes lesson-draw {0%,8%{stroke-dashoffset:1;}70%,100%{stroke-dashoffset:0;}}
+@keyframes lesson-pen {0%,100%{transform:translate(0,0);}50%{transform:translate(-18px,30px) rotate(-12deg);}}
+@keyframes lesson-cast {0%,25%{transform:rotate(14deg);}40%,80%{transform:rotate(-9deg);}100%{transform:rotate(14deg);}}
+@keyframes lesson-develop {0%,30%{opacity:.12;}65%,90%{opacity:1;}100%{opacity:.12;}}
+@keyframes lesson-moon {0%,40%{transform:rotate(0);}80%,100%{transform:rotate(360deg);}}
+@keyframes lesson-type {0%{opacity:0;transform:translateY(6px);}45%,90%{opacity:1;transform:none;}100%{opacity:0;}}
+@media(max-height:560px){.incant-introduction{padding:12px 22px;}.introduction-picture{height:95px;}.typewriter-lesson img{height:70px;}.introduction-page h2{font-size:24px;margin:6px 0 10px;}.introduction-page p{font-size:15px;}.introduction-page .introduction-hint{margin-top:8px;}.incant-introduction footer{margin-top:12px;}}
+@media(prefers-reduced-motion:reduce){.introduction-page,.incant-introduction svg *,.typewriter-lesson span{animation:none!important;}.lesson-ink{stroke-dashoffset:0;}}
+.room-help span {color:#f8eed9;-webkit-text-stroke:.5px #3c3022;paint-order:stroke fill;text-shadow:none;}

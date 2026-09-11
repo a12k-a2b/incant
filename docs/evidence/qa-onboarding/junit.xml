@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="2.385"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1597 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-DsdjJDBG.css   52.35 kB │ gzip: 12.12 kB
+dist/assets/index-CUK8kiBH.js   312.52 kB │ gzip: 99.15 kB
+✓ built in 806ms</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="0.699"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (7 tests) 5ms
+ ✓ tests/backup.test.ts (2 tests) 81ms
+
+ Test Files  2 passed (2)
+      Tests  9 passed (9)
+   Start at  08:49:27
+   Duration  335ms (transform 52ms, setup 0ms, collect 114ms, tests 86ms, environment 0ms, prepare 104ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="217.692"><failure message="command exited -15">  ✓   4 tests/archive.e2e.ts:116:1 › archive failure cannot clear the sketch (453ms)
+  ✓   5 tests/archive.e2e.ts:133:1 › old gallery casts backfill once without stealing the active page (218ms)
+  ✘   6 tests/archive.e2e.ts:153:1 › unresponsive native picker recovers without clearing (30.0s)
+(node:82431) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 tests/archive.e2e.ts:180:1 › named frames persist while keeping the drawing (443ms)
+  ✓   8 tests/archive.e2e.ts:197:1 › different spells reuse the exact sketch and archive both results (6.1s)
+  ✓   9 tests/archive.e2e.ts:238:1 › sessions group activity, preserve revision bundles, and separate new pages after inactivity (271ms)
+  ✓  10 tests/archive.e2e.ts:273:1 › foreground frame is 90 percent and See-through is a persistent rollback (286ms)
+  ✓  11 tests/archive.e2e.ts:298:1 › a session can cross midnight while sketches remain grouped by their local creation day (171ms)
+  ✓  12 tests/cloud-backup.e2e.ts:2:1 › offline retry backs up exact bytes, resumes idempotently and restores without replacing a draft (205ms)
+  ✘  13 tests/desk.e2e.ts:46:1 › immersive desk keeps tools tucked away and palm input ignored (30.0s)
+(node:82548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  14 tests/desk.e2e.ts:79:1 › failed cast clears fog and preserves original sketch and retry (30.0s)
+(node:82674) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  15 tests/desk.e2e.ts:96:1 › casting fog reveals a saved image and historical reroll keeps its source (30.0s)
+(node:82860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)</failure><system-out>  ✓   4 tests/archive.e2e.ts:116:1 › archive failure cannot clear the sketch (453ms)
+  ✓   5 tests/archive.e2e.ts:133:1 › old gallery casts backfill once without stealing the active page (218ms)
+  ✘   6 tests/archive.e2e.ts:153:1 › unresponsive native picker recovers without clearing (30.0s)
+(node:82431) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 tests/archive.e2e.ts:180:1 › named frames persist while keeping the drawing (443ms)
+  ✓   8 tests/archive.e2e.ts:197:1 › different spells reuse the exact sketch and archive both results (6.1s)
+  ✓   9 tests/archive.e2e.ts:238:1 › sessions group activity, preserve revision bundles, and separate new pages after inactivity (271ms)
+  ✓  10 tests/archive.e2e.ts:273:1 › foreground frame is 90 percent and See-through is a persistent rollback (286ms)
+  ✓  11 tests/archive.e2e.ts:298:1 › a session can cross midnight while sketches remain grouped by their local creation day (171ms)
+  ✓  12 tests/cloud-backup.e2e.ts:2:1 › offline retry backs up exact bytes, resumes idempotently and restores without replacing a draft (205ms)
+  ✘  13 tests/desk.e2e.ts:46:1 › immersive desk keeps tools tucked away and palm input ignored (30.0s)
+(node:82548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  14 tests/desk.e2e.ts:79:1 › failed cast clears fog and preserves original sketch and retry (30.0s)
+(node:82674) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  15 tests/desk.e2e.ts:96:1 › casting fog reveals a saved image and historical reroll keeps its source (30.0s)
+(node:82860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)</system-out></testcase></testsuite>

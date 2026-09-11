@@ -312,3 +312,6 @@ test("a session can cross midnight while sketches remain grouped by their local 
   expect(p.before.day).toBe("2026-09-11");
   expect(p.after.day).toBe("2026-09-12");
 });
+
+// These existing flows exercise a returning user; first-visit behavior has its own suite.
+test.beforeEach(async ({ page }) => { await page.addInitScript(() => localStorage.setItem("incant-introduction-v1", "seen")); });

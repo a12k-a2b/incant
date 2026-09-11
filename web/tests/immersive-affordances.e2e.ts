@@ -122,3 +122,6 @@ test("hourglass cancels late image and respects reduced motion", async ({
   await expect(page.locator(".phase-casting")).toHaveCount(0);
   await expect(page.locator(".spell-fog")).toHaveCount(0);
 });
+
+// These existing flows exercise a returning user; first-visit behavior has its own suite.
+test.beforeEach(async ({ page }) => { await page.addInitScript(() => localStorage.setItem("incant-introduction-v1", "seen")); });

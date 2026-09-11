@@ -557,7 +557,7 @@ test("immersive mode keeps the wand and illustrated typewriter, including while 
 }) => {
   await page.goto("/");
   await expect(page.locator(".immersive-mode")).toBeVisible();
-  await expect(page.getByRole("button")).toHaveCount(4);
+  await expect(page.getByRole("button")).toHaveCount(5);
   await expect(page.locator(".typewriter-key")).toBeVisible();
   await expect(page.locator(".desk-latch")).not.toBeVisible();
   await expect(page.locator(".empty-parchment")).not.toBeVisible();
@@ -587,7 +587,7 @@ test("immersive mode keeps the wand and illustrated typewriter, including while 
     .locator(".cast-button")
     .evaluate((b: HTMLButtonElement) => b.click());
   await expect(page.locator(".phase-casting")).toBeVisible();
-  await expect(page.getByRole("button")).toHaveCount(5);
+  await expect(page.getByRole("button")).toHaveCount(6);
   await page.locator(".voice-wand").click();
   await expect(page.locator(".spell-fog")).toHaveCount(0);
   await page.waitForTimeout(1300);
@@ -596,7 +596,7 @@ test("immersive mode keeps the wand and illustrated typewriter, including while 
     .locator(".cast-button")
     .evaluate((b: HTMLButtonElement) => b.click());
   await expect(page.locator(".manifestation.image-ready")).toBeVisible();
-  await expect(page.getByRole("button")).toHaveCount(4);
+  await expect(page.getByRole("button")).toHaveCount(5);
   await page.locator(".voice-wand").click();
   await expect(page.locator(".manifestation")).toHaveCount(0);
   expect(await png(page)).toBe(original);
@@ -625,3 +625,6 @@ test("typewriter focuses only the writing field and releases its viewport lock o
     .poll(() => page.locator("main").evaluate((e) => e.style.height))
     .toBe("");
 });
+
+// These existing flows exercise a returning user; first-visit behavior has its own suite.
+test.beforeEach(async ({ page }) => { await page.addInitScript(() => localStorage.setItem("incant-introduction-v1", "seen")); });

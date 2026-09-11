@@ -91,3 +91,6 @@ test("offline retry backs up exact bytes, resumes idempotently and restores with
     "current draft",
   );
 });
+
+// These existing flows exercise a returning user; first-visit behavior has its own suite.
+test.beforeEach(async ({ page }) => { await page.addInitScript(() => localStorage.setItem("incant-introduction-v1", "seen")); });
