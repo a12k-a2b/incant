@@ -1,0 +1,12 @@
+{
+  "time": "2026-09-12T20:37:32.758Z",
+  "kind": "Isolated hosted browser, synthetic ink, cloud writes intercepted; no provider call or owner artwork",
+  "checks": {
+    "endpoint": true,
+    "atomicRevision": true,
+    "reloadSamePixels": true,
+    "applicationJavaScriptMatchesTestedBuild": true
+  },
+  "javascriptSha256": "3dfd31563c94bfd5577a6215d564c4a2582cf04b4df41901180903c9a3eee2da",
+  "status": "PASS"
+}
