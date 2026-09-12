@@ -1,0 +1,45 @@
+{
+  "time": "2026-09-12T20:09:41.580Z",
+  "kind": "Hosted isolated Chromium; synthetic sketch; one real image cast; cloud backup mocked unavailable to keep fixture out of the owner archive",
+  "checks": {
+    "health": 200,
+    "unauthenticatedCast": 401,
+    "newDrawingTools": true,
+    "liveCast": {
+      "status": 200,
+      "ok": true,
+      "elapsedMs": 12516
+    },
+    "finalImageVisible": true,
+    "localShare": [
+      {
+        "names": [
+          "incant-image.png",
+          "incant-original-sketch.png"
+        ],
+        "text": "I drew it, muttered “A small stone wizard cottage, with a steep triangular roof. Keep the position and proportions of my sketch. Render the walls, roof tiles and a small wooden door in ink and gentle watercolor.”, and the parchment got carried away.",
+        "title": "A small act of sorcery"
+      }
+    ],
+    "strikeBeforeFog": true
+  },
+  "phases": [
+    {
+      "phase": "strike",
+      "at": 1789243785796
+    },
+    {
+      "phase": "casting",
+      "at": 1789243786701
+    },
+    {
+      "phase": "reveal",
+      "at": 1789243798273
+    },
+    {
+      "phase": "idle",
+      "at": 1789243800962
+    }
+  ],
+  "status": "PASS"
+}

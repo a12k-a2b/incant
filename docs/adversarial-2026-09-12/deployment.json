@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "sourceCommit": "7c5db81e196dd20d2d698c1441359fadfff479b2",
+  "deploymentId": "1af6cfbc-0c42-457c-af18-6f5f77f38886",
+  "previousDeploymentId": "ead41fce-af53-4e85-bbb3-c4850bf3a902",
+  "url": "https://incant-web-production.up.railway.app/",
+  "alias": "https://anjan.app/incant",
+  "command": "railway up . --path-as-root --service incant-web --detach --json",
+  "workingDirectory": "incant/web",
+  "rollbackTag": "incant-before-adversarial-2026-09-12"
+}

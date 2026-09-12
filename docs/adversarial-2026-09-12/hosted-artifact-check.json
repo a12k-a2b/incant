@@ -1,0 +1,39 @@
+{
+  "at": "2026-09-12T20:15:56.506692+00:00",
+  "checks": [
+    {
+      "path": "web/dist/index.html",
+      "expected": "eae748750fb5483b17dbd6c820622d1519574f6ce7aa0a3a3ae16863a58a2f98",
+      "actual": "cbf55f014e8467d7a686151f3cca366b3742ab775bdde5b7f935ae190b655645",
+      "status": "FAIL"
+    },
+    {
+      "path": "web/dist/sw.js",
+      "expected": "7c04eb1e53eded4fd3799ed09f35f24810659a7faf9d15edcd052f22372cf97f",
+      "actual": "d0eae27fe3c785de6f58bdbf08a37c7239975843f1cc5b164f70bfbd93614e77",
+      "status": "FAIL"
+    },
+    {
+      "path": "web/dist/assets/index-D644Lgn1.js",
+      "status": "BLOCKED",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "path": "web/dist/assets/index-DuHJk60s.css",
+      "status": "BLOCKED",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "adjudication": {
+    "javascriptBytesIdentical": true,
+    "javascriptSha256": "2f52dcb0be1f18f8139dc49aace35833621e525dcc179d8db085be60116d1d36",
+    "cssIdenticalAfterRemovingLocalOnlyRules": true,
+    "localOnlyRules": [
+      ".visible{visibility:visible}",
+      ".static{position:static}",
+      ".isolate{isolation:isolate}",
+      ".contents{display:contents}"
+    ],
+    "explanation": "Docker copies app source/public/build-sw but omits tests and diagnostic scripts. Tailwind automatic source scanning produces four additional generic utilities locally. Public JS bytes are identical despite different Vite output filename hashes. HTML and service-worker differences reference these generated asset names. Initial exact-folder comparison remains FAIL; deployed application JS equivalence PASS."
+  }
+}

@@ -68,4 +68,4 @@ The gate-2 failure was a precondition race: the new test drew before durable hyd
 
 The former stable source remains tagged `incant-before-adversarial-2026-09-12` at 46a4faa; the older owner-approved stable checkpoint/tag is unchanged. No server backup format or destructive database migration changed. Living storm clouds and story-style continuity remain deferred. Large-library pagination/performance measurement is recorded in LOOSE-ENDS.md.
 
-Hosted deployment/live-provider verification and the installed DC-1 launch check are recorded separately after publication.
+Hosted deployment is complete. One real synthetic image cast passed in 12,516 ms with strike → fog → reveal ordering. The installed DC-1 app opened with its existing drawing intact; new dragon drawing controls were observed. Physical pen/palm, real speech and Android share-sheet verification remain manual/BLOCKED. See REPORT.md, deployment.json, hosted-check.json and infrastructure.json for final evidence and limits.
