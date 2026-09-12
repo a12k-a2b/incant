@@ -81,6 +81,7 @@ export class GeminiLiveTranscribe {
       }, 12000);
 
       ws.onopen = () => {
+        if (this.ws !== ws) return;
         ws.send(
           JSON.stringify({
             setup: {
@@ -110,10 +111,11 @@ export class GeminiLiveTranscribe {
       };
 
       ws.onmessage = (event) => {
-        void this.handleMessage(event.data);
+        void this.handleMessage(ws, event.data);
       };
 
       ws.onerror = () => {
+        if (this.ws !== ws) return;
         window.clearTimeout(this.setupTimer);
         this.setupReject?.(
           new Error("Could not reach Gemini Live Transcribe."),
@@ -123,6 +125,7 @@ export class GeminiLiveTranscribe {
       };
 
       ws.onclose = () => {
+        if (this.ws !== ws) return;
         window.clearTimeout(this.setupTimer);
         this.setupReject?.(
           new Error("The listening connection closed. Try again."),
@@ -175,12 +178,12 @@ export class GeminiLiveTranscribe {
     while (Date.now() - started < waitMs) {
       const elapsed = Date.now() - started;
       if (
-        this.combined() &&
-        (this.turnComplete ||
-          (this.lastTranscript >= started &&
+        this.turnComplete ||
+        (this.combined() &&
+          ((this.lastTranscript >= started &&
             !this.interim &&
             Date.now() - this.lastTranscript > 500) ||
-          (elapsed >= 2500 && this.lastTranscript < started))
+            (elapsed >= 2500 && this.lastTranscript < started)))
       )
         break;
       if (!this.ws || this.ws.readyState !== WebSocket.OPEN) break;
@@ -210,8 +213,9 @@ export class GeminiLiveTranscribe {
     return [finalText, this.interim].filter(Boolean).join(" ").trim();
   }
 
-  private async handleMessage(data: unknown) {
+  private async handleMessage(ws: WebSocket, data: unknown) {
     const text = await decodeWsData(data);
+    if (this.ws !== ws) return;
 
     let msg: {
       setupComplete?: unknown;

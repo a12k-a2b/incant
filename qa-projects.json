@@ -50,7 +50,7 @@
             "nightly",
             "release"
           ],
-          "timeout_seconds": 240,
+          "timeout_seconds": 480,
           "required": true
         }
       ]

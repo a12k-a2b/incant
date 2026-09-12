@@ -1,0 +1,10 @@
+{
+  "files": {
+    "web/dist/index.html": "eae748750fb5483b17dbd6c820622d1519574f6ce7aa0a3a3ae16863a58a2f98",
+    "web/dist/sw.js": "7c04eb1e53eded4fd3799ed09f35f24810659a7faf9d15edcd052f22372cf97f",
+    "web/dist/assets/index-D644Lgn1.js": "2f52dcb0be1f18f8139dc49aace35833621e525dcc179d8db085be60116d1d36",
+    "web/dist/assets/index-DuHJk60s.css": "00ad4e87326da0dbfa654c6f580e3e8303791b14660d0e9d39d1b67d6a060895"
+  },
+  "observedAt": "2026-09-12T19:57:37.712201+00:00",
+  "latestArtifactMtime": "2026-09-12T19:55:55.347042+00:00"
+}

@@ -1,0 +1,254 @@
+{
+  "config": {
+    "argv": [
+      "/opt/homebrew/Cellar/node/26.5.0/bin/node",
+      "/private/tmp/incant-adversarial-20260912/fable/web/node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "review.playwright.config.ts",
+      "review-tests/palm-wand.review.ts",
+      "review-tests/storage-growth.review.ts"
+    ],
+    "configFile": "/private/tmp/incant-adversarial-20260912/fable/web/review.playwright.config.ts",
+    "rootDir": "/private/tmp/incant-adversarial-20260912/fable/web/review-tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/private/tmp/incant-adversarial-20260912/fable/web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/private/tmp/incant-adversarial-20260912/fable/web/review-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.review.ts"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../review-browser-tests.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "palm-wand.review.ts",
+      "file": "palm-wand.review.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "touch on the wand mid pen stroke cuts the stroke and locks the page",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 460,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m100\u001b[39m\nReceived:   \u001b[31m255\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m100\u001b[39m\nReceived:   \u001b[31m255\u001b[39m\n    at /private/tmp/incant-adversarial-20260912/fable/web/review-tests/palm-wand.review.ts:71:21",
+                    "location": {
+                      "file": "/private/tmp/incant-adversarial-20260912/fable/web/review-tests/palm-wand.review.ts",
+                      "column": 21,
+                      "line": 71
+                    },
+                    "snippet": "  69 |   expect(pixels[0]).toBeLessThan(100);\n  70 |   // Oracle: the pen stroke should continue unbroken; a resting palm is not a wand press.\n> 71 |   expect(pixels[1]).toBeLessThan(100);\n     |                     ^\n  72 | });\n  73 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/private/tmp/incant-adversarial-20260912/fable/web/review-tests/palm-wand.review.ts",
+                        "column": 21,
+                        "line": 71
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m100\u001b[39m\nReceived:   \u001b[31m255\u001b[39m\n\n  69 |   expect(pixels[0]).toBeLessThan(100);\n  70 |   // Oracle: the pen stroke should continue unbroken; a resting palm is not a wand press.\n> 71 |   expect(pixels[1]).toBeLessThan(100);\n     |                     ^\n  72 | });\n  73 |\n    at /private/tmp/incant-adversarial-20260912/fable/web/review-tests/palm-wand.review.ts:71:21"
+                    }
+                  ],
+                  "stdout": [
+                    {
+                      "text": "ink at 30% (before palm): \u001b[33m41\u001b[39m | ink at 55% (after palm): \u001b[33m255\u001b[39m\n"
+                    },
+                    {
+                      "text": "wand state while palm rests: Connecting… keep holding\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-12T19:26:28.084Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/private/tmp/incant-adversarial-20260912/fable/web/test-results/palm-wand.review.ts-touch--7c551-e-stroke-and-locks-the-page/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/private/tmp/incant-adversarial-20260912/fable/web/review-tests/palm-wand.review.ts",
+                    "column": 21,
+                    "line": 71
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "7a0266e57a2445f652f7-2f7168d990b114750334",
+          "file": "palm-wand.review.ts",
+          "line": 12,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "storage-growth.review.ts",
+      "file": "storage-growth.review.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "bytes per stroke point and behaviour when the draft no longer fits",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7851,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m100\u001b[39m\nReceived:   \u001b[31m255\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m100\u001b[39m\nReceived:   \u001b[31m255\u001b[39m\n    at /private/tmp/incant-adversarial-20260912/fable/web/review-tests/storage-growth.review.ts:112:29",
+                    "location": {
+                      "file": "/private/tmp/incant-adversarial-20260912/fable/web/review-tests/storage-growth.review.ts",
+                      "column": 29,
+                      "line": 112
+                    },
+                    "snippet": "  110 |   expect(pixels).toBeLessThan(100);\n  111 |   // Oracle: ink drawn after the quota hit should still be recoverable after reload.\n> 112 |   expect(pixelsAfterReload).toBeLessThan(100);\n      |                             ^\n  113 | });\n  114 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/private/tmp/incant-adversarial-20260912/fable/web/review-tests/storage-growth.review.ts",
+                        "column": 29,
+                        "line": 112
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m100\u001b[39m\nReceived:   \u001b[31m255\u001b[39m\n\n  110 |   expect(pixels).toBeLessThan(100);\n  111 |   // Oracle: ink drawn after the quota hit should still be recoverable after reload.\n> 112 |   expect(pixelsAfterReload).toBeLessThan(100);\n      |                             ^\n  113 | });\n  114 |\n    at /private/tmp/incant-adversarial-20260912/fable/web/review-tests/storage-growth.review.ts:112:29"
+                    }
+                  ],
+                  "stdout": [
+                    {
+                      "text": "draft stats: {\"bytes\":11429,\"points\":201,\"perPoint\":56.86069651741293,\"sample\":{\"x\":0.20899999673106634,\"y\":0.38311438272909054,\"p\":0.5}}\n"
+                    },
+                    {
+                      "text": "points before a 5 MiB localStorage budget: ~92205 (≈6 min of continuous 240 Hz ink)\n"
+                    },
+                    {
+                      "text": "filler written: {\"chunks\":38,\"bytes\":5230592}\n"
+                    },
+                    {
+                      "text": "second stroke visible on canvas: \u001b[33mtrue\u001b[39m | draft changed: \u001b[33mfalse\u001b[39m\n"
+                    },
+                    {
+                      "text": "room message: \"This browser could not save your draft. Download the sketch before leaving.\"\n"
+                    },
+                    {
+                      "text": "strokes after reload: \u001b[33m1\u001b[39m | second stroke survives reload: \u001b[33mfalse\u001b[39m\n"
+                    },
+                    {
+                      "text": "archive pairs: \u001b[33m1\u001b[39m | archived sketch equals post-quota ink: \u001b[33mfalse\u001b[39m | archived sketch equals stale (pre-quota) ink: \u001b[33mtrue\u001b[39m\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-12T19:26:28.923Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/private/tmp/incant-adversarial-20260912/fable/web/test-results/storage-growth.review.ts-b-29ee5-en-the-draft-no-longer-fits/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/private/tmp/incant-adversarial-20260912/fable/web/review-tests/storage-growth.review.ts",
+                    "column": 29,
+                    "line": 112
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8e5721f36ad707e26ddb-5fe28f2d10eb53eceec1",
+          "file": "storage-growth.review.ts",
+          "line": 10,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-12T19:26:27.859Z",
+    "duration": 9154.566,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

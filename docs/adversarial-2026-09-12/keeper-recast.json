@@ -1,0 +1,26 @@
+{
+  "id": "K5",
+  "kind": "Recast historical A while unrelated unfinished B remains on canvas",
+  "draftDistinct": true,
+  "beforeHasB": true,
+  "afterHasB": false,
+  "canvasStillB": true,
+  "rows": [
+    {
+      "id": 1,
+      "bundle": "sketch-6f7b1feb-f7ce-4ee4-ba3a-31d0f4e19a1c",
+      "source": "A",
+      "spells": [
+        "Synthetic original A"
+      ]
+    },
+    {
+      "id": 2,
+      "bundle": "sketch-efcfdbbc-154a-4481-bbd9-692f0624985b",
+      "source": "A",
+      "spells": [
+        "Synthetic recast A"
+      ]
+    }
+  ]
+}

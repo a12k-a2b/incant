@@ -28,3 +28,7 @@ The corner now reveals the exact source retained with the selected generation. D
 
 ## Living storm clouds (2026-09-12)
 Keep the current hourglass for now. Explore casting clouds as slow, dark storm masses that drift through one another, collide, and separate like a lava lamp. Let the image develop through them. Revisit the hourglass motion as part of this; do not implement the storm animation in the current reliability pass.
+
+## Large spellbook performance — after adversarial review, 2026-09-12
+
+The reliability pass avoids hashing unchanged full-size images on each cloud poll. Large-library reads still load complete image records, and the spellbook is not paginated. Measure a synthetic party-sized archive on the DC-1 before choosing indexed metadata queries, pagination, or image decoding limits. Do not treat desktop timings as a device battery/memory guarantee. Keep every source and generation through any future storage optimization.

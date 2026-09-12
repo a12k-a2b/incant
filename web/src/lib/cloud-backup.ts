@@ -1,11 +1,17 @@
 import {
   allPairs,
+  ensureArchiveRevision,
   meta,
   putMeta,
   importCloudPairs,
   type Pair,
 } from "./archive";
 export let backupStatus = "Checking cloud backup…";
+type DigestCache = {
+  revision: string;
+  sourceHash: string;
+  images: { id: string; hash: string }[];
+};
 function status(text: string) {
   backupStatus = text;
   window.dispatchEvent(new Event("incant-backup-status"));
@@ -55,19 +61,55 @@ export function syncCloud() {
     let count = 0;
     // Content-addressed images upload once; immutable manifests retain prior versions.
     for (const pair of pairs) {
-      const sourceHash = await digest(pair.sketch);
-      const images = await Promise.all(
-        pair.images.map(async (i) => ({ ...i, image: await digest(i.image) })),
-      );
-      const snapshot = { ...pair, device, sketch: sourceHash, images };
+      const revision = pair.revision || (await ensureArchiveRevision(pair.id!)),
+        cached = await meta<DigestCache>(`backup-digest:${pair.id}`),
+        validCache =
+          !!cached &&
+          cached.revision === revision &&
+          typeof cached.sourceHash === "string" &&
+          Array.isArray(cached.images) &&
+          cached.images.length === pair.images.length &&
+          cached.images.every(
+            (image, index) => image.id === pair.images[index].id,
+          ),
+        sourceHash = validCache
+          ? cached!.sourceHash
+          : await digest(pair.sketch),
+        imageHashes = validCache
+          ? cached!.images
+          : await Promise.all(
+              pair.images.map(async (image) => ({
+                id: image.id,
+                hash: await digest(image.image),
+              })),
+            ),
+        images = pair.images.map((image, index) => ({
+          ...image,
+          image: imageHashes[index].hash,
+        }));
+      if (!validCache)
+        await putMeta(`backup-digest:${pair.id}`, {
+          revision,
+          sourceHash,
+          images: imageHashes,
+        } satisfies DigestCache);
+      const portable = { ...pair };
+      delete portable.revision;
+      const snapshot = { ...portable, device, sketch: sourceHash, images };
       const key = await digest(JSON.stringify(snapshot));
       if (savedSnapshots.has(key)) {
         count++;
         continue;
       }
       status(`Backing up ${count + 1} of ${pairs.length} sketches…`);
-      for (const data of [pair.sketch, ...pair.images.map((i) => i.image)]) {
-        const id = await digest(data);
+      const objects = [
+        { id: sourceHash, data: pair.sketch },
+        ...pair.images.map((image, index) => ({
+          id: imageHashes[index].hash,
+          data: image.image,
+        })),
+      ];
+      for (const { id, data } of objects) {
         if (!savedObjects.has(id)) {
           await request("objects/" + id, { data });
           savedObjects.add(id);
@@ -114,9 +156,25 @@ export async function restoreCloud() {
       device: string;
       key: string;
     })[];
-    // Combine repeated backups of the same exact source, retaining every generation.
+    // Autosave can produce many unsealed snapshots for one mutable draft. Keep
+    // only its latest revision, while retaining every sealed source and all of
+    // the generations later appended to that exact source.
+    const latestDrafts = new Map<string, (typeof records)[number]>();
+    const historical = records.filter(
+      (record) => record.sealed || record.images.length > 0,
+    );
+    for (const record of records.filter(
+      (record) => !record.sealed && record.images.length === 0,
+    )) {
+      const group = `${record.device}:${record.id}:${record.bundleId || ""}`;
+      const old = latestDrafts.get(group);
+      const time = record.updated ?? record.created ?? 0,
+        oldTime = old?.updated ?? old?.created ?? 0;
+      if (!old || time > oldTime || (time === oldTime && record.key > old.key))
+        latestDrafts.set(group, record);
+    }
     const merged = new Map<string, Pair & { cloudKey: string }>();
-    for (const record of records) {
+    for (const record of [...historical, ...latestDrafts.values()]) {
       const group = `${record.device}:${record.id}:${record.sketch}`;
       const old = merged.get(group);
       const images = [
@@ -124,7 +182,10 @@ export async function restoreCloud() {
           [...(old?.images ?? []), ...record.images].map((i) => [i.id, i]),
         ).values(),
       ];
-      merged.set(group, { ...record, images, cloudKey: group });
+      const oldTime = old?.updated ?? old?.created ?? 0,
+        time = record.updated ?? record.created ?? 0,
+        newest = old && oldTime > time ? old : record;
+      merged.set(group, { ...newest, images, cloudKey: group });
     }
     const restored = [];
     for (const pair of merged.values()) {

@@ -1,15 +1,11 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import {
-  DRAFT_KEY,
-  hasInk,
-  validDrawing,
-  type Drawing,
-  type Point,
-  type Stroke,
-} from "@/lib/drawing";
+import { hasInk, type Drawing, type Point, type Stroke } from "@/lib/drawing";
+import { loadDurableDraft, saveDurableDraft } from "@/lib/durable-draft";
 export type Tool = "quill" | "rubber";
 export type SketchCanvasHandle = {
   exportPng: () => string | null;
+  commitCurrent: () => void;
+  flush: () => Promise<void>;
   clear: () => void;
   undo: () => void;
   redo: () => void;
@@ -21,14 +17,24 @@ type Props = {
   tool: Tool;
   locked: boolean;
   className?: string;
+  onVisualChange?: () => void;
   onChange?: () => void;
+  onReady?: () => void;
   onStorageError?: (message: string) => void;
 };
 const PAPER = "#ffffff",
   INK = "#292820";
 export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
   function SketchCanvas(
-    { tool, locked, className, onChange, onStorageError },
+    {
+      tool,
+      locked,
+      className,
+      onVisualChange,
+      onChange,
+      onReady,
+      onStorageError,
+    },
     ref,
   ) {
     const refit = useRef<() => void>(() => {});
@@ -38,8 +44,21 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
       future = useRef<Drawing>([]);
     const current = useRef<Stroke | null>(null),
       pointer = useRef<number | null>(null);
-    const callbacks = useRef({ onChange, onStorageError });
-    callbacks.current = { onChange, onStorageError };
+    const hydrated = useRef(false),
+      durableRevision = useRef(0),
+      latestSave = useRef<Promise<void>>(Promise.resolve());
+    const callbacks = useRef({
+      onVisualChange,
+      onChange,
+      onReady,
+      onStorageError,
+    });
+    callbacks.current = {
+      onVisualChange,
+      onChange,
+      onReady,
+      onStorageError,
+    };
     const segment = (a: Point, b: Point, eraser: boolean) => {
       const ctx = canvas.current?.getContext("2d");
       if (!ctx) return;
@@ -76,43 +95,53 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
           segment(s.points[Math.max(0, i - 1)], p, s.eraser),
         );
     };
+    const roundedDrawing = (): Drawing =>
+      strokes.current.map((stroke) => ({
+        eraser: stroke.eraser,
+        points: stroke.points.map(({ x, y, p }) => ({
+          x: Math.round(x * 10_000) / 10_000,
+          y: Math.round(y * 10_000) / 10_000,
+          p: Math.round(p * 10_000) / 10_000,
+        })),
+      }));
     const changed = () => {
-      try {
-        localStorage.setItem(DRAFT_KEY, JSON.stringify(strokes.current));
-        localStorage.setItem(
-          DRAFT_KEY + "-size",
-          JSON.stringify(dimensions.current),
-        );
-      } catch {
-        callbacks.current.onStorageError?.(
-          "This browser could not save your draft. Download the sketch before leaving.",
-        );
-      }
-      callbacks.current.onChange?.();
+      callbacks.current.onVisualChange?.();
+      const revision = ++durableRevision.current;
+      const saving = saveDurableDraft({
+        drawing: roundedDrawing(),
+        size: { ...dimensions.current },
+        revision,
+      })
+        .then(() => {
+          if (revision === durableRevision.current)
+            callbacks.current.onChange?.();
+        })
+        .catch(() => {
+          if (revision === durableRevision.current)
+            callbacks.current.onStorageError?.(
+              "This browser could not save your draft. Download the sketch before leaving.",
+            );
+          throw new Error("The draft could not be saved.");
+        });
+      latestSave.current = saving;
+      // Pointer event handlers cannot await persistence. flush() exposes the
+      // same rejection to destructive actions such as a page turn.
+      void saving.catch(() => {});
+      return saving;
+    };
+    const commitCurrent = () => {
+      if (!current.current) return;
+      strokes.current.push(current.current);
+      future.current = [];
+      current.current = null;
+      pointer.current = null;
+      changed();
     };
     useEffect(() => {
-      try {
-        const saved = JSON.parse(localStorage.getItem(DRAFT_KEY) || "[]");
-        if (validDrawing(saved)) strokes.current = saved;
-      } catch {
-        /* keep blank page */
-      }
       const node = canvas.current!;
       const host = node.parentElement!;
-      try {
-        const d = JSON.parse(
-          localStorage.getItem(DRAFT_KEY + "-size") || "null",
-        );
-        if (
-          d &&
-          [d.w, d.h].every(
-            (v) => Number.isInteger(v) && v >= 512 && v <= 1536 && v % 16 === 0,
-          )
-        )
-          dimensions.current = d;
-      } catch {
-        /* older drafts keep their original aspect */
-      }
+      let alive = true;
+      let observer: ResizeObserver | null = null;
       const fit = () => {
         const r = host.getBoundingClientRect();
         if (!strokes.current.length && !current.current) {
@@ -133,14 +162,38 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         paint();
       };
       refit.current = fit;
-      fit();
-      const observer = new ResizeObserver(fit);
-      observer.observe(host);
-      callbacks.current.onChange?.();
-      return () => observer.disconnect();
+      void loadDurableDraft()
+        .then((saved) => {
+          if (!alive) return;
+          if (saved) {
+            strokes.current = saved.drawing;
+            dimensions.current = saved.size;
+            durableRevision.current = saved.revision;
+          }
+        })
+        .catch(() => {
+          if (alive)
+            callbacks.current.onStorageError?.(
+              "This browser could not restore your saved draft. Start with a test mark before drawing more.",
+            );
+        })
+        .finally(() => {
+          if (!alive) return;
+          fit();
+          observer = new ResizeObserver(fit);
+          observer.observe(host);
+          hydrated.current = true;
+          callbacks.current.onReady?.();
+        });
+      return () => {
+        alive = false;
+        observer?.disconnect();
+      };
     }, []);
     useImperativeHandle(ref, () => ({
       exportPng: () => canvas.current?.toDataURL("image/png") ?? null,
+      commitCurrent,
+      flush: () => latestSave.current,
       clear: () => {
         future.current = [];
         strokes.current = [];
@@ -159,7 +212,11 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         paint();
         changed();
       },
-      isEmpty: () => !hasInk(strokes.current),
+      isEmpty: () =>
+        !hasInk([
+          ...strokes.current,
+          ...(current.current ? [current.current] : []),
+        ]),
       canUndo: () => strokes.current.length > 0,
       canRedo: () => future.current.length > 0,
     }));
@@ -189,6 +246,7 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
       const down = (e: PointerEvent) => {
         if (
           locked ||
+          !hydrated.current ||
           pointer.current !== null ||
           !["pen", "mouse"].includes(e.pointerType) ||
           (e.pointerType === "mouse" && e.button !== 0)
@@ -250,11 +308,7 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
       const finish = (e?: PointerEvent) => {
         if (!e || e.pointerId === pendingPen) pendingPen = null;
         if (!current.current || (e && e.pointerId !== pointer.current)) return;
-        strokes.current.push(current.current);
-        future.current = [];
-        current.current = null;
-        pointer.current = null;
-        changed();
+        commitCurrent();
       };
       node.addEventListener("pointerdown", down);
       node.addEventListener("pointermove", move);

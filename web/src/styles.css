@@ -1850,7 +1850,7 @@ dialog::backdrop {
 .immersive-mode .room-message button { display: none; }
 .immersive-mode .wand-status,
 .immersive-mode .room-message { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
-.moon-key { position: absolute; z-index: 7; right: 0; top: 0; width: 23%; height: 20%; min-width: 72px; min-height: 72px; background: none; padding: 0; border-radius: 50%; touch-action: manipulation; }
+.moon-key { position: absolute; z-index: 7; right: 0; top: 0; width: 23%; height: 20%; min-width: 72px; min-height: 72px; background: none; padding: 0; border-radius: 50%; clip-path:ellipse(46% 48% at 60% 42%); touch-action: manipulation; }
 .moon-orbit { display: block; width: 100%; height: 100%; opacity: 0; background: url('/wizard-frame-v3.png') right top / 100vw 100dvh no-repeat; clip-path: ellipse(48% 48% at 52% 48%); }
 .turning-moon .moon-orbit { opacity: 1; animation: moon-turn 3.2s ease-in-out both; }
 .day-cycle { position: absolute; inset: 0; z-index: 5; pointer-events: none; animation: a-new-day 3.2s linear both; }

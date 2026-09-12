@@ -28,6 +28,7 @@ import {
   type Tool,
 } from "./SketchCanvas";
 import {
+  archiveCast,
   archiveExisting,
   archiveSketch,
   archiveImage,
@@ -60,6 +61,26 @@ const describe = (err: unknown) =>
   err instanceof Error
     ? err.message
     : "The spell could not finish. Please try again.";
+const describeVoice = (err: unknown) => {
+  if (err instanceof DOMException) {
+    if (err.name === "NotAllowedError" || err.name === "SecurityError")
+      return "Microphone access was denied. Allow microphone access, or type your spell.";
+    if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError")
+      return "No microphone was found. Connect one, or type your spell.";
+    if (
+      err.name === "NotReadableError" ||
+      err.name === "TrackStartError" ||
+      err.name === "AbortError"
+    )
+      return "The microphone is busy or unavailable. Close other audio apps, or type your spell.";
+  }
+  if (
+    err instanceof TypeError &&
+    /failed to fetch|network|load failed/i.test(err.message)
+  )
+    return "The wand could not reach the voice service. Check your connection, or type your spell.";
+  return describe(err);
+};
 function download(src: string, name: string) {
   const a = document.createElement("a");
   a.href = src;
@@ -76,6 +97,7 @@ export function IncantApp({
   const archiveDialog = useRef<HTMLDialogElement>(null);
   const [archiveError, setArchiveError] = useState("");
   const [archiveWorking, setArchiveWorking] = useState(false);
+  const [canvasReady, setCanvasReady] = useState(false);
   const [turning, setTurning] = useState(false);
   const renewal = useRef(false);
   const draftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -151,6 +173,7 @@ export function IncantApp({
   }, [revealing, loadedImage]);
   const voiceButton = useRef<HTMLButtonElement>(null);
   const voicePointer = useRef<number | null>(null);
+  const suppressVoiceClickUntil = useRef(0);
   const voicePress = useRef({ started: 0, stopping: false });
   const [handsFree, setHandsFreeState] = useState(false);
   const handsFreeRef = useRef(false);
@@ -160,6 +183,7 @@ export function IncantApp({
   };
   const [striking, setStriking] = useState(false);
   const voiceSketch = useRef<string | null>(null);
+  const voiceSource = useRef<Creation | null>(null);
   const sketch = useRef<SketchCanvasHandle>(null),
     voice = useRef<Voice | null>(null),
     operation = useRef<AbortController | null>(null),
@@ -175,6 +199,7 @@ export function IncantApp({
     });
   const [tool, setTool] = useState<Tool>("quill"),
     [revision, setRevision] = useState(0),
+    [, redrawCanvasState] = useState(0),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [dragonAwake, setDragonAwake] = useState(false);
@@ -191,7 +216,11 @@ export function IncantApp({
     [active, setActive] = useState<Creation | null>(null);
   const [elapsed, setElapsed] = useState(0),
     [progress, setProgress] = useState(""),
-    [last, setLast] = useState<{ sketch: string; words: string } | null>(null);
+    [last, setLast] = useState<{
+      sketch: string;
+      words: string;
+      source?: Creation | null;
+    } | null>(null);
   useEffect(() => {
     const button = voiceButton.current;
     if (!button) return;
@@ -211,7 +240,13 @@ export function IncantApp({
   }, []);
   useEffect(() => {
     if (draftTimer.current) clearTimeout(draftTimer.current);
-    if (!sketch.current || sketch.current.isEmpty() || renewal.current) return;
+    if (
+      !canvasReady ||
+      !sketch.current ||
+      sketch.current.isEmpty() ||
+      renewal.current
+    )
+      return;
     draftTimer.current = setTimeout(() => {
       const png = sketch.current?.exportPng();
       if (png)
@@ -233,7 +268,7 @@ export function IncantApp({
   }, [revision]);
   useEffect(() => () => turnTimers.current.forEach(clearTimeout), []);
   useEffect(() => startCloudBackup(), []);
-  const busy = phase !== "idle",
+  const busy = phase !== "idle" || !canvasReady,
     empty = sketch.current?.isEmpty() ?? true;
   useEffect(() => {
     try {
@@ -278,6 +313,8 @@ export function IncantApp({
   }, [phase]);
   const closeVoice = (s: Voice) => {
     clearTimeout(s.timer);
+    voicePointer.current = null;
+    suppressVoiceClickUntil.current = performance.now() + 500;
     s.controller.abort();
     s.proc?.disconnect();
     s.stream?.getTracks().forEach((t) => t.stop());
@@ -289,6 +326,12 @@ export function IncantApp({
       setHandsFree(false);
     }
   };
+  const clearVoiceSource = (restore = false) => {
+    const source = voiceSource.current;
+    voiceSketch.current = null;
+    voiceSource.current = null;
+    if (restore && source) setActive(source);
+  };
   const cancel = () => {
     serial.current++;
     if (voice.current) closeVoice(voice.current);
@@ -297,29 +340,46 @@ export function IncantApp({
     setRevealing(false);
     setStriking(false);
     voicePointer.current = null;
-    voiceSketch.current = null;
+    clearVoiceSource(true);
     setPhase("idle");
     setProgress("");
   };
   useEffect(() => {
     const hidden = () => {
-      if (document.hidden && voice.current) {
+      if (!document.hidden) return;
+      voicePointer.current = null;
+      suppressVoiceClickUntil.current = performance.now() + 500;
+      if (voice.current) {
         closeVoice(voice.current);
-        voiceSketch.current = null;
+        clearVoiceSource(true);
         setPhase("idle");
         setNotice("Listening stopped when you left the desk.");
       }
     };
+    const pageHidden = () => {
+      voicePointer.current = null;
+      suppressVoiceClickUntil.current = performance.now() + 500;
+      if (voice.current) {
+        closeVoice(voice.current);
+        clearVoiceSource(true);
+        setPhase("idle");
+      }
+    };
     document.addEventListener("visibilitychange", hidden);
+    window.addEventListener("pagehide", pageHidden);
     return () => {
       document.removeEventListener("visibilitychange", hidden);
+      window.removeEventListener("pagehide", pageHidden);
       if (voice.current) closeVoice(voice.current);
       operation.current?.abort();
     };
   }, []);
   async function cast(spell = words, again = false) {
-    if (operation.current) return;
-    const png = again
+    if (operation.current || renewal.current) return;
+    const source = again
+        ? active || last?.source || null
+        : voiceSource.current || active,
+      png = again
         ? last?.sketch
         : voiceSketch.current || active?.sketch || sketch.current?.exportPng(),
       text = (again ? last?.words : spell)?.trim();
@@ -342,7 +402,7 @@ export function IncantApp({
     const control = new AbortController();
     operation.current = control;
     const id = ++serial.current;
-    setLast({ sketch: png, words: text });
+    setLast({ sketch: png, words: text, source });
     setWords(text);
     setError("");
     setPanel(false);
@@ -361,7 +421,7 @@ export function IncantApp({
     let successes = 0;
     try {
       if (draftTimer.current) clearTimeout(draftTimer.current);
-      const pair = await archiveSketch(png, text, true);
+      const pair = await archiveCast(png, text, source);
       void archiveFolderReady()
         .then((ready) => (ready ? syncArchive(pair.id) : undefined))
         .catch(() => {});
@@ -384,10 +444,17 @@ export function IncantApp({
             sketch: png,
             spell: text,
             created: Date.now(),
+            archivePairId: pair.id,
+            archiveBundleId: pair.bundleId,
           };
           successes++;
           setCreations((prev) => [...prev, item]);
-          if (successes === 1) setActive(item);
+          if (successes === 1) {
+            setActive(item);
+            setLast((previous) =>
+              previous ? { ...previous, source: item } : previous,
+            );
+          }
           setProgress(`${successes} of ${count} images ready`);
           try {
             await archiveImage(pair.id!, {
@@ -425,7 +492,7 @@ export function IncantApp({
       clearTimeout(timer);
       if (id === serial.current) {
         operation.current = null;
-        voiceSketch.current = null;
+        clearVoiceSource();
         setStriking(false);
         setPhase("idle");
         setProgress("");
@@ -433,7 +500,7 @@ export function IncantApp({
     }
   }
   async function beginVoice() {
-    if (busy || voice.current || operation.current) return;
+    if (busy || renewal.current || voice.current || operation.current) return;
     if (empty && !active?.sketch) {
       setError("Draw a few lines first, then hold the wand and speak.");
       return;
@@ -444,6 +511,7 @@ export function IncantApp({
       );
       return;
     }
+    voiceSource.current = active;
     voiceSketch.current = active?.sketch || sketch.current?.exportPng() || null;
     setActive(null);
     setRevealing(false);
@@ -460,7 +528,7 @@ export function IncantApp({
       if (settings.voiceMode === "conversation") {
         s.talk = new RealtimeVoice(
           (text) => {
-            if (voice.current === s) setWords(text);
+            if (voice.current === s && text.trim()) setWords(text);
           },
           (spell) => {
             if (voice.current !== s) return;
@@ -472,7 +540,7 @@ export function IncantApp({
           (err) => {
             if (voice.current === s) {
               closeVoice(s);
-              voiceSketch.current = null;
+              clearVoiceSource(true);
               setPhase("idle");
               setError(err.message);
             }
@@ -485,7 +553,7 @@ export function IncantApp({
         s.timer = setTimeout(() => {
           if (voice.current === s) {
             closeVoice(s);
-            voiceSketch.current = null;
+            clearVoiceSource(true);
             setPhase("idle");
             setNotice(
               "The talking wand has rested after three minutes. Tap to begin again.",
@@ -552,7 +620,7 @@ export function IncantApp({
         );
       if (voice.current !== s) return;
       await s.live.connect(body.token, (text) => {
-        if (voice.current === s) setWords(text);
+        if (voice.current === s && text.trim()) setWords(text);
       });
       if (voice.current !== s) return;
       s.live.startTurn();
@@ -563,20 +631,20 @@ export function IncantApp({
         if (voice.current === s) {
           closeVoice(s);
           setPhase("idle");
+          clearVoiceSource(true);
           setError(
             "Listening stopped after one minute. Your words are here; review them and tap Cast spell.",
           );
         }
       }, 60000);
-      setWords("");
       setPhase("listening");
       if (s.stopRequested) void endVoice();
     } catch (err) {
       if (voice.current === s) {
         closeVoice(s);
         setPhase("idle");
-        voiceSketch.current = null;
-        setError(describe(err));
+        clearVoiceSource(true);
+        setError(describeVoice(err));
       }
     }
   }
@@ -589,13 +657,9 @@ export function IncantApp({
       return;
     }
     if (cancelled) {
-      voiceSketch.current = null;
       closeVoice(s);
+      clearVoiceSource(true);
       setPhase("idle");
-      if (!cancelled)
-        setNotice(
-          "The wand was still connecting. Hold until “Listening”, then speak.",
-        );
       return;
     }
     s.stopping = true;
@@ -615,7 +679,7 @@ export function IncantApp({
       closeVoice(s);
       setPhase("idle");
       if (!final.trim()) {
-        voiceSketch.current = null;
+        clearVoiceSource(true);
         setError("The wand heard no words. Try again, or type the spell.");
         return;
       }
@@ -625,16 +689,23 @@ export function IncantApp({
       if (voice.current === s) {
         closeVoice(s);
         setPhase("idle");
-        voiceSketch.current = null;
-        setError(describe(err));
+        clearVoiceSource(true);
+        setError(describeVoice(err));
       }
     }
   }
   const newPage = async () => {
     if (busy || renewal.current) return;
     renewal.current = true;
+    // Lock drawing and every other action while durability/archive work is
+    // pending. The visual moon turn begins only after those writes succeed.
+    setPhase("renewing");
     if (draftTimer.current) clearTimeout(draftTimer.current);
     try {
+      // A synthetic activation or unusual input chord can reach this action
+      // before pointerup. Commit that legitimate ink before reading/archiving.
+      sketch.current?.commitCurrent();
+      await sketch.current?.flush();
       const png = sketch.current?.exportPng();
       if (png && !sketch.current?.isEmpty())
         await archiveSketch(png, words, true);
@@ -645,7 +716,6 @@ export function IncantApp({
         .catch(() => {});
       setPanel(false);
       archiveDialog.current?.close();
-      setPhase("renewing");
       setTurning(true);
       turnTimers.current.push(
         setTimeout(() => {
@@ -668,6 +738,7 @@ export function IncantApp({
       );
     } catch (e) {
       renewal.current = false;
+      setPhase("idle");
       setArchiveError("The sketch has not been cleared. " + describe(e));
       archiveDialog.current?.showModal();
     }
@@ -723,7 +794,9 @@ export function IncantApp({
                 tool={tool}
                 locked={busy || !!active}
                 className="drawing-canvas"
+                onVisualChange={() => redrawCanvasState((n) => n + 1)}
                 onChange={() => setRevision((n) => n + 1)}
+                onReady={() => setCanvasReady(true)}
                 onStorageError={setNotice}
               />
               {empty && !active && phase === "idle" && (
@@ -830,7 +903,7 @@ export function IncantApp({
                 ? "Stop spell"
                 : phase === "connecting"
                   ? handsFree
-                    ? "Connecting… tap to cancel"
+                    ? "Connecting… tap to finish"
                     : "Connecting… keep holding"
                   : phase === "listening"
                     ? handsFree
@@ -849,6 +922,7 @@ export function IncantApp({
             onPointerDown={(e) => {
               if (voicePointer.current !== null || e.button !== 0) return;
               e.preventDefault();
+              suppressVoiceClickUntil.current = performance.now() + 500;
               if (
                 immersiveMode &&
                 (phase === "casting" || phase === "finishing")
@@ -866,6 +940,7 @@ export function IncantApp({
               if (!handsFreeRef.current) void beginVoice();
             }}
             onPointerUp={(e) => {
+              suppressVoiceClickUntil.current = performance.now() + 500;
               if (voicePointer.current !== e.pointerId) return;
               voicePointer.current = null;
               if (
@@ -880,11 +955,13 @@ export function IncantApp({
               }
             }}
             onPointerCancel={(e) => {
+              suppressVoiceClickUntil.current = performance.now() + 500;
               if (voicePointer.current !== e.pointerId) return;
               voicePointer.current = null;
               void endVoice(true);
             }}
             onLostPointerCapture={(e) => {
+              suppressVoiceClickUntil.current = performance.now() + 500;
               if (voicePointer.current !== e.pointerId) return;
               voicePointer.current = null;
               void endVoice(true);
@@ -897,6 +974,7 @@ export function IncantApp({
               }
               if ((e.key === " " || e.key === "Enter") && !e.repeat) {
                 e.preventDefault();
+                suppressVoiceClickUntil.current = performance.now() + 500;
                 if (
                   immersiveMode &&
                   (phase === "casting" || phase === "finishing")
@@ -904,21 +982,57 @@ export function IncantApp({
                   cancel();
                   return;
                 }
-                void beginVoice();
+                voicePress.current = {
+                  started: performance.now(),
+                  stopping: handsFreeRef.current,
+                };
+                if (!handsFreeRef.current) void beginVoice();
               }
             }}
             onKeyUp={(e) => {
               if (e.key === " " || e.key === "Enter") {
                 e.preventDefault();
-                void endVoice();
+                suppressVoiceClickUntil.current = performance.now() + 500;
+                if (
+                  !voicePress.current.stopping &&
+                  performance.now() - voicePress.current.started < 300 &&
+                  voice.current
+                ) {
+                  setHandsFree(true);
+                } else {
+                  setHandsFree(false);
+                  void endVoice();
+                }
               }
             }}
             onBlur={() => {
+              voicePointer.current = null;
+              suppressVoiceClickUntil.current = performance.now() + 500;
               if (
                 !handsFreeRef.current &&
                 (voice.current?.ready || phase === "connecting")
               )
                 void endVoice(true);
+            }}
+            onClick={() => {
+              // Pointer and keyboard lifecycles above own their generated click.
+              // A standalone semantic click (HTMLElement.click/accessibility
+              // activation) has no down/up events, so give it tap/tap behavior.
+              if (performance.now() <= suppressVoiceClickUntil.current) return;
+              if (
+                immersiveMode &&
+                (phase === "casting" || phase === "finishing")
+              ) {
+                cancel();
+                return;
+              }
+              if (voice.current) {
+                setHandsFree(false);
+                void endVoice();
+                return;
+              }
+              void beginVoice();
+              if (voice.current) setHandsFree(true);
             }}
             onContextMenu={(e) => e.preventDefault()}
           >
@@ -1035,7 +1149,9 @@ export function IncantApp({
           busy={busy}
           onOpen={(c) => {
             setActive(c);
-            setLast(c.sketch ? { sketch: c.sketch, words: c.spell } : null);
+            setLast(
+              c.sketch ? { sketch: c.sketch, words: c.spell, source: c } : null,
+            );
             setLibraryOpen(false);
           }}
         />
@@ -1157,7 +1273,7 @@ export function IncantApp({
             />
             <button
               className="cast-button"
-              disabled={busy || !words.trim() || empty}
+              disabled={busy || !words.trim() || (empty && !active?.sketch)}
               onClick={() => void cast()}
             >
               <Sparkles size={19} /> Cast spell
@@ -1178,7 +1294,9 @@ export function IncantApp({
           busy={busy}
           onOpen={(c) => {
             setActive(c);
-            setLast(c.sketch ? { sketch: c.sketch, words: c.spell } : null);
+            setLast(
+              c.sketch ? { sketch: c.sketch, words: c.spell, source: c } : null,
+            );
           }}
         />
       </dialog>
@@ -1223,7 +1341,7 @@ export function IncantApp({
             type="submit"
             className="bubble-cast"
             aria-label="Cast typed spell"
-            disabled={busy || empty || !words.trim()}
+            disabled={busy || (empty && !active?.sketch) || !words.trim()}
           >
             <Sparkles size={23} />
           </button>
@@ -1303,6 +1421,42 @@ export function IncantApp({
         settings={settings}
         onChange={setSettings}
         onClose={() => setBook(false)}
+        onReturnToDrawing={
+          active && phase === "idle"
+            ? () => {
+                setActive(null);
+                setRevealing(false);
+                setBook(false);
+              }
+            : undefined
+        }
+        onUndo={
+          !active && phase === "idle"
+            ? () => {
+                sketch.current?.undo();
+                setBook(false);
+              }
+            : undefined
+        }
+        onRedo={
+          !active && phase === "idle"
+            ? () => {
+                sketch.current?.redo();
+                setBook(false);
+              }
+            : undefined
+        }
+        onSaveSketch={
+          !active && !empty && phase === "idle"
+            ? () => {
+                const png = sketch.current?.exportPng();
+                if (png) download(png, "incant-sketch.png");
+                setBook(false);
+              }
+            : undefined
+        }
+        canUndo={!active && phase === "idle" && !!sketch.current?.canUndo()}
+        canRedo={!active && phase === "idle" && !!sketch.current?.canRedo()}
       />
       {help && <Onboarding onClose={() => setHelp(false)} />}
       <span hidden>

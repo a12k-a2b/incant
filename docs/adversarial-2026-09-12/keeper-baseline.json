@@ -1,0 +1,23 @@
+[
+  {
+    "id": "K1",
+    "check": "Native share with locally available images while owl cloud returns 503",
+    "shared": false,
+    "tray": "✦\nOwl post\n×\n\nA little magic, addressed to someone.\n\nPrepare image\nImage · original sketch · your spell\n\nSynthetic cloud outage\n\nHoot for image replies while Incant is open\nLetters & replies\n\nOwl post is offline. These receipts may be out of date.\n\nAbout letters & receipts\n\nNo letters yet.",
+    "expected": "Local native sharing remains available independently of cloud post links"
+  },
+  {
+    "id": "K2",
+    "check": "Semantic click activation of wand",
+    "phase": "drawing-room immersive-room  immersive-mode phase-idle is-revealing live-paper",
+    "expected": "Accessible click should start talking like a tap"
+  },
+  {
+    "id": "K3",
+    "check": "Cancellation while data channel is connecting",
+    "didRemote": true,
+    "settled": false,
+    "trackState": "ended",
+    "expected": "connect promise settles on cancellation and tracks stop"
+  }
+]

@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="6.839"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1601 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.42 kB
+dist/assets/index-DuHJk60s.css   61.10 kB │ gzip:  14.18 kB
+dist/assets/index-D644Lgn1.js   317.81 kB │ gzip: 100.15 kB
+✓ built in 2.28s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="2.068"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/realtime-voice.test.ts (2 tests) 74ms
+ ✓ tests/contracts.test.ts (7 tests) 14ms
+ ✓ tests/backup.test.ts (2 tests) 193ms
+ ✓ tests/owl.test.ts (3 tests) 411ms
+   ✓ owl capabilities isolate images; open and reply receipts are durable and retry-safe  319ms
+
+ Test Files  4 passed (4)
+      Tests  14 passed (14)
+   Start at  12:55:56
+   Duration  1.14s (transform 319ms, setup 0ms, collect 781ms, tests 692ms, environment 1ms, prepare 472ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="225.87"><failure message="command exited 1">      - Expect "toHaveClass" locator('main') with timeout 5000ms
+      - waiting for locator('main')
+        14 × locator resolved to &lt;main data-frame="balanced" data-cast-stage="idle" data-voice-mode="dictation" data-frame-layer="see-through" data-native-interactions="true" class="drawing-room immersive-room  immersive-mode phase-idle  live-paper"&gt;…&lt;/main&gt;
+           - unexpected value "drawing-room immersive-room  immersive-mode phase-idle  live-paper"
+
+
+      270 |   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      271 |   await page.mouse.down();
+    &gt; 272 |   await expect(page.locator("main")).toHaveClass(/phase-listening/);
+          |                                      ^
+      273 |   await wand.evaluate((button: HTMLButtonElement) =&gt; button.blur());
+      274 |   await expect(page.locator("main")).toHaveClass(/phase-idle/);
+      275 |   await page.mouse.up();
+        at /Users/anjan/Documents/SolOS/incant/web/tests/input-reliability.e2e.ts:272:38
+
+    Error Context: test-results/input-reliability.e2e.ts-w-3bc23--the-next-gesture-can-start/error-context.md
+
+  1 failed
+    tests/input-reliability.e2e.ts:262:1 › wand blur releases pointer ownership so the next gesture can start 
+  89 passed (3.7m)</failure><system-out>      - Expect "toHaveClass" locator('main') with timeout 5000ms
+      - waiting for locator('main')
+        14 × locator resolved to &lt;main data-frame="balanced" data-cast-stage="idle" data-voice-mode="dictation" data-frame-layer="see-through" data-native-interactions="true" class="drawing-room immersive-room  immersive-mode phase-idle  live-paper"&gt;…&lt;/main&gt;
+           - unexpected value "drawing-room immersive-room  immersive-mode phase-idle  live-paper"
+
+
+      270 |   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      271 |   await page.mouse.down();
+    &gt; 272 |   await expect(page.locator("main")).toHaveClass(/phase-listening/);
+          |                                      ^
+      273 |   await wand.evaluate((button: HTMLButtonElement) =&gt; button.blur());
+      274 |   await expect(page.locator("main")).toHaveClass(/phase-idle/);
+      275 |   await page.mouse.up();
+        at /Users/anjan/Documents/SolOS/incant/web/tests/input-reliability.e2e.ts:272:38
+
+    Error Context: test-results/input-reliability.e2e.ts-w-3bc23--the-next-gesture-can-start/error-context.md
+
+  1 failed
+    tests/input-reliability.e2e.ts:262:1 › wand blur releases pointer ownership so the next gesture can start 
+  89 passed (3.7m)</system-out></testcase></testsuite>

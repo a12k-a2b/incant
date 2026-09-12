@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="6.298"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1601 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.42 kB
+dist/assets/index-DuHJk60s.css   61.10 kB │ gzip:  14.18 kB
+dist/assets/index-DjDNtCD6.js   317.69 kB │ gzip: 100.13 kB
+✓ built in 1.89s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="3.336"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/realtime-voice.test.ts (2 tests) 83ms
+ ✓ tests/contracts.test.ts (7 tests) 21ms
+ ✓ tests/backup.test.ts (2 tests) 605ms
+   ✓ durable immutable snapshots require complete, hash-verified objects and survive server restart  597ms
+ ✓ tests/owl.test.ts (3 tests) 905ms
+   ✓ owl capabilities isolate images; open and reply receipts are durable and retry-safe  781ms
+
+ Test Files  4 passed (4)
+      Tests  14 passed (14)
+   Start at  12:46:02
+   Duration  2.00s (transform 463ms, setup 0ms, collect 1.05s, tests 1.62s, environment 1ms, prepare 703ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="194.278"><failure message="command exited 1">
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      121 |   await expect
+      122 |     .poll(() =&gt; page.evaluate(() =&gt; (window as any).owlTrayShareCalls))
+    &gt; 123 |     .toBe(3);
+          |      ^
+      124 |   expect(handoffs).toBe(1);
+      125 |   await page.evaluate(() =&gt; (window as any).releaseOwlTrayShare());
+      126 |   await expect.poll(() =&gt; handoffs).toBe(2);
+        at /Users/anjan/Documents/SolOS/incant/web/tests/owl.e2e.ts:123:6
+
+    Error Context: test-results/owl.e2e.ts-owl-sharing-pre-cdbc0-nounces-an-image-reply-once/error-context.md
+
+  3 failed
+    tests/desk.e2e.ts:556:1 › immersive mode keeps the wand and illustrated typewriter, including while casting 
+    tests/input-reliability.e2e.ts:448:1 › voice cancellation restores an opened generation and typed recast works over a blank current page 
+    tests/owl.e2e.ts:4:1 › owl sharing preserves activation, distinguishes cancellation, and announces an image reply once 
+  84 passed (3.2m)</failure><system-out>
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      121 |   await expect
+      122 |     .poll(() =&gt; page.evaluate(() =&gt; (window as any).owlTrayShareCalls))
+    &gt; 123 |     .toBe(3);
+          |      ^
+      124 |   expect(handoffs).toBe(1);
+      125 |   await page.evaluate(() =&gt; (window as any).releaseOwlTrayShare());
+      126 |   await expect.poll(() =&gt; handoffs).toBe(2);
+        at /Users/anjan/Documents/SolOS/incant/web/tests/owl.e2e.ts:123:6
+
+    Error Context: test-results/owl.e2e.ts-owl-sharing-pre-cdbc0-nounces-an-image-reply-once/error-context.md
+
+  3 failed
+    tests/desk.e2e.ts:556:1 › immersive mode keeps the wand and illustrated typewriter, including while casting 
+    tests/input-reliability.e2e.ts:448:1 › voice cancellation restores an opened generation and typed recast works over a blank current page 
+    tests/owl.e2e.ts:4:1 › owl sharing preserves activation, distinguishes cancellation, and announces an image reply once 
+  84 passed (3.2m)</system-out></testcase></testsuite>

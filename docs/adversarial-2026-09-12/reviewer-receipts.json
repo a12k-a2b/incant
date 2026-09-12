@@ -1,0 +1,52 @@
+[
+  {
+    "attempt": "fable-run",
+    "stdout_sha256": "138308b7b8c4734d4f0b54d6351f532a2406260a26bfadee1faf47846986d8e4",
+    "served_models": [
+      "claude-fable-5-1"
+    ],
+    "terminal_reason": "logger timeout after 1200 seconds",
+    "is_error": true,
+    "tool_calls": 111
+  },
+  {
+    "attempt": "fable-finalize",
+    "stdout_sha256": "61241848b66e687a5977b8fd259eba59653780e25347215680fd754336751b4e",
+    "served_models": [
+      "claude-fable-5-1"
+    ],
+    "terminal_reason": "success",
+    "is_error": false,
+    "tool_calls": 12
+  },
+  {
+    "attempt": "grok-run",
+    "stdout_sha256": "ba7f98939af0fa699e6cda44eab56aba50967d47069ce8c3886b9734087a1893",
+    "served_models": [
+      "grok-4.6-build"
+    ],
+    "terminal_reason": "Cancelled",
+    "turns": 13,
+    "source_only": false
+  },
+  {
+    "attempt": "grok-retry",
+    "stdout_sha256": "f505e49d86e5bcee518768d3a8a00db387718849b4025129b0d4c17464176bb1",
+    "served_models": [
+      "grok-4.6-build"
+    ],
+    "terminal_reason": "Cancelled",
+    "turns": 14,
+    "source_only": false
+  },
+  {
+    "attempt": "grok-focused",
+    "stdout_sha256": "26d5dfd6a56e8455ca59ab421cf08b6977fd5ba7a3ddb7a361f8dfe959c3e5b6",
+    "served_models": [
+      "grok-4.6-build"
+    ],
+    "terminal_reason": "EndTurn",
+    "turns": 1,
+    "source_only": true
+  }
+]

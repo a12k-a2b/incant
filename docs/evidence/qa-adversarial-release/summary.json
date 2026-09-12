@@ -1,0 +1,79 @@
+{
+  "counts": {
+    "BLOCKED": 0,
+    "FAIL": 1,
+    "PASS": 2,
+    "SKIP": 0
+  },
+  "generated_at": "2026-09-12T19:59:43Z",
+  "kind": "repository-checks",
+  "metadata": {
+    "dry_run": false,
+    "harness_version": "0.1.0",
+    "profile": "pr",
+    "revisions": {
+      "incant-web": "46a4faa63ff81a0aee2d3dfd6735915e1b409d5e"
+    }
+  },
+  "results": [
+    {
+      "check": "production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "incant/web",
+      "description": "TypeScript and production PWA build",
+      "duration_seconds": 6.839,
+      "exit_code": 0,
+      "id": "incant-web/production-build",
+      "log": "logs/incant-web_production-build.log",
+      "output_tail": "\n> incant@1.1.0 build\n> tsc --noEmit && vite build && node scripts/build-sw.mjs\n\nvite v7.3.6 building client environment for production...\ntransforming...\n\u2713 1601 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.70 kB \u2502 gzip:   0.42 kB\ndist/assets/index-DuHJk60s.css   61.10 kB \u2502 gzip:  14.18 kB\ndist/assets/index-D644Lgn1.js   317.81 kB \u2502 gzip: 100.15 kB\n\u2713 built in 2.28s",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-12T19:55:48Z",
+      "status": "PASS"
+    },
+    {
+      "check": "unit-contracts",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "incant/web",
+      "description": "Malformed image/network handling and room authentication negative controls",
+      "duration_seconds": 2.068,
+      "exit_code": 0,
+      "id": "incant-web/unit-contracts",
+      "log": "logs/incant-web_unit-contracts.log",
+      "output_tail": "\n> incant@1.1.0 test\n> vitest run\n\n\n RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web\n\n \u2713 tests/realtime-voice.test.ts (2 tests) 74ms\n \u2713 tests/contracts.test.ts (7 tests) 14ms\n \u2713 tests/backup.test.ts (2 tests) 193ms\n \u2713 tests/owl.test.ts (3 tests) 411ms\n   \u2713 owl capabilities isolate images; open and reply receipts are durable and retry-safe  319ms\n\n Test Files  4 passed (4)\n      Tests  14 passed (14)\n   Start at  12:55:56\n   Duration  1.14s (transform 319ms, setup 0ms, collect 781ms, tests 692ms, environment 1ms, prepare 472ms)\n",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-12T19:55:55Z",
+      "status": "PASS"
+    },
+    {
+      "check": "browser-flows",
+      "command": [
+        "npm",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "incant/web",
+      "description": "Synthetic browser ink, recovery, cast, voice-race, dialog and responsive checks; requires local server on port5173",
+      "duration_seconds": 225.87,
+      "exit_code": 1,
+      "id": "incant-web/browser-flows",
+      "log": "logs/incant-web_browser-flows.log",
+      "output_tail": "      - Expect \"toHaveClass\" locator('main') with timeout 5000ms\n      - waiting for locator('main')\n        14 \u00d7 locator resolved to <main data-frame=\"balanced\" data-cast-stage=\"idle\" data-voice-mode=\"dictation\" data-frame-layer=\"see-through\" data-native-interactions=\"true\" class=\"drawing-room immersive-room  immersive-mode phase-idle  live-paper\">\u2026</main>\n           - unexpected value \"drawing-room immersive-room  immersive-mode phase-idle  live-paper\"\n\n\n      270 |   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);\n      271 |   await page.mouse.down();\n    > 272 |   await expect(page.locator(\"main\")).toHaveClass(/phase-listening/);\n          |                                      ^\n      273 |   await wand.evaluate((button: HTMLButtonElement) => button.blur());\n      274 |   await expect(page.locator(\"main\")).toHaveClass(/phase-idle/);\n      275 |   await page.mouse.up();\n        at /Users/anjan/Documents/SolOS/incant/web/tests/input-reliability.e2e.ts:272:38\n\n    Error Context: test-results/input-reliability.e2e.ts-w-3bc23--the-next-gesture-can-start/error-context.md\n\n  1 failed\n    tests/input-reliability.e2e.ts:262:1 \u203a wand blur releases pointer ownership so the next gesture can start \n  89 passed (3.7m)",
+      "project": "incant-web",
+      "reason": "command exited 1",
+      "required": true,
+      "started_at": "2026-09-12T19:55:57Z",
+      "status": "FAIL"
+    }
+  ],
+  "schema_version": 1,
+  "status": "FAIL"
+}

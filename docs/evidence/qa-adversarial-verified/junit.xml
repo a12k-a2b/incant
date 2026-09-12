@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="0" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="5.111"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1601 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.42 kB
+dist/assets/index-DuHJk60s.css   61.10 kB │ gzip:  14.18 kB
+dist/assets/index-D644Lgn1.js   317.81 kB │ gzip: 100.15 kB
+✓ built in 1.42s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="1.565"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/realtime-voice.test.ts (2 tests) 73ms
+ ✓ tests/contracts.test.ts (7 tests) 17ms
+ ✓ tests/backup.test.ts (2 tests) 199ms
+ ✓ tests/owl.test.ts (3 tests) 390ms
+   ✓ owl capabilities isolate images; open and reply receipts are durable and retry-safe  310ms
+
+ Test Files  4 passed (4)
+      Tests  14 passed (14)
+   Start at  13:02:59
+   Duration  906ms (transform 285ms, setup 0ms, collect 731ms, tests 678ms, environment 1ms, prepare 357ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="194.623"><system-out>  ✓  73 tests/onboarding.e2e.ts:73:3 › guide fits dc1-portrait and remains usable with reduced motion (1.8s)
+  ✓  74 tests/onboarding.e2e.ts:73:3 › guide fits dc1-landscape and remains usable with reduced motion (1.9s)
+  ✓  75 tests/onboarding.e2e.ts:73:3 › guide fits phone and remains usable with reduced motion (868ms)
+  ✓  76 tests/onboarding.e2e.ts:73:3 › guide fits short and remains usable with reduced motion (951ms)
+  ✓  77 tests/owl.e2e.ts:4:1 › owl sharing preserves activation, distinguishes cancellation, and announces an image reply once (17.2s)
+  ✓  78 tests/owl.e2e.ts:151:1 › recipient opens deliberately, sees no room gate, and retries the same reply safely (578ms)
+  ✓  79 tests/owl.e2e.ts:198:1 › missing cloud storage is recoverable and never opens a share sheet (475ms)
+  ✓  80 tests/owl.e2e.ts:223:3 › painted owl shares exact local parcel without cloud at 503 (4.8s)
+  ✓  81 tests/owl.e2e.ts:223:3 › painted owl shares exact local parcel without cloud at 429 (4.5s)
+  ✓  82 tests/owl.e2e.ts:364:1 › a delayed reply-link preparation cannot attach old files or spell to a new active cast (12.4s)
+  ✓  83 tests/share-image.e2e.ts:8:3 › native png parcel keeps matching names, MIME, and exact bytes (241ms)
+  ✓  84 tests/share-image.e2e.ts:8:3 › native jpg parcel keeps matching names, MIME, and exact bytes (279ms)
+  ✓  85 tests/share-image.e2e.ts:8:3 › native webp parcel keeps matching names, MIME, and exact bytes (325ms)
+  ✓  86 tests/wand-feedback.e2e.ts:3:3 › wand acknowledges connection immediately and signals actual listening (2.6s)
+  ✓  87 tests/wand-feedback.e2e.ts:3:3 › wand acknowledges connection immediately and signals actual listening with reduced motion (1.7s)
+  ✓  88 tests/wand-sequence.e2e.ts:3:3 › first gesture over a result casts again with original sketch (tap) (6.2s)
+  ✓  89 tests/wand-sequence.e2e.ts:3:3 › first gesture over a result casts again with original sketch (hold) (6.4s)
+  ✓  90 tests/wand-sequence.e2e.ts:119:1 › dragon settings persist voice and owl choices without adding an owl icon (1.8s)
+
+  90 passed (3.2m)</system-out></testcase></testsuite>

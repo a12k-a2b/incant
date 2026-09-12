@@ -8,6 +8,7 @@ export class RealtimeVoice {
   private committed = false;
   private finalizeTimer = 0;
   private timeout = 0;
+  private settleReady: ((error?: Error) => void) | null = null;
   constructor(
     private onWords: (s: string) => void,
     private onCast: (s: string) => void,
@@ -47,33 +48,54 @@ export class RealtimeVoice {
       this.stream.getTracks().forEach((t) => pc.addTrack(t, this.stream!));
       const dc = (this.channel = pc.createDataChannel("oai-events"));
       const ready = new Promise<void>((resolve, reject) => {
-        this.timeout = window.setTimeout(
-          () => reject(new Error("The talking wand did not connect in time.")),
-          20000,
-        );
-        dc.onopen = () => {
+        let settled = false;
+        const settle = (error?: Error) => {
+          if (settled) return;
+          settled = true;
           clearTimeout(this.timeout);
-          if (sketch)
-            dc.send(
-              JSON.stringify({
-                type: "conversation.item.create",
-                item: {
-                  type: "message",
-                  role: "user",
-                  content: [
-                    {
-                      type: "input_text",
-                      text: "Here is my sketch. Wait for my spoken description.",
-                    },
-                    { type: "input_image", image_url: sketch },
-                  ],
-                },
-              }),
-            );
-          resolve();
+          if (this.settleReady === settle) this.settleReady = null;
+          if (error) reject(error);
+          else resolve();
+        };
+        this.settleReady = settle;
+        this.timeout = window.setTimeout(() => {
+          settle(new Error("The talking wand did not connect in time."));
+        }, 20000);
+        dc.onopen = () => {
+          if (this.closed) {
+            settle(new Error("The talking wand connection was cancelled."));
+            return;
+          }
+          try {
+            if (sketch)
+              dc.send(
+                JSON.stringify({
+                  type: "conversation.item.create",
+                  item: {
+                    type: "message",
+                    role: "user",
+                    content: [
+                      {
+                        type: "input_text",
+                        text: "Here is my sketch. Wait for my spoken description.",
+                      },
+                      { type: "input_image", image_url: sketch },
+                    ],
+                  },
+                }),
+              );
+            settle();
+          } catch {
+            settle(new Error("The talking wand connection could not open."));
+          }
         };
         dc.onclose = () => {
+          settle(new Error("The talking wand connection closed."));
           if (!this.closed) this.fail("The talking wand connection closed.");
+        };
+        dc.onerror = () => {
+          settle(new Error("The talking wand connection failed."));
+          if (!this.closed) this.fail("The talking wand connection failed.");
         };
         dc.onmessage = (e) => {
           if (this.closed) return;
@@ -199,6 +221,8 @@ export class RealtimeVoice {
   }
   close() {
     this.closed = true;
+    this.settleReady?.(new Error("The talking wand connection was cancelled."));
+    this.settleReady = null;
     clearTimeout(this.timeout);
     clearTimeout(this.finalizeTimer);
     this.controller.abort();

@@ -363,6 +363,7 @@ for (const input of ["keyboard", "touch-hold", "tap"] as const) {
         .getByRole("button", { name: /Listening… tap to cast/ })
         .click();
     } else {
+      await page.waitForTimeout(350);
       await page.keyboard.up("Space");
     }
     await expect(page.getByRole("alert")).toContainText("Synthetic stop");
@@ -570,8 +571,11 @@ test("immersive mode keeps the wand and illustrated typewriter, including while 
   await page.screenshot({ path: "../docs/evidence/immersive-mode.png" });
   await expect(page.locator("canvas")).toBeVisible();
   const original = await png(page);
+  let releaseCast!: () => void;
+  const castGate = new Promise<void>((resolve) => (releaseCast = resolve));
+  let castResponses = 0;
   await page.route("**/api/cast", async (r) => {
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+    await castGate;
     await r
       .fulfill({
         json: {
@@ -581,23 +585,34 @@ test("immersive mode keeps the wand and illustrated typewriter, including while 
         },
       })
       .catch(() => {});
+    castResponses++;
   });
   // Set up casting independently of the separately tested speech adapter.
   await page
     .locator(".cast-button")
     .evaluate((b: HTMLButtonElement) => b.click());
   await expect(page.locator(".phase-casting")).toBeVisible();
-  await expect(page.getByRole("button")).toHaveCount(7);
+  await expect(page.locator(".voice-wand")).toBeVisible();
+  await expect(page.locator(".typewriter-key")).toBeVisible();
   await page.locator(".voice-wand").click();
+  await expect(page.locator("main")).toHaveClass(/phase-idle/);
+  releaseCast();
+  await expect.poll(() => castResponses).toBe(1);
   await expect(page.locator(".spell-fog")).toHaveCount(0);
-  await page.waitForTimeout(1300);
   await expect(page.locator(".manifestation")).toHaveCount(0);
   await page
     .locator(".cast-button")
     .evaluate((b: HTMLButtonElement) => b.click());
   await expect(page.locator(".manifestation.image-ready")).toBeVisible();
   await expect(page.getByRole("button")).toHaveCount(7);
+  await page.evaluate(() => {
+    Object.defineProperty(navigator.mediaDevices, "getUserMedia", {
+      configurable: true,
+      value: () => new Promise(() => {}),
+    });
+  });
   await page.locator(".voice-wand").click();
+  await expect(page.locator("main")).toHaveClass(/phase-connecting/);
   await expect(page.locator(".manifestation")).toHaveCount(0);
   expect(await png(page)).toBe(original);
 });
@@ -627,4 +642,8 @@ test("typewriter focuses only the writing field and releases its viewport lock o
 });
 
 // These existing flows exercise a returning user; first-visit behavior has its own suite.
-test.beforeEach(async ({ page }) => { await page.addInitScript(() => localStorage.setItem("incant-introduction-v1", "seen")); });
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() =>
+    localStorage.setItem("incant-introduction-v1", "seen"),
+  );
+});

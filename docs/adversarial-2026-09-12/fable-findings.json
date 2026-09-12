@@ -1,0 +1,143 @@
+{
+  "reviewer": "Fable 5.1 (independent lane)",
+  "baseline": "46a4faa",
+  "date": "2026-09-12",
+  "app_source_modified": false,
+  "hardware_or_live_provider_tested": false,
+  "recorded_runs": [
+    {
+      "file": "review-browser-tests.json",
+      "command": "npx playwright test -c review.playwright.config.ts review-tests/palm-wand.review.ts review-tests/storage-growth.review.ts",
+      "stats": { "expected": 0, "unexpected": 2, "skipped": 0, "flaky": 0 },
+      "run_by": "earlier pass of this lane; not re-run in the finishing pass"
+    },
+    {
+      "file": "browser-tests.json",
+      "command": "npm run test:e2e (baseline suite)",
+      "stats": { "expected": 60, "unexpected": 0, "flaky": 0 },
+      "run_by": "earlier pass of this lane; read only"
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "P1",
+      "status": "reproduced",
+      "archetypes": [2, 1, 4],
+      "title": "Touch on the wand while a pen stroke is in progress starts the wand and cuts the stroke",
+      "paths": [
+        "web/src/components/incant/SketchCanvas.tsx:191-199",
+        "web/review-tests/palm-wand.review.ts:37-71",
+        "review-browser-tests.json:78-141"
+      ],
+      "trigger": "Pen pointerdown and moves on the parchment; while pen is down, non-primary touch pointerdown on .voice-wand; continue pen moves; pen up.",
+      "expected": "Stroke continues unbroken; wand remains idle while a palm rests on it during inking.",
+      "actual": "main gets phase-connecting, wand aria-label 'Connecting… keep holding', canvas pixel at 55% width stays 255 (no ink) although pen kept moving. Pixel at 30% is 41 (inked before the palm).",
+      "causality": "Parchment filters pointer types and honours a locked gate in SketchCanvas.tsx:191-199. grep for pointerType in web/src matches only SketchCanvas.tsx, so the wand button accepts touch pointerdown with no pen-in-contact check. The exact wand line that locks the canvas was not read in this pass.",
+      "why_tests_miss": "desk.e2e.ts 'palm input ignored' places the palm on the parchment only, never on a frame control during an active stroke.",
+      "smallest_fix": "In the wand pointerdown handler, return early when a pen pointer is currently in contact on the parchment (expose SketchCanvas pointer.current as a data attribute on main), or when e.pointerType === 'touch' && !e.isPrimary. Keep finger taps working when no pen is down.",
+      "oracle": "palm-wand.review.ts:71 pixel at 55% < 100; wand aria-label not matching /Connecting/ while pen is down; after pen lift a real wand tap still reaches phase-connecting.",
+      "limits": "Synthetic PointerEvents in headless Chromium with setPointerCapture stubbed. DC-1 driver-level palm rejection not tested."
+    },
+    {
+      "id": "F2",
+      "severity": "P1",
+      "status": "reproduced",
+      "archetypes": [5, 4],
+      "title": "When localStorage is full, warned ink is lost on reload and the archive current pair reverts to the stale sketch",
+      "paths": [
+        "web/src/components/incant/SketchCanvas.tsx:79-98",
+        "web/review-tests/storage-growth.review.ts:39-112",
+        "review-browser-tests.json:155-235"
+      ],
+      "trigger": "Fill localStorage to near quota; draw one more stroke; wait past the archive debounce; reload.",
+      "expected": "No silent loss: post-quota ink survives reload or the archived copy keeps the newer sketch.",
+      "actual": "Stroke visible (pixel 41), draft key unchanged, room message shown. After reload: 1 stroke, pixel 255. Archive current pair equals the pre-quota PNG, not the post-quota PNG.",
+      "causality": "changed() at SketchCanvas.tsx:79-92 catches the setItem failure, reports the message, and continues; strokes live only in memory. On mount (93-98) the stale localStorage draft replaces memory and the archive is re-sealed from it. archive.ts was not re-read in this pass; the overwrite is observed, the exact line is not cited.",
+      "why_tests_miss": "archive.e2e.ts 'archive failure cannot clear the sketch' fails the archive, not the draft save, and does not reload afterwards.",
+      "smallest_fix": "In the catch branch set draftDirty and write the drawing to the IndexedDB store under a draft key; on mount prefer the IndexedDB draft when newer; do not re-seal the archive current pair from a localStorage draft while draftDirty is set.",
+      "oracle": "storage-growth.review.ts:112 pixelsAfterReload < 100 and archived.sketch === postQuotaPng (line 107).",
+      "limits": "Quota forced with filler keys in Chromium; real quota differs per tablet browser."
+    },
+    {
+      "id": "F3",
+      "severity": "P3",
+      "status": "measured",
+      "archetypes": [5],
+      "title": "Draft strokes serialise at about 57 bytes per point at full double precision; whole drawing rewritten per stroke",
+      "paths": [
+        "web/src/components/incant/SketchCanvas.tsx:81",
+        "web/src/lib/drawing.ts:1-4",
+        "review-browser-tests.json:195-198"
+      ],
+      "trigger": "One 200-sample stroke; read incant-drawing-v2 length.",
+      "expected": "Compact draft so hours of sketches stay well inside quota.",
+      "actual": "11429 bytes for 201 points; about 92k points fit 5 MiB (roughly six minutes of continuous 240 Hz ink).",
+      "causality": "Points stored as {x,y,p} doubles with JSON.stringify of the full array on every change.",
+      "why_tests_miss": "No test measures draft size.",
+      "smallest_fix": "Round x, y, p to 4 decimals when serialising.",
+      "oracle": "perPoint in storage-growth.review.ts stats below 30.",
+      "limits": "Realistic sketches are far smaller; this mainly shortens the road to F2."
+    },
+    {
+      "id": "H1",
+      "severity": "unrated",
+      "status": "BLOCKED",
+      "archetypes": [3],
+      "title": "Silent wand press may erase a typed spell that was never cast; click or Enter may act as an empty hold",
+      "paths": ["web/review-tests/voice-words.review.ts:32-117"],
+      "note": "Test authored, never executed. Source not re-read in this pass."
+    },
+    {
+      "id": "H2",
+      "severity": "unrated",
+      "status": "BLOCKED",
+      "archetypes": [1, 2],
+      "title": "Short mark in the top-right of the parchment may hit the moon and wipe the page without a confirmation",
+      "paths": ["web/review-tests/overlay-hit-areas.review.ts:15-135"],
+      "note": "Test authored, never executed. Source not re-read in this pass."
+    },
+    {
+      "id": "H3",
+      "severity": "unrated",
+      "status": "BLOCKED",
+      "archetypes": [6],
+      "title": "Viewing results may upload owl letters without a share and re-upload on reload; daily cap may count revoked letters",
+      "paths": ["web/review-tests/owl-quota.review.ts:5-42", "web/review-tests/owl-quota.review.unit.ts:10-37"],
+      "note": "Tests authored, never executed. Source not re-read in this pass."
+    },
+    {
+      "id": "H4",
+      "severity": "unrated",
+      "status": "BLOCKED",
+      "archetypes": [1, 4],
+      "title": "Offline cast and microphone denial may show raw browser error strings",
+      "paths": ["web/review-tests/error-copy.review.ts:17-53"],
+      "note": "Test authored, never executed. Source not re-read in this pass."
+    },
+    {
+      "id": "H5",
+      "severity": "unrated",
+      "status": "BLOCKED",
+      "archetypes": [3, 7],
+      "title": "A result may lock and hide the canvas with no undo available in the immersive room",
+      "paths": ["web/review-tests/after-cast.review.ts:9-83"],
+      "note": "Test authored, never executed. Source not re-read in this pass."
+    }
+  ],
+  "coverage": {
+    "1": "H2, H4 blocked; nothing confirmed",
+    "2": "F1 confirmed; H2 blocked",
+    "3": "H1, H5 blocked; baseline suite covers recasts with exact sketch",
+    "4": "baseline covers cancel, late result, early release; H4 blocked",
+    "5": "F2 confirmed, F3 measured; cloud-cost.review.ts never run",
+    "6": "H3 blocked; baseline owl tests passed in the recorded run",
+    "7": "only reduced-motion cases in baseline; nothing new"
+  },
+  "limits": [
+    "No DC-1 hardware, stylus, live provider or production storage.",
+    "browser-tests.json and review-browser-tests.json were produced by the earlier pass; read, not re-run.",
+    "Source reading in the finishing pass limited to SketchCanvas.tsx fragments and drawing.ts.",
+    "One shell read of the test directory was denied by the harness; files were read via the search tool."
+  ]
+}

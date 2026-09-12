@@ -4,6 +4,10 @@ export type Creation = {
   spell: string;
   created: number;
   sketch?: string;
+  // Optional local archive hints. The generation id remains the authoritative
+  // identity, so older creation records continue to work unchanged.
+  archivePairId?: number;
+  archiveBundleId?: string;
 };
 function db(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {

@@ -7,11 +7,22 @@ export type Pair = {
   sessionStarted?: number;
   created?: number;
   updated?: number;
+  // Local mutation oracle for bounded backup hashing. It is stripped from
+  // exported cloud manifests and does not change the database schema.
+  revision?: string;
   day?: string;
   sketch: string;
   spell: string;
   sealed: boolean;
   images: { id: string; image: string; spell: string; created?: number }[];
+};
+export type ArchiveSource = {
+  id: string;
+  image: string;
+  spell: string;
+  created?: number;
+  archivePairId?: number;
+  archiveBundleId?: string;
 };
 type Directory = FileSystemDirectoryHandle & {
   queryPermission(o: { mode: string }): Promise<PermissionState>;
@@ -85,6 +96,7 @@ export async function archiveSketch(
             : { sketch, spell, sealed: seal, images: [] };
         saved = {
           ...saved,
+          revision: crypto.randomUUID(),
           bundleId: old?.bundleId ?? `sketch-${crypto.randomUUID()}`,
           sessionId: old?.sessionId ?? session.id,
           sessionStarted: old?.sessionStarted ?? session.started,
@@ -131,6 +143,126 @@ export async function archiveSketch(
     d.close();
   }
 }
+
+// A recast belongs to the generation the user opened, not to the mutable draft
+// pointer. Keeping this separate from archiveSketch makes it impossible for a
+// historical cast to replace an unrelated current page.
+export async function archiveCast(
+  sketch: string,
+  spell: string,
+  source?: ArchiveSource | null,
+  now = Date.now(),
+): Promise<Pair> {
+  if (!source) return archiveSketch(sketch, spell, true, now);
+  const d = await open();
+  try {
+    return await new Promise((resolve, reject) => {
+      const t = d.transaction("pairs", "readwrite"),
+        pairs = t.objectStore("pairs");
+      let saved: Pair;
+      const save = (rows: Pair[]) => {
+        const containsSource = (pair: Pair) =>
+          pair.sketch === sketch &&
+          pair.images.some((image) => image.id === source.id);
+        let pair =
+          typeof source.archivePairId === "number"
+            ? rows.find(
+                (candidate) =>
+                  candidate.id === source.archivePairId &&
+                  containsSource(candidate),
+              )
+            : undefined;
+        const bundleMatches = source.archiveBundleId
+          ? rows.filter(
+              (candidate) =>
+                candidate.bundleId === source.archiveBundleId &&
+                containsSource(candidate),
+            )
+          : [];
+        if (!pair && bundleMatches.length === 1) pair = bundleMatches[0];
+        const matches = rows.filter(containsSource);
+        if (!pair && matches.length === 1) pair = matches[0];
+        if (!pair && (bundleMatches.length > 1 || matches.length > 1)) {
+          t.abort();
+          return;
+        }
+        if (pair) {
+          if (pair.cloudKey) {
+            // Restored records stay immutable. A local continuation shares the
+            // numbered bundle but contains only the newly generated results,
+            // avoiding duplicate source images on the next cloud restore.
+            const origin = { ...pair };
+            delete origin.id;
+            delete origin.cloudKey;
+            saved = {
+              ...origin,
+              revision: crypto.randomUUID(),
+              created: now,
+              updated: now,
+              spell,
+              sealed: true,
+              images: [],
+            };
+            const add = pairs.add(saved);
+            add.onsuccess = () => {
+              saved.id = Number(add.result);
+            };
+          } else {
+            saved = {
+              ...pair,
+              revision: crypto.randomUUID(),
+              spell,
+              sealed: true,
+              updated: now,
+            };
+            pairs.put(saved);
+          }
+          return;
+        }
+        // Old gallery rows can be opened before archiveExisting finishes. Seed
+        // their deterministic legacy bundle without touching meta.current.
+        saved = {
+          revision: crypto.randomUUID(),
+          bundleId: source.archiveBundleId || `legacy-${source.id}`,
+          created: source.created ?? now,
+          updated: now,
+          day: localDay(source.created ?? now),
+          sketch,
+          spell,
+          sealed: true,
+          images: [
+            {
+              id: source.id,
+              image: source.image,
+              spell: source.spell,
+              created: source.created,
+            },
+          ],
+        };
+        const add = pairs.add(saved);
+        add.onsuccess = () => {
+          saved.id = Number(add.result);
+        };
+      };
+      const all = pairs.getAll();
+      all.onsuccess = () => save(all.result);
+      t.oncomplete = () => {
+        window.dispatchEvent(new Event("incant-archive-saved"));
+        resolve(saved);
+      };
+      t.onabort = () =>
+        reject(
+          t.error ||
+            new Error(
+              "The source generation appears in more than one archive record.",
+            ),
+        );
+      t.onerror = () => reject(t.error);
+    });
+  } finally {
+    d.close();
+  }
+}
 export async function archiveImage(
   pairId: number,
   image: { id: string; image: string; spell: string },
@@ -150,6 +282,7 @@ export async function archiveImage(
         }
         if (!pair.images.some((i) => i.id === image.id))
           pair.images.push({ ...image, created: Date.now() });
+        pair.revision = crypto.randomUUID();
         pair.updated = Date.now();
         s.put(pair);
       };
@@ -190,6 +323,7 @@ export async function archiveExisting(
             .map((image) => items.find((c) => c.id === image.id)?.created)
             .filter((n): n is number => typeof n === "number");
           if (times.length) {
+            pair.revision = crypto.randomUUID();
             pair.created = Math.min(...times);
             pair.updated = Math.max(...times);
             pair.day = localDay(pair.created);
@@ -203,6 +337,7 @@ export async function archiveExisting(
           if (!item.sketch || known.has(item.id)) continue;
           known.add(item.id);
           p.add({
+            revision: crypto.randomUUID(),
             bundleId: `legacy-${item.id}`,
             created: item.created,
             updated: item.created,
@@ -229,6 +364,32 @@ export async function allPairs(): Promise<Pair[]> {
       const r = d.transaction("pairs").objectStore("pairs").getAll();
       r.onsuccess = () => resolve(r.result);
       r.onerror = () => reject(r.error);
+    });
+  } finally {
+    d.close();
+  }
+}
+export async function ensureArchiveRevision(pairId: number): Promise<string> {
+  const d = await open();
+  try {
+    return await new Promise((resolve, reject) => {
+      const t = d.transaction("pairs", "readwrite"),
+        pairs = t.objectStore("pairs"),
+        request = pairs.get(pairId);
+      let revision = "";
+      request.onsuccess = () => {
+        const pair = request.result as Pair | undefined;
+        if (!pair) {
+          t.abort();
+          return;
+        }
+        revision = pair.revision || crypto.randomUUID();
+        if (!pair.revision) pairs.put({ ...pair, revision });
+      };
+      t.oncomplete = () => resolve(revision);
+      t.onabort = () =>
+        reject(t.error || new Error("Sketch pair missing during backup."));
+      t.onerror = () => reject(t.error);
     });
   } finally {
     d.close();
@@ -471,12 +632,33 @@ export async function importCloudPairs(items: (Pair & { cloudKey: string })[]) {
         const r = m.get("restored:" + item.cloudKey);
         r.onsuccess = () => {
           const { id, ...copy } = item;
-          const save = p.put({
-            ...copy,
-            ...(typeof r.result === "number" ? { id: r.result } : {}),
-          });
-          save.onsuccess = () =>
-            m.put(save.result, "restored:" + item.cloudKey);
+          const save = (old?: Pair) => {
+            // A temporarily stale cloud listing must not erase generations
+            // already recovered into this browser on an earlier restore.
+            const images = [
+              ...new Map(
+                [...item.images, ...(old?.images ?? [])].map((image) => [
+                  image.id,
+                  image,
+                ]),
+              ).values(),
+            ];
+            const oldTime = old?.updated ?? old?.created ?? 0,
+              itemTime = item.updated ?? item.created ?? 0,
+              newest = old && oldTime > itemTime ? old : copy;
+            const write = p.put({
+              ...newest,
+              cloudKey: item.cloudKey,
+              images,
+              ...(typeof r.result === "number" ? { id: r.result } : {}),
+            });
+            write.onsuccess = () =>
+              m.put(write.result, "restored:" + item.cloudKey);
+          };
+          if (typeof r.result === "number") {
+            const existing = p.get(r.result);
+            existing.onsuccess = () => save(existing.result);
+          } else save();
         };
       }
       t.oncomplete = () => resolve();

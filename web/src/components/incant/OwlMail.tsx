@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Creation } from "@/lib/collection";
-import { imageFile } from "@/lib/share-image";
+import { imageFile, shareImage } from "@/lib/share-image";
 import {
   owlRequest,
   parchmentPNG,
@@ -17,13 +17,21 @@ export function OwlMail({
   busy: boolean;
   mode: "direct" | "tray";
 }) {
+  type PreparedParcel = { source: Creation; letter: OwlLetter };
+  const sameCreation = (a: Creation, b: Creation) =>
+    a.id === b.id &&
+    a.image === b.image &&
+    a.sketch === b.sketch &&
+    a.spell === b.spell;
+  const snapshot = (creation: Creation): Creation => ({ ...creation });
   const activeRef = useRef(active);
   activeRef.current = active;
   const dialog = useRef<HTMLDialogElement>(null),
     mounted = useRef(true),
-    preparing = useRef(false);
+    preparing = useRef(false),
+    postingRef = useRef(false);
   const [letters, setLetters] = useState<OwlLetter[]>([]),
-    [ready, setReady] = useState<OwlLetter | null>(null),
+    [ready, setReady] = useState<PreparedParcel | null>(null),
     [pending, setPending] = useState(false),
     [error, setError] = useState(""),
     [inboxError, setInboxError] = useState(""),
@@ -35,8 +43,10 @@ export function OwlMail({
   );
   const soundRef = useRef(sound);
   soundRef.current = sound;
-  const prepared = useRef(new Map<string, OwlLetter>()),
-    requestIds = useRef(new Map<string, string>());
+  const prepared = useRef(new Map<string, PreparedParcel>()),
+    requestIds = useRef(
+      new Map<string, { source: Creation; requestId: string }>(),
+    );
   const seen = useRef(new Set<string>()),
     announced = useRef(new Set<string>()),
     initialized = useRef(false);
@@ -56,10 +66,17 @@ export function OwlMail({
         if (!mounted.current) return;
         setLetters(rows);
         setReady((current) =>
-          current ? rows.find((r) => r.id === current.id) || current : null,
+          current
+            ? {
+                ...current,
+                letter:
+                  rows.find((r) => r.id === current.letter.id) ||
+                  current.letter,
+              }
+            : null,
         );
         for (const [id, cached] of prepared.current) {
-          const latest = rows.find((r) => r.id === cached.id);
+          const latest = rows.find((r) => r.id === cached.letter.id);
           if (latest?.revoked) {
             prepared.current.delete(id);
             requestIds.current.delete(id);
@@ -100,14 +117,16 @@ export function OwlMail({
       document.removeEventListener("visibilitychange", poll);
     };
   }, []);
-  useEffect(() => {
-    if (active && mode === "direct" && !busy) void prepare();
-  }, [active?.id, mode, busy]);
-  async function prepare() {
-    if (!activeRef.current || preparing.current) return;
-    const image = activeRef.current;
+  async function prepare(creation = activeRef.current) {
+    if (!creation || preparing.current) return;
+    const image = snapshot(creation);
     const cached = prepared.current.get(image.id);
-    if (cached && !cached.revoked && cached.expires > Date.now()) {
+    if (
+      cached &&
+      sameCreation(cached.source, image) &&
+      !cached.letter.revoked &&
+      cached.letter.expires > Date.now()
+    ) {
       setReady(cached);
       return;
     }
@@ -115,42 +134,36 @@ export function OwlMail({
     setPending(true);
     setReady(null);
     try {
-      let id = requestIds.current.get(image.id);
-      if (!id) {
-        id = crypto.randomUUID();
-        requestIds.current.set(image.id, id);
+      let request = requestIds.current.get(image.id);
+      if (!request || !sameCreation(request.source, image)) {
+        request = { source: image, requestId: crypto.randomUUID() };
+        requestIds.current.set(image.id, request);
       }
       const png = await parchmentPNG(imageFile(image));
       const sketch = image.sketch
         ? await parchmentPNG(imageFile({ ...image, image: image.sketch }))
         : undefined;
       const letter = await owlRequest<OwlLetter>("", {
-        id,
+        id: request.requestId,
         image: png,
         sketch,
         spell: image.spell,
       });
-      prepared.current.set(image.id, letter);
+      const parcel = { source: image, letter };
+      prepared.current.set(image.id, parcel);
       if (mounted.current) {
-        if (activeRef.current?.id === image.id) setReady(letter);
+        if (activeRef.current && sameCreation(activeRef.current, image))
+          setReady(parcel);
         setLetters((v) => [letter, ...v.filter((x) => x.id !== letter.id)]);
       }
     } catch (e) {
       if (mounted.current) setError((e as Error).message);
     } finally {
       preparing.current = false;
-      if (mounted.current) {
-        setPending(false);
-        if (
-          activeRef.current &&
-          activeRef.current.id !== image.id &&
-          mode === "direct"
-        )
-          void prepare();
-      }
+      if (mounted.current) setPending(false);
     }
   }
-  function show() {
+  function markUpdatesSeen() {
     wakeOwl();
     for (const l of letters) {
       if (l.opened) seen.current.add("open:" + l.id);
@@ -164,59 +177,86 @@ export function OwlMail({
     } catch {}
     setUnread(0);
     setError("");
-    const cached = active ? prepared.current.get(active.id) : null;
-    if (
-      mode === "direct" &&
-      cached &&
-      !cached.revoked &&
-      cached.expires > Date.now() &&
-      typeof navigator.share === "function"
-    ) {
-      void share(cached);
+  }
+  function show() {
+    const hasUnreadPost = unread > 0;
+    markUpdatesSeen();
+    const image = activeRef.current ? snapshot(activeRef.current) : null;
+    if (mode === "direct" && image && !hasUnreadPost) {
+      void shareLocal(image);
       return;
     }
-    setReady(null);
+    const cached = image ? prepared.current.get(image.id) : null;
+    setReady(
+      cached &&
+        sameCreation(cached.source, image!) &&
+        !cached.letter.revoked &&
+        cached.letter.expires > Date.now()
+        ? cached
+        : null,
+    );
     dialog.current?.showModal();
-    void prepare();
   }
-  async function share(letter = ready) {
-    const ready = letter;
-    if (!ready || ready.revoked || ready.expires < Date.now() || posting)
-      return;
+  async function shareLocal(image: Creation) {
+    if (postingRef.current) return;
+    postingRef.current = true;
     setPosting(true);
     setError("");
-    const url = location.origin + "/#owl=" + ready.token;
     try {
-      if (!navigator.share)
-        throw new Error(
-          "This browser has no share sheet. Use Copy link instead.",
+      const result = await shareImage(image);
+      setNotice(
+        result === "cancelled"
+          ? "Sharing cancelled. Your image is still here."
+          : "Handed to your sharing app. Finish sending there; Incant cannot confirm delivery.",
+      );
+    } catch (e) {
+      setError((e as Error).message);
+      if (activeRef.current && sameCreation(activeRef.current, image)) {
+        const cached = prepared.current.get(image.id);
+        setReady(
+          cached &&
+            sameCreation(cached.source, image) &&
+            !cached.letter.revoked &&
+            cached.letter.expires > Date.now()
+            ? cached
+            : null,
         );
-      const file = active ? imageFile(active) : null;
-      const data: ShareData = {
-        title: "A small act of sorcery",
-        text: `I drew it, muttered “${active?.spell || "abracadabra"}”, and the parchment got carried away.`,
-        url,
-      };
-      const files = file
-        ? [new File([file], "incant-image.png", { type: file.type })]
-        : [];
-      if (active?.sketch) {
-        const source = imageFile({ ...active, image: active.sketch });
-        files.push(
-          new File([source], "incant-original-sketch.png", {
-            type: source.type,
-          }),
-        );
+        dialog.current?.showModal();
       }
-      if (files.length && navigator.canShare?.({ ...data, files }))
-        data.files = files;
-      await navigator.share(data);
+    } finally {
+      postingRef.current = false;
+      setPosting(false);
+    }
+  }
+  async function share(parcel = ready) {
+    if (
+      !parcel ||
+      parcel.letter.revoked ||
+      parcel.letter.expires < Date.now() ||
+      postingRef.current
+    )
+      return;
+    postingRef.current = true;
+    setPosting(true);
+    setError("");
+    const url = location.origin + "/#owl=" + parcel.letter.token;
+    try {
+      const result = await shareImage(parcel.source, { url });
+      if (result === "cancelled") {
+        setNotice("Sharing cancelled. Your image is still here.");
+        return;
+      }
       setNotice(
         "Handed to your sharing app. Finish sending there; Incant cannot confirm delivery.",
       );
       try {
-        const r = await owlRequest<OwlLetter>("/" + ready.id + "/handoff", {});
-        setReady(r);
+        const r = await owlRequest<OwlLetter>(
+          "/" + parcel.letter.id + "/handoff",
+          {},
+        );
+        const updated = { ...parcel, letter: r };
+        prepared.current.set(parcel.source.id, updated);
+        setReady(updated);
         setLetters((v) => v.map((l) => (l.id === r.id ? r : l)));
       } catch {
         setNotice(
@@ -224,13 +264,10 @@ export function OwlMail({
         );
       }
     } catch (e) {
-      if ((e as Error).name === "AbortError")
-        setNotice("Sharing cancelled. Your image is still here.");
-      else {
-        setError((e as Error).message);
-        dialog.current?.showModal();
-      }
+      setError((e as Error).message);
+      dialog.current?.showModal();
     } finally {
+      postingRef.current = false;
       setPosting(false);
     }
   }
@@ -238,9 +275,9 @@ export function OwlMail({
     try {
       const r = await owlRequest<OwlLetter>("/" + l.id + "/revoke", {});
       setLetters((v) => v.map((x) => (x.id === l.id ? r : x)));
-      if (ready?.id === l.id) setReady(null);
+      if (ready?.letter.id === l.id) setReady(null);
       for (const [key, value] of prepared.current)
-        if (value.id === l.id) {
+        if (value.letter.id === l.id) {
           prepared.current.delete(key);
           requestIds.current.delete(key);
         }
@@ -279,7 +316,7 @@ export function OwlMail({
             <div>
               {pending ? (
                 <p role="status">Tying a ribbon around your image…</p>
-              ) : ready && !ready.revoked ? (
+              ) : ready && !ready.letter.revoked ? (
                 <>
                   <button
                     className="owl-action"
@@ -291,7 +328,9 @@ export function OwlMail({
                   <button
                     onClick={() => {
                       void navigator.clipboard
-                        .writeText(location.origin + "/#owl=" + ready.token)
+                        .writeText(
+                          location.origin + "/#owl=" + ready.letter.token,
+                        )
                         .then(() =>
                           setNotice("Link copied. It has not been sent."),
                         )
@@ -302,14 +341,23 @@ export function OwlMail({
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={() => {
-                    setError("");
-                    void prepare();
-                  }}
-                >
-                  Prepare image
-                </button>
+                <>
+                  <button
+                    className="owl-action"
+                    disabled={posting}
+                    onClick={() => active && void shareLocal(snapshot(active))}
+                  >
+                    Choose where to send
+                  </button>
+                  <button
+                    onClick={() => {
+                      setError("");
+                      void prepare();
+                    }}
+                  >
+                    Prepare reply link
+                  </button>
+                </>
               )}
               <small>Image · original sketch · your spell</small>
             </div>

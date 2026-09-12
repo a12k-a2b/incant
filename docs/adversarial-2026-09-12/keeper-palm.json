@@ -1,0 +1,11 @@
+{
+  "id": "K4",
+  "kind": "Synthetic pen contact plus simultaneous touchscreen tap at moon",
+  "before": "drawing-room immersive-room  immersive-mode phase-idle  live-paper",
+  "after": "drawing-room immersive-room turning-moon immersive-mode phase-renewing  live-paper",
+  "archivedPairs": 0,
+  "draftStrokes": 0,
+  "finalPhase": "drawing-room immersive-room  immersive-mode phase-idle  live-paper",
+  "blankAfter": false,
+  "expected": "A palm touch should not clear an in-progress stylus drawing or start a new page"
+}

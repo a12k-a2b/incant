@@ -18,6 +18,7 @@ export function ArchiveLibrary({
   const [error, setError] = useState("");
   const [cloud, setCloud] = useState(backupStatus);
   const [recovering, setRecovering] = useState(false);
+  const [expandedSketch, setExpandedSketch] = useState<string | null>(null);
   useEffect(() => {
     const update = () => setCloud(backupStatus);
     window.addEventListener("incant-backup-status", update);
@@ -118,26 +119,92 @@ export function ArchiveLibrary({
                     : sid}{" "}
                   · {bundles.size} {bundles.size === 1 ? "sketch" : "sketches"}
                 </h4>
-                {[...bundles].map(([bid, versions]) => (
-                  <article key={bid} aria-label="Sketch bundle">
-                    <div className="archive-source">
-                      {versions[0].sketch && (
-                        <img
-                          src={versions[0].sketch}
-                          alt="Sketch"
-                          loading="lazy"
-                        />
-                      )}
-                      <span>
-                        Sketch{" "}
-                        {Math.min(...versions.map((p) => p.id || 0)) || ""} ·{" "}
-                        {versions.reduce((n, p) => n + p.images.length, 0)}{" "}
-                        generations
-                      </span>
-                    </div>
-                    <div className="collection-strip">
-                      {versions.flatMap((p) =>
-                        p.images.map((i) => (
+                {[...bundles].map(([bid, versions]) => {
+                  const generations = [
+                      ...new Map(
+                        versions.flatMap((pair) =>
+                          pair.images.map((image) => [
+                            image.id,
+                            { image, pair },
+                          ]),
+                        ),
+                      ).values(),
+                    ],
+                    sketchOnly = versions.filter(
+                      (pair) => pair.sketch && pair.images.length === 0,
+                    );
+                  return (
+                    <article key={bid} aria-label="Sketch bundle">
+                      <div className="archive-source">
+                        {versions[0].sketch && (
+                          <img
+                            src={versions[0].sketch}
+                            alt="Sketch"
+                            loading="lazy"
+                          />
+                        )}
+                        <span>
+                          Sketch{" "}
+                          {Math.min(...versions.map((p) => p.id || 0)) || ""} ·{" "}
+                          {generations.length} generations
+                        </span>
+                      </div>
+                      {sketchOnly.map((pair) => {
+                        const key = `${pair.id || "legacy"}:${pair.bundleId || bid}`;
+                        return (
+                          <div key={key} className="archive-file-actions">
+                            <button
+                              type="button"
+                              aria-expanded={expandedSketch === key}
+                              onClick={() =>
+                                setExpandedSketch((open) =>
+                                  open === key ? null : key,
+                                )
+                              }
+                            >
+                              {expandedSketch === key
+                                ? "Hide sketch"
+                                : "View sketch"}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                try {
+                                  saveImage({
+                                    id: `sketch-${pair.bundleId || pair.id}`,
+                                    image: pair.sketch,
+                                    spell: pair.spell || "Saved sketch",
+                                    created: pair.created || 0,
+                                  });
+                                } catch (e) {
+                                  setError(
+                                    e instanceof Error
+                                      ? e.message
+                                      : "Could not save sketch",
+                                  );
+                                }
+                              }}
+                            >
+                              Save sketch
+                            </button>
+                            {expandedSketch === key && (
+                              <img
+                                src={pair.sketch}
+                                alt="Full-size saved sketch"
+                                style={{
+                                  display: "block",
+                                  width: "100%",
+                                  maxHeight: "70vh",
+                                  objectFit: "contain",
+                                  background: "#fffaf0",
+                                }}
+                              />
+                            )}
+                          </div>
+                        );
+                      })}
+                      <div className="collection-strip">
+                        {generations.map(({ image: i, pair: p }) => (
                           <div className="archive-generation" key={i.id}>
                             <button
                               disabled={busy}
@@ -149,6 +216,8 @@ export function ArchiveLibrary({
                                   spell: i.spell,
                                   created: i.created || p.created || 0,
                                   sketch: p.sketch,
+                                  archivePairId: p.id,
+                                  archiveBundleId: p.bundleId,
                                 })
                               }
                             >
@@ -200,11 +269,11 @@ export function ArchiveLibrary({
                               </button>
                             </div>
                           </div>
-                        )),
-                      )}
-                    </div>
-                  </article>
-                ))}
+                        ))}
+                      </div>
+                    </article>
+                  );
+                })}
               </section>
             );
           })}

@@ -11,6 +11,12 @@ type Props = {
   settings: IncantSettings;
   onChange: (s: IncantSettings) => void;
   onClose: () => void;
+  onReturnToDrawing?: () => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
+  onSaveSketch?: () => void;
+  canUndo?: boolean;
+  canRedo?: boolean;
 };
 export function Grimoire({
   open,
@@ -19,6 +25,12 @@ export function Grimoire({
   onClose,
   imageReady,
   voiceReady,
+  onReturnToDrawing,
+  onUndo,
+  onRedo,
+  onSaveSketch,
+  canUndo,
+  canRedo,
 }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -50,6 +62,24 @@ export function Grimoire({
         </button>
       </header>
       <div className="settings-leaves">
+        <fieldset>
+          <legend>Your drawing</legend>
+          <div className="settings-choices">
+            {onReturnToDrawing && (
+              <button onClick={onReturnToDrawing}>Return to my drawing</button>
+            )}
+            <button onClick={onUndo} disabled={!canUndo}>
+              Undo ink
+            </button>
+            <button onClick={onRedo} disabled={!canRedo}>
+              Redo ink
+            </button>
+            <button onClick={onSaveSketch} disabled={!onSaveSketch}>
+              Save sketch
+            </button>
+          </div>
+          <p>Your finished images stay in the spellbooks.</p>
+        </fieldset>
         <fieldset>
           <legend>The wand’s voice</legend>
           <label>

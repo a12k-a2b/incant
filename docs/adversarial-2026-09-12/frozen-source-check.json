@@ -1,0 +1,18 @@
+[
+  {
+    "lane": "fable",
+    "sourceFiles": 77,
+    "changed": [
+      "web/playwright.config.ts"
+    ],
+    "assessment": "PASS: only setup-time Playwright port/report path configuration differs; application sources remained unchanged."
+  },
+  {
+    "lane": "grok",
+    "sourceFiles": 77,
+    "changed": [
+      "web/playwright.config.ts"
+    ],
+    "assessment": "PASS: only setup-time Playwright port/report path configuration differs; application sources remained unchanged."
+  }
+]

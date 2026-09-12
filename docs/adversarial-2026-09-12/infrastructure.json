@@ -1,0 +1,33 @@
+{
+  "unit_attempt": {
+    "command": "npm test",
+    "result": "BLOCKED",
+    "reason": "Sandbox prevented test HTTP listeners: listen EPERM 127.0.0.1. 9 tests passed; 5 server tests timed out as consequence. Rerun same checks with local listener permission before release.",
+    "time": "2026-09-12T19:33:02Z"
+  },
+  "hardware": {
+    "connection": "PASS",
+    "build": "Daylight/vext_jagar/jagar:13/TP1A.220624.014/2609012347:user/release-keys",
+    "physical_pen_and_palm": "BLOCKED pending human hands-on test",
+    "native_share": "Not yet tested this release",
+    "note": "Initially absent; connected device discovered during review. No remote-debugging forwarding used.",
+    "wrapper": {
+      "package": "app.incant.web",
+      "version": "1.0",
+      "versionCode": 1,
+      "apkSha256": "59d9f5840db0aeb91ec0fbeaa1db62e364c23dd0f65914b7815bc70b5b0624b0",
+      "changed": false
+    }
+  },
+  "unit_rerun": {
+    "result": "PASS",
+    "command": "npm test (local-listener permission enabled)",
+    "tests": 14,
+    "reason": "Same server tests pass once EPERM listener restriction is removed; no timeout increase."
+  },
+  "doctor": {
+    "status": "PASS",
+    "checks": 20,
+    "report": "qa/artifacts/20260912T194516Z-doctor/report.md"
+  }
+}
