@@ -1,6 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { hasInk, type Drawing, type Point, type Stroke } from "@/lib/drawing";
 import { loadDurableDraft, saveDurableDraft } from "@/lib/durable-draft";
+import { inkPoint, inkSamples } from "@/lib/ink-input";
+import { setInkContact } from "@/lib/ink-activity";
 export type Tool = "quill" | "rubber";
 export type SketchCanvasHandle = {
   exportPng: () => string | null;
@@ -10,6 +12,7 @@ export type SketchCanvasHandle = {
   undo: () => void;
   redo: () => void;
   isEmpty: () => boolean;
+  isDrawing: () => boolean;
   canUndo: () => boolean;
   canRedo: () => boolean;
 };
@@ -44,6 +47,7 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
       future = useRef<Drawing>([]);
     const current = useRef<Stroke | null>(null),
       pointer = useRef<number | null>(null);
+    const roundedStrokes = useRef(new WeakMap<Stroke, Stroke>());
     const hydrated = useRef(false),
       durableRevision = useRef(0),
       latestSave = useRef<Promise<void>>(Promise.resolve());
@@ -96,14 +100,21 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         );
     };
     const roundedDrawing = (): Drawing =>
-      strokes.current.map((stroke) => ({
-        eraser: stroke.eraser,
-        points: stroke.points.map(({ x, y, p }) => ({
-          x: Math.round(x * 10_000) / 10_000,
-          y: Math.round(y * 10_000) / 10_000,
-          p: Math.round(p * 10_000) / 10_000,
-        })),
-      }));
+      strokes.current.map((stroke) => {
+        let rounded = roundedStrokes.current.get(stroke);
+        if (!rounded) {
+          rounded = {
+            eraser: stroke.eraser,
+            points: stroke.points.map(({ x, y, p }) => ({
+              x: Math.round(x * 10_000) / 10_000,
+              y: Math.round(y * 10_000) / 10_000,
+              p: Math.round(p * 10_000) / 10_000,
+            })),
+          };
+          roundedStrokes.current.set(stroke, rounded);
+        }
+        return rounded;
+      });
     const changed = () => {
       callbacks.current.onVisualChange?.();
       const revision = ++durableRevision.current;
@@ -135,6 +146,7 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
       future.current = [];
       current.current = null;
       pointer.current = null;
+      setInkContact(canvas, false);
       changed();
     };
     useEffect(() => {
@@ -142,6 +154,7 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
       const host = node.parentElement!;
       let alive = true;
       let observer: ResizeObserver | null = null;
+      let painted = false;
       const fit = () => {
         const r = host.getBoundingClientRect();
         if (!strokes.current.length && !current.current) {
@@ -155,11 +168,15 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         const scale = Math.min(r.width / w, r.height / h);
         node.style.width = w * scale + "px";
         node.style.height = h * scale + "px";
-        if (node.width !== w || node.height !== h) {
+        const bitmapChanged = node.width !== w || node.height !== h;
+        if (bitmapChanged) {
           node.width = w;
           node.height = h;
         }
-        paint();
+        // CSS-only resizes retain the bitmap. Replaying all ink here can stall
+        // the pen when the keyboard/viewport changes or the observer repeats.
+        if (bitmapChanged || !painted) paint();
+        painted = true;
       };
       refit.current = fit;
       void loadDurableDraft()
@@ -198,6 +215,7 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         future.current = [];
         strokes.current = [];
         refit.current();
+        paint();
         changed();
       },
       undo: () => {
@@ -219,18 +237,11 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         ]),
       canUndo: () => strokes.current.length > 0,
       canRedo: () => future.current.length > 0,
+      isDrawing: () => current.current !== null,
     }));
     useEffect(() => {
       const node = canvas.current;
       if (!node) return;
-      const point = (e: PointerEvent): Point => {
-        const r = node.getBoundingClientRect();
-        return {
-          x: Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)),
-          y: Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)),
-          p: e.pressure || 0.45,
-        };
-      };
       // A hovering barrel button is an active pointer, but is not pen contact.
       // Chorded tip contact may arrive as pointermove rather than pointerdown.
       let pendingPen: number | null = null;
@@ -268,8 +279,9 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         pointer.current = e.pointerId;
         current.current = {
           eraser: tool === "rubber" || e.button === 5 || (e.buttons & 32) !== 0,
-          points: [point(e)],
+          points: [inkPoint(e, node.getBoundingClientRect())],
         };
+        setInkContact(canvas, true);
         segment(
           current.current.points[0],
           current.current.points[0],
@@ -281,7 +293,9 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
           const contact = penContact(e);
           if (e.pointerId === pointer.current && !contact) {
             finish(e); // Keep legitimate ink, but never append a hover sample.
-            pendingPen = (e.buttons & 2) !== 0 ? e.pointerId : null;
+            // If contact resumes before a terminal up/cancel, start a separate
+            // segment instead of ignoring the rest of this pointer sequence.
+            pendingPen = e.pointerId;
             return;
           }
           if (
@@ -296,11 +310,10 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         const s = current.current;
         if (e.pointerId !== pointer.current || !s) return;
         e.preventDefault();
-        for (const sample of e.getCoalescedEvents?.().length
-          ? e.getCoalescedEvents()
-          : [e]) {
+        const bounds = node.getBoundingClientRect();
+        for (const sample of inkSamples(e)) {
           if (s.points.length >= 20000) break;
-          const next = point(sample);
+          const next = inkPoint(sample, bounds);
           segment(s.points[s.points.length - 1], next, s.eraser);
           s.points.push(next);
         }
@@ -308,13 +321,32 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
       const finish = (e?: PointerEvent) => {
         if (!e || e.pointerId === pendingPen) pendingPen = null;
         if (!current.current || (e && e.pointerId !== pointer.current)) return;
+        // A fast flick can end beyond the last pointermove. Up is a real
+        // endpoint; cancel, capture loss and hover are not geometry samples.
+        const stroke = current.current;
+        if (e?.type === "pointerup" && stroke.points.length < 20000) {
+          const last = stroke.points[stroke.points.length - 1];
+          const next = inkPoint(e, node.getBoundingClientRect());
+          next.p = last.p; // release pressure is zero, not a new brush width
+          if (next.x !== last.x || next.y !== last.y) {
+            segment(last, next, stroke.eraser);
+            stroke.points.push(next);
+          }
+        }
         commitCurrent();
+      };
+      const interrupted = () => finish();
+      const visibility = () => {
+        if (document.hidden) finish();
       };
       node.addEventListener("pointerdown", down);
       node.addEventListener("pointermove", move);
       node.addEventListener("pointerup", finish);
       node.addEventListener("pointercancel", finish);
       node.addEventListener("lostpointercapture", finish);
+      window.addEventListener("blur", interrupted);
+      window.addEventListener("pagehide", interrupted);
+      document.addEventListener("visibilitychange", visibility);
       return () => {
         finish();
         node.removeEventListener("pointerdown", down);
@@ -322,6 +354,9 @@ export const SketchCanvas = forwardRef<SketchCanvasHandle, Props>(
         node.removeEventListener("pointerup", finish);
         node.removeEventListener("pointercancel", finish);
         node.removeEventListener("lostpointercapture", finish);
+        window.removeEventListener("blur", interrupted);
+        window.removeEventListener("pagehide", interrupted);
+        document.removeEventListener("visibilitychange", visibility);
       };
     }, [tool, locked]);
     return (

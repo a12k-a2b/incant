@@ -1,0 +1,79 @@
+{
+  "subtype": "success",
+  "is_error": false,
+  "duration_ms": 341890,
+  "num_turns": 31,
+  "usage": {
+    "input_tokens": 322,
+    "cache_creation_input_tokens": 96834,
+    "cache_read_input_tokens": 516245,
+    "output_tokens": 25628,
+    "output_tokens_details": {
+      "thinking_tokens": 13840
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 96834,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 32,
+        "output_tokens": 708,
+        "cache_read_input_tokens": 93068,
+        "cache_creation_input_tokens": 8228,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8228
+        },
+        "type": "message",
+        "model": null
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 1172,
+      "outputTokens": 21,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.0012770000000000001,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "thinkingTokens": 0,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-fable-5-1": {
+      "inputTokens": 322,
+      "outputTokens": 25628,
+      "cacheReadInputTokens": 516245,
+      "cacheCreationInputTokens": 96834,
+      "webSearchRequests": 0,
+      "costUSD": 3.35036125,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 13840,
+      "canonicalModel": "claude-fable-5-1",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "route": "Claude Code Max existing OAuth subscription; no API-key overrides",
+  "requestedModel": "claude-fable-5-1",
+  "effort": "high",
+  "sourceOnly": true,
+  "privateRawReceipt": "/private/tmp/incant-ink-fable-20260912/stdout.jsonl",
+  "rawSha256": "2bc54ec8105e87e292f03be9a5eabae3b93fb98b240c657fccb52ec99f35cc7d",
+  "briefSha256": "34294d08adff5e656fa0eb25c6be4b7c0032db62c1b5097b3177f971f9129b77",
+  "authorization": "Standing owner approval in workspace AGENTS.md plus current explicit Fable request",
+  "note": "Model usage reports list-price cost, not a claim of extra cash billing. Claude CLI also reports an auxiliary Haiku call; substantive review served by Fable. Logical source-only lane, not kernel sealing."
+}

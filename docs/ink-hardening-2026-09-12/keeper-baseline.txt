@@ -1,0 +1,50 @@
+
+Running 2 tests using 1 worker
+
+(node:99242) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/ink-pipeline.e2e.ts:9:1 › coalesced input reads layout once per batch and preserves the pen-up endpoint (752ms)
+(node:99261) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 tests/ink-pipeline.e2e.ts:38:1 › background preview waits until the ongoing stroke ends (1.8s)
+
+
+  1) tests/ink-pipeline.e2e.ts:9:1 › coalesced input reads layout once per batch and preserves the pen-up endpoint 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 100
+    Received:   255
+
+      32 |   });
+      33 |   expect(result.middle).toBeLessThan(100);
+    > 34 |   expect(result.endpoint).toBeLessThan(100);
+         |                           ^
+      35 |   expect(result.batchReads).toBeLessThanOrEqual(1);
+      36 | });
+      37 |
+        at /Users/anjan/Documents/SolOS/incant/web/tests/ink-pipeline.e2e.ts:34:27
+
+    Error Context: test-results/ink-pipeline.e2e.ts-coales-09938-eserves-the-pen-up-endpoint/error-context.md
+
+  2) tests/ink-pipeline.e2e.ts:38:1 › background preview waits until the ongoing stroke ends ───────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      54 |   await page.mouse.move(box.x + box.width * .6, box.y + box.height * .6);
+      55 |   await page.waitForTimeout(1100); // Cross the 500ms archive debounce while contact stays active.
+    > 56 |   expect(await page.evaluate(() => (window as any).inkExports)).toBe(0);
+         |                                                                 ^
+      57 |   await page.mouse.up();
+      58 |   await expect.poll(() => page.evaluate(() => (window as any).inkExports)).toBeGreaterThan(0);
+      59 | });
+        at /Users/anjan/Documents/SolOS/incant/web/tests/ink-pipeline.e2e.ts:56:65
+
+    Error Context: test-results/ink-pipeline.e2e.ts-backgr-0a95f-til-the-ongoing-stroke-ends/error-context.md
+
+  2 failed
+    tests/ink-pipeline.e2e.ts:9:1 › coalesced input reads layout once per batch and preserves the pen-up endpoint 
+    tests/ink-pipeline.e2e.ts:38:1 › background preview waits until the ongoing stroke ends ────────

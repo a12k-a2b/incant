@@ -1,4 +1,5 @@
 import { DRAFT_KEY, validDrawing, type Drawing } from "./drawing";
+import { afterInk, inkIsActive } from "./ink-activity";
 
 export type DraftSize = { w: number; h: number };
 export type DurableDraft = {
@@ -10,6 +11,7 @@ export type DurableDraft = {
 const DATABASE = "incant-draft-v1";
 const STORE = "drafts";
 const CURRENT = "current";
+const REVISION = "revision";
 const FALLBACK_KEY = DRAFT_KEY + "-snapshot";
 
 function validSize(value: unknown): value is DraftSize {
@@ -86,15 +88,21 @@ function fallbackDraft(): DurableDraft | null {
 function mirror(draft: DurableDraft) {
   // One envelope is the committed fallback. The old split keys remain a
   // best-effort compatibility mirror and are never used to outrank it.
-  localStorage.setItem(FALLBACK_KEY, JSON.stringify(draft));
+  const drawing = JSON.stringify(draft.drawing);
+  localStorage.setItem(
+    FALLBACK_KEY,
+    `{"drawing":${drawing},"size":${JSON.stringify(draft.size)},"revision":${draft.revision}}`,
+  );
   try {
-    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft.drawing));
+    localStorage.setItem(DRAFT_KEY, drawing);
     localStorage.setItem(DRAFT_KEY + "-size", JSON.stringify(draft.size));
   } catch {
     /* the atomic fallback envelope is complete */
   }
 }
 
+let cancelMirror: (() => void) | undefined;
+let mirrorRevision = -1;
 export async function saveDurableDraft(draft: DurableDraft): Promise<void> {
   if (!validDraft(draft)) throw new Error("Invalid Incant draft.");
   let durableError: unknown;
@@ -105,12 +113,29 @@ export async function saveDurableDraft(draft: DurableDraft): Promise<void> {
       await new Promise<void>((resolve, reject) => {
         const transaction = database.transaction(STORE, "readwrite"),
           store = transaction.objectStore(STORE),
-          request = store.get(CURRENT);
-        request.onsuccess = () => {
-          const old = validDraft(request.result) ? request.result : null;
-          if (!old || draft.revision >= old.revision) {
+          request = store.get(REVISION);
+        const writeIfNewer = (oldRevision: number) => {
+          if (draft.revision >= oldRevision) {
             accepted = true;
             store.put(draft, CURRENT);
+            store.put(draft.revision, REVISION);
+          }
+        };
+        request.onsuccess = () => {
+          if (Number.isSafeInteger(request.result) && request.result >= 0)
+            writeIfNewer(request.result);
+          else {
+            // First save after upgrade: discover the revision of an existing
+            // snapshot once. Keep the compare and both writes in this same
+            // transaction, so overlapping saves cannot race or regress.
+            const legacy = store.get(CURRENT);
+            legacy.onsuccess = () => {
+              const old = validDraft(legacy.result)
+                ? legacy.result.revision
+                : -1;
+              if (old >= 0) store.put(old, REVISION);
+              writeIfNewer(old);
+            };
           }
         };
         transaction.oncomplete = () => resolve();
@@ -124,6 +149,25 @@ export async function saveDurableDraft(draft: DurableDraft): Promise<void> {
     durableError = error;
   }
   if (!accepted && !durableError) return;
+  // A compatibility copy is optional once IDB commits. Avoid synchronous JSON
+  // and localStorage work inside the next stroke; keep only the latest mirror.
+  // When IDB fails, this becomes the durable fallback and must run immediately.
+  if (draft.revision < mirrorRevision) return;
+  mirrorRevision = draft.revision;
+  cancelMirror?.();
+  cancelMirror = undefined;
+  if (!durableError && inkIsActive()) {
+    cancelMirror = afterInk(() => {
+      cancelMirror = undefined;
+      if (draft.revision !== mirrorRevision) return;
+      try {
+        mirror(draft);
+      } catch {
+        /* IDB already committed */
+      }
+    });
+    return;
+  }
   try {
     mirror(draft);
   } catch {

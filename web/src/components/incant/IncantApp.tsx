@@ -247,7 +247,13 @@ export function IncantApp({
       renewal.current
     )
       return;
-    draftTimer.current = setTimeout(() => {
+    const savePreview = () => {
+      // Editable strokes are already saved locally. PNG encoding is only an
+      // archive preview and must not interrupt the next in-progress stroke.
+      if (sketch.current?.isDrawing()) {
+        draftTimer.current = setTimeout(savePreview, 500);
+        return;
+      }
       const png = sketch.current?.exportPng();
       if (png)
         void archiveSketch(png, words)
@@ -261,7 +267,8 @@ export function IncantApp({
               "Your file archive needs attention. Tap the moon to reconnect it before starting a new page.",
             ),
           );
-    }, 500);
+    };
+    draftTimer.current = setTimeout(savePreview, 500);
     return () => {
       if (draftTimer.current) clearTimeout(draftTimer.current);
     };

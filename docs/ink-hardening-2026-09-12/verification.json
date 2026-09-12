@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "browser": {
+    "startTime": "2026-09-12T20:30:02.120Z",
+    "duration": 201634.41700000002,
+    "expected": 96,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "unitServerTests": 14,
+  "build": "PASS",
+  "sourceHashes": {
+    "web/src/components/incant/SketchCanvas.tsx": "2637f3e5717e94905fe146e8767b5d1b52ca212e8bb2fbc124d411672064f33c",
+    "web/src/components/incant/IncantApp.tsx": "1aa7db379414be91ea0a885636d1fd247ce6517f35ba7fe9921d8ad29b00ec6f",
+    "web/src/lib/ink-input.ts": "dbc7260f4c41abc38647f77a2e718cf8c7a01f061074fad81979d626e0ae5d2c",
+    "web/src/lib/ink-activity.ts": "bc9f8e8e9558181c586d3ec17c541da5c036229126d5eb2f80aa8ca18d07d83d",
+    "web/src/lib/durable-draft.ts": "97bbbb3e290ed6ae12f456fd5cf4f256b3affbd344cce9609f1f8ebb6e223e1e",
+    "web/tests/ink-pipeline.e2e.ts": "c554579912d5ab099fbec593fb96ff8556af410d0fe68df18ba3c22b8a1ed5b6"
+  },
+  "physicalStylusLatency": "BLOCKED: no hands-on measurement this pass",
+  "doctor": "Host tooling PASS; Android ADB daemon blocked by sandbox in initial doctor. No device claim."
+}
