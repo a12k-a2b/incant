@@ -1,0 +1,78 @@
+{
+  "counts": {
+    "BLOCKED": 0,
+    "FAIL": 0,
+    "PASS": 3,
+    "SKIP": 0
+  },
+  "generated_at": "2026-09-12T00:57:24Z",
+  "kind": "repository-checks",
+  "metadata": {
+    "dry_run": false,
+    "harness_version": "0.1.0",
+    "profile": "pr",
+    "revisions": {
+      "incant-web": "4054edb697202487457cc346ceb53a9b5845a2b4"
+    }
+  },
+  "results": [
+    {
+      "check": "production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "incant/web",
+      "description": "TypeScript and production PWA build",
+      "duration_seconds": 5.239,
+      "exit_code": 0,
+      "id": "incant-web/production-build",
+      "log": "logs/incant-web_production-build.log",
+      "output_tail": "\n> incant@1.1.0 build\n> tsc --noEmit && vite build && node scripts/build-sw.mjs\n\nvite v7.3.6 building client environment for production...\ntransforming...\n\u2713 1602 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.70 kB \u2502 gzip:   0.42 kB\ndist/assets/index-C5U8Ihlq.css   58.13 kB \u2502 gzip:  13.36 kB\ndist/assets/index-BClLRmi2.js   325.94 kB \u2502 gzip: 103.78 kB\n\u2713 built in 1.88s",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-12T00:55:14Z",
+      "status": "PASS"
+    },
+    {
+      "check": "unit-contracts",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "incant/web",
+      "description": "Malformed image/network handling and room authentication negative controls",
+      "duration_seconds": 1.881,
+      "exit_code": 0,
+      "id": "incant-web/unit-contracts",
+      "log": "logs/incant-web_unit-contracts.log",
+      "output_tail": "\n> incant@1.1.0 test\n> vitest run\n\n\n RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web\n\n \u2713 tests/contracts.test.ts (7 tests) 18ms\n \u2713 tests/backup.test.ts (2 tests) 182ms\n \u2713 tests/owl.test.ts (2 tests) 290ms\n\n Test Files  3 passed (3)\n      Tests  11 passed (11)\n   Start at  17:55:20\n   Duration  1.12s (transform 240ms, setup 0ms, collect 692ms, tests 490ms, environment 1ms, prepare 381ms)\n",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-12T00:55:20Z",
+      "status": "PASS"
+    },
+    {
+      "check": "browser-flows",
+      "command": [
+        "npm",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "incant/web",
+      "description": "Synthetic browser ink, recovery, cast, voice-race, dialog and responsive checks; requires local server on port5173",
+      "duration_seconds": 122.124,
+      "exit_code": 0,
+      "id": "incant-web/browser-flows",
+      "log": "logs/incant-web_browser-flows.log",
+      "output_tail": "  \u2713  39 tests/immersive-affordances.e2e.ts:58:1 \u203a illustrated books expose saved creations and share exact image bytes (3.9s)\n  \u2713  40 tests/immersive-affordances.e2e.ts:100:1 \u203a hourglass cancels late image and respects reduced motion (4.7s)\n  \u2713  41 tests/native-interactions.e2e.ts:7:1 \u203a room blocks native menu and image drag, while editing and external controls remain native (470ms)\n  \u2713  42 tests/native-interactions.e2e.ts:72:1 \u203a real Chromium pen barrel-only press changes neither pixels nor saved draft; tip remains functional (422ms)\n  \u2713  43 tests/native-interactions.e2e.ts:126:1 \u203a barrel-first chord starts only at contact and stops at tip lift, with no hover trail (832ms)\n  \u2713  44 tests/native-interactions.e2e.ts:169:1 \u203a anomalous barrel button zero cannot ink; tip-first chord and cancel preserve real ink (872ms)\n  \u2713  45 tests/native-interactions.e2e.ts:213:1 \u203a legacy tools dialog still scrolls and allows plain-text selection (897ms)\n  \u2713  46 tests/onboarding.e2e.ts:2:1 \u203a first visit is skippable, stays dismissed across reload, and help replays it (832ms)\n  \u2713  47 tests/onboarding.e2e.ts:34:1 \u203a four pages support back and completion without modifying the sketch (1.2s)\n  \u2713  48 tests/onboarding.e2e.ts:73:3 \u203a guide fits dc1-portrait and remains usable with reduced motion (2.0s)\n  \u2713  49 tests/onboarding.e2e.ts:73:3 \u203a guide fits dc1-landscape and remains usable with reduced motion (1.9s)\n  \u2713  50 tests/onboarding.e2e.ts:73:3 \u203a guide fits phone and remains usable with reduced motion (901ms)\n  \u2713  51 tests/onboarding.e2e.ts:73:3 \u203a guide fits short and remains usable with reduced motion (849ms)\n  \u2713  52 tests/owl.e2e.ts:4:1 \u203a owl sharing preserves activation, distinguishes cancellation, and announces an image reply once (17.3s)\n  \u2713  53 tests/owl.e2e.ts:113:1 \u203a recipient opens deliberately, sees no room gate, and retries the same reply safely (646ms)\n  \u2713  54 tests/owl.e2e.ts:162:1 \u203a missing cloud storage is recoverable and never opens a share sheet (552ms)\n  \u2713  55 tests/wand-feedback.e2e.ts:3:3 \u203a wand acknowledges connection immediately and signals actual listening (5.2s)\n  \u2713  56 tests/wand-feedback.e2e.ts:3:3 \u203a wand acknowledges connection immediately and signals actual listening with reduced motion (3.7s)\n\n  56 passed (2.0m)",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-12T00:55:22Z",
+      "status": "PASS"
+    }
+  ],
+  "schema_version": 1,
+  "status": "PASS"
+}

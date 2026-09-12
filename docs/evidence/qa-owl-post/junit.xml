@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="4.946"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1602 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.42 kB
+dist/assets/index-CG5C1iOj.css   57.97 kB │ gzip:  13.31 kB
+dist/assets/index-Cb8spoqJ.js   325.94 kB │ gzip: 103.78 kB
+✓ built in 1.77s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="1.76"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (7 tests) 18ms
+ ✓ tests/backup.test.ts (2 tests) 273ms
+ ✓ tests/owl.test.ts (2 tests) 367ms
+   ✓ owl capabilities isolate images; open and reply receipts are durable and retry-safe  362ms
+
+ Test Files  3 passed (3)
+      Tests  11 passed (11)
+   Start at  17:51:29
+   Duration  1.07s (transform 160ms, setup 0ms, collect 504ms, tests 658ms, environment 1ms, prepare 374ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="150.932"><failure message="command exited 1">           - done scrolling
+           - &lt;button disabled class="owl-key" aria-label="Owl post"&gt;&lt;/button&gt; intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+
+
+      356 |         page.getByRole("button", { name: /Listening… tap to cast/ }),
+      357 |       ).toBeVisible();
+    &gt; 358 |       await page.locator("canvas").click({ position: { x: 50, y: 50 } });
+          |                                    ^
+      359 |       await expect(
+      360 |         page.getByRole("button", { name: /Listening… tap to cast/ }),
+      361 |       ).toBeVisible();
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:358:36
+
+    Error Context: test-results/desk.e2e.ts-voice-tap-uses-9da38-an-the-previous-typed-spell/error-context.md
+
+  1 failed
+    tests/desk.e2e.ts:237:3 › voice tap uses final speech rather than the previous typed spell ─────
+  55 passed (2.5m)</failure><system-out>           - done scrolling
+           - &lt;button disabled class="owl-key" aria-label="Owl post"&gt;&lt;/button&gt; intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+
+
+      356 |         page.getByRole("button", { name: /Listening… tap to cast/ }),
+      357 |       ).toBeVisible();
+    &gt; 358 |       await page.locator("canvas").click({ position: { x: 50, y: 50 } });
+          |                                    ^
+      359 |       await expect(
+      360 |         page.getByRole("button", { name: /Listening… tap to cast/ }),
+      361 |       ).toBeVisible();
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:358:36
+
+    Error Context: test-results/desk.e2e.ts-voice-tap-uses-9da38-an-the-previous-typed-spell/error-context.md
+
+  1 failed
+    tests/desk.e2e.ts:237:3 › voice tap uses final speech rather than the previous typed spell ─────
+  55 passed (2.5m)</system-out></testcase></testsuite>

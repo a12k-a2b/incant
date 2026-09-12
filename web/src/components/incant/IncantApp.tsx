@@ -1,3 +1,4 @@
+import { OwlMail } from "./OwlMail";
 import { useNativeInteractionGuard } from "@/lib/native-interactions";
 import { Onboarding, needsIntroduction } from "./Onboarding";
 import { startCloudBackup } from "@/lib/cloud-backup";
@@ -565,6 +566,7 @@ export function IncantApp({
       data-frame-layer={frameLayer}
       className={`drawing-room immersive-room ${turning ? "turning-moon" : ""} ${immersiveMode ? "immersive-mode" : ""} phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
     >
+      <OwlMail active={active} busy={busy} />
       <section className="desk" aria-label="Wizard's drawing desk">
         <div className="drawing-area">
           <div className="paper-wrap">

@@ -557,7 +557,7 @@ test("immersive mode keeps the wand and illustrated typewriter, including while 
 }) => {
   await page.goto("/");
   await expect(page.locator(".immersive-mode")).toBeVisible();
-  await expect(page.getByRole("button")).toHaveCount(5);
+  await expect(page.getByRole("button")).toHaveCount(6);
   await expect(page.locator(".typewriter-key")).toBeVisible();
   await expect(page.locator(".desk-latch")).not.toBeVisible();
   await expect(page.locator(".empty-parchment")).not.toBeVisible();
@@ -596,7 +596,7 @@ test("immersive mode keeps the wand and illustrated typewriter, including while 
     .locator(".cast-button")
     .evaluate((b: HTMLButtonElement) => b.click());
   await expect(page.locator(".manifestation.image-ready")).toBeVisible();
-  await expect(page.getByRole("button")).toHaveCount(5);
+  await expect(page.getByRole("button")).toHaveCount(6);
   await page.locator(".voice-wand").click();
   await expect(page.locator(".manifestation")).toHaveCount(0);
   expect(await png(page)).toBe(original);

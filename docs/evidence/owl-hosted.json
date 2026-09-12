@@ -1,0 +1,11 @@
+{
+  "time": "2026-09-12T00:58:51.786Z",
+  "kind": "live Railway, isolated browser, synthetic image; no external recipients",
+  "authIsolation": "PASS",
+  "deliberateOpen": "PASS",
+  "replyPersisted": "PASS",
+  "revocation": "PASS",
+  "externalMessagesSent": 0,
+  "nativeAndroid": "BLOCKED: device disconnected",
+  "syntheticLetter": "Closed after test; retained in room post tray"
+}

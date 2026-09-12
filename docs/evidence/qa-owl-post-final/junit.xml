@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="0" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="5.239"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1602 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.42 kB
+dist/assets/index-C5U8Ihlq.css   58.13 kB │ gzip:  13.36 kB
+dist/assets/index-BClLRmi2.js   325.94 kB │ gzip: 103.78 kB
+✓ built in 1.88s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="1.881"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (7 tests) 18ms
+ ✓ tests/backup.test.ts (2 tests) 182ms
+ ✓ tests/owl.test.ts (2 tests) 290ms
+
+ Test Files  3 passed (3)
+      Tests  11 passed (11)
+   Start at  17:55:20
+   Duration  1.12s (transform 240ms, setup 0ms, collect 692ms, tests 490ms, environment 1ms, prepare 381ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="122.124"><system-out>  ✓  39 tests/immersive-affordances.e2e.ts:58:1 › illustrated books expose saved creations and share exact image bytes (3.9s)
+  ✓  40 tests/immersive-affordances.e2e.ts:100:1 › hourglass cancels late image and respects reduced motion (4.7s)
+  ✓  41 tests/native-interactions.e2e.ts:7:1 › room blocks native menu and image drag, while editing and external controls remain native (470ms)
+  ✓  42 tests/native-interactions.e2e.ts:72:1 › real Chromium pen barrel-only press changes neither pixels nor saved draft; tip remains functional (422ms)
+  ✓  43 tests/native-interactions.e2e.ts:126:1 › barrel-first chord starts only at contact and stops at tip lift, with no hover trail (832ms)
+  ✓  44 tests/native-interactions.e2e.ts:169:1 › anomalous barrel button zero cannot ink; tip-first chord and cancel preserve real ink (872ms)
+  ✓  45 tests/native-interactions.e2e.ts:213:1 › legacy tools dialog still scrolls and allows plain-text selection (897ms)
+  ✓  46 tests/onboarding.e2e.ts:2:1 › first visit is skippable, stays dismissed across reload, and help replays it (832ms)
+  ✓  47 tests/onboarding.e2e.ts:34:1 › four pages support back and completion without modifying the sketch (1.2s)
+  ✓  48 tests/onboarding.e2e.ts:73:3 › guide fits dc1-portrait and remains usable with reduced motion (2.0s)
+  ✓  49 tests/onboarding.e2e.ts:73:3 › guide fits dc1-landscape and remains usable with reduced motion (1.9s)
+  ✓  50 tests/onboarding.e2e.ts:73:3 › guide fits phone and remains usable with reduced motion (901ms)
+  ✓  51 tests/onboarding.e2e.ts:73:3 › guide fits short and remains usable with reduced motion (849ms)
+  ✓  52 tests/owl.e2e.ts:4:1 › owl sharing preserves activation, distinguishes cancellation, and announces an image reply once (17.3s)
+  ✓  53 tests/owl.e2e.ts:113:1 › recipient opens deliberately, sees no room gate, and retries the same reply safely (646ms)
+  ✓  54 tests/owl.e2e.ts:162:1 › missing cloud storage is recoverable and never opens a share sheet (552ms)
+  ✓  55 tests/wand-feedback.e2e.ts:3:3 › wand acknowledges connection immediately and signals actual listening (5.2s)
+  ✓  56 tests/wand-feedback.e2e.ts:3:3 › wand acknowledges connection immediately and signals actual listening with reduced motion (3.7s)
+
+  56 passed (2.0m)</system-out></testcase></testsuite>

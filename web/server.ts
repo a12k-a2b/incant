@@ -1,4 +1,5 @@
-import { backupRouter } from './server/backup';
+import { owlRouters } from "./server/owl";
+import { backupRouter } from "./server/backup";
 import express from "express";
 import { existsSync } from "node:fs";
 if (existsSync(".env")) process.loadEnvFile(".env");
@@ -87,6 +88,12 @@ app.post("/api/unlock", (req, res) => {
   );
   res.json({ ok: true });
 });
+const owl = owlRouters(
+  process.env.RAILWAY_VOLUME_MOUNT_PATH
+    ? `${process.env.RAILWAY_VOLUME_MOUNT_PATH}/incant-owl-v1`
+    : process.env.INCANT_OWL_PATH,
+);
+app.use("/api/owl-public", owl.publicRouter);
 app.use("/api", (req, res, next) => {
   if (secret && !access.valid(req.get("cookie") || "")) {
     res
@@ -96,7 +103,15 @@ app.use("/api", (req, res, next) => {
   }
   next();
 });
-app.use("/api/backup", backupRouter(process.env.RAILWAY_VOLUME_MOUNT_PATH ? `${process.env.RAILWAY_VOLUME_MOUNT_PATH}/incant-backup-v1` : process.env.INCANT_BACKUP_PATH));
+app.use("/api/owl", owl.privateRouter);
+app.use(
+  "/api/backup",
+  backupRouter(
+    process.env.RAILWAY_VOLUME_MOUNT_PATH
+      ? `${process.env.RAILWAY_VOLUME_MOUNT_PATH}/incant-backup-v1`
+      : process.env.INCANT_BACKUP_PATH,
+  ),
+);
 let activeCasts = 0;
 const castTimes: number[] = [];
 app.post("/api/cast", (_req, res, next) => {
