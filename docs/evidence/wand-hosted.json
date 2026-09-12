@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-12T18:25:44.224Z",
+  "deployment": "ead41fce-af53-4e85-bbb3-c4850bf3a902",
+  "unauthenticatedRealtime": 401,
+  "authenticatedRealtime": 200,
+  "ephemeralTokenIssued": true,
+  "newClient": true,
+  "font": 200,
+  "status": "PASS"
+}

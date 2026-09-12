@@ -155,3 +155,36 @@ test("owl storage fails closed when unconfigured", async () => {
     h.server.close();
   }
 });
+test("parcel persists exact source and spell; retries cannot substitute another prompt", async () => {
+  const root = await mkdtemp(join(tmpdir(), "owl-parcel-"));
+  const h = await serve(root);
+  try {
+    const id = randomUUID(),
+      spell = "A tiny cottage in winter";
+    const body = { id, image, sketch: image, spell };
+    const letter = await (await h.request("/private", body)).json();
+    expect(
+      (await h.request("/public/sketch", undefined, letter.token)).status,
+    ).not.toBe(200);
+    expect(
+      (await h.request("/private", { ...body, spell: "A different idea" }))
+        .status,
+    ).toBe(409);
+    const opened = await (
+      await h.request("/public/open", {}, letter.token)
+    ).json();
+    expect(opened).toMatchObject({ spell, hasSketch: true });
+    const source = await h.request("/public/sketch", undefined, letter.token);
+    expect(source.status).toBe(200);
+    expect(Buffer.from(await source.arrayBuffer()).toString("base64")).toBe(
+      image.split(",")[1],
+    );
+    await h.request("/private/" + id + "/revoke", {});
+    expect(
+      (await h.request("/public/sketch", undefined, letter.token)).status,
+    ).toBe(404);
+  } finally {
+    await new Promise<void>((r) => h.server.close(() => r()));
+    await rm(root, { recursive: true, force: true });
+  }
+});

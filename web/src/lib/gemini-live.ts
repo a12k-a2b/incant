@@ -45,6 +45,8 @@ export class GeminiLiveTranscribe {
   private setupResolve: (() => void) | null = null;
   private setupReject: ((err: Error) => void) | null = null;
   private setupTimer = 0;
+  private lastTranscript = 0;
+  private turnComplete = false;
 
   get connected() {
     return this.ws?.readyState === WebSocket.OPEN && this.setupDone;
@@ -139,6 +141,8 @@ export class GeminiLiveTranscribe {
     this.finals = [];
     this.interim = "";
     this.turnActive = true;
+    this.turnComplete = false;
+    this.lastTranscript = 0;
     this.ws.send(JSON.stringify({ realtimeInput: { activityStart: {} } }));
   }
 
@@ -159,7 +163,7 @@ export class GeminiLiveTranscribe {
     );
   }
 
-  async endTurn(waitMs = 2500): Promise<string> {
+  async endTurn(waitMs = 8000): Promise<string> {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       this.turnActive = false;
       return this.combined();
@@ -169,7 +173,17 @@ export class GeminiLiveTranscribe {
 
     const started = Date.now();
     while (Date.now() - started < waitMs) {
-      // Wait for the final flush, not merely the first earlier phrase.
+      const elapsed = Date.now() - started;
+      if (
+        this.combined() &&
+        (this.turnComplete ||
+          (this.lastTranscript >= started &&
+            !this.interim &&
+            Date.now() - this.lastTranscript > 500) ||
+          (elapsed >= 2500 && this.lastTranscript < started))
+      )
+        break;
+      if (!this.ws || this.ws.readyState !== WebSocket.OPEN) break;
       await new Promise((r) => setTimeout(r, 80));
     }
     return this.combined();
@@ -202,6 +216,7 @@ export class GeminiLiveTranscribe {
     let msg: {
       setupComplete?: unknown;
       serverContent?: {
+        turnComplete?: boolean;
         interimInputTranscription?: { text?: string };
         inputTranscription?: { text?: string };
       };
@@ -223,12 +238,15 @@ export class GeminiLiveTranscribe {
 
     const content = msg.serverContent;
     if (!content) return;
+    if (content.turnComplete) this.turnComplete = true;
 
     if (content.interimInputTranscription?.text) {
+      this.lastTranscript = Date.now();
       this.interim = content.interimInputTranscription.text;
       this.onTranscript?.(this.preview(), false);
     }
     if (content.inputTranscription?.text) {
+      this.lastTranscript = Date.now();
       const piece = content.inputTranscription.text.trim();
       if (piece) this.finals.push(piece);
       this.interim = "";

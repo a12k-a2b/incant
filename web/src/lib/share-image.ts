@@ -18,13 +18,25 @@ export function saveImage(c: Creation) {
 }
 export async function shareImage(c: Creation) {
   // Construct the file synchronously so Android receives the original tap activation.
-  const file = imageFile(c);
-  if (!navigator.share || !navigator.canShare?.({ files: [file] }))
+  const files = [imageFile(c)];
+  if (c.sketch)
+    files.push(
+      new File(
+        [imageFile({ ...c, image: c.sketch })],
+        "incant-original-sketch.png",
+        { type: "image/png" },
+      ),
+    );
+  if (!navigator.share || !navigator.canShare?.({ files }))
     throw new Error(
       "Image sharing is unavailable in this browser. Use Save, then share the image from Files.",
     );
   try {
-    await navigator.share({ files: [file], title: "Incant" });
+    await navigator.share({
+      files,
+      title: "A small act of sorcery",
+      text: `I drew it, muttered “${c.spell}”, and the parchment got carried away.`,
+    });
   } catch (e) {
     if (e instanceof DOMException && e.name === "AbortError") return;
     throw e;

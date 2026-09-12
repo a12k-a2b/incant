@@ -1,3 +1,4 @@
+import { realtimeRouter } from "./server/realtime";
 import { owlRouters } from "./server/owl";
 import { backupRouter } from "./server/backup";
 import express from "express";
@@ -103,6 +104,7 @@ app.use("/api", (req, res, next) => {
   }
   next();
 });
+app.use("/api/realtime-token", realtimeRouter());
 app.use("/api/owl", owl.privateRouter);
 app.use(
   "/api/backup",

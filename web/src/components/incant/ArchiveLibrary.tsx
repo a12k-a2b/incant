@@ -182,6 +182,7 @@ export function ArchiveLibrary({
                                 onClick={() => {
                                   setError("");
                                   void shareImage({
+                                    sketch: p.sketch,
                                     id: i.id,
                                     image: i.image,
                                     spell: i.spell,

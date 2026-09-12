@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { owlRequest, parchmentPNG } from "@/lib/owl-client";
 export function OwlLetter({ token }: { token: string }) {
+  const [sketchImage, setSketchImage] = useState("");
+  const [spell, setSpell] = useState("");
   const [available, setAvailable] = useState(false),
     [image, setImage] = useState(""),
     [error, setError] = useState(""),
@@ -19,7 +21,24 @@ export function OwlLetter({ token }: { token: string }) {
     setPending(true);
     setError("");
     try {
-      await owlRequest("/open", {}, token);
+      const parcel = await owlRequest("/open", {}, token);
+      setSpell(parcel.spell || "");
+      if (parcel.hasSketch) {
+        const source = await fetch("/api/owl-public/sketch", {
+          headers: { "x-owl-key": token },
+          signal: AbortSignal.timeout(20000),
+        });
+        if (!source.ok)
+          throw new Error("The original sketch could not load. Try again.");
+        const blob = await source.blob();
+        const data = await new Promise<string>((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => resolve(String(r.result));
+          r.onerror = reject;
+          r.readAsDataURL(blob);
+        });
+        setSketchImage(data);
+      }
       const r = await fetch("/api/owl-public/image", {
         headers: { "x-owl-key": token },
         signal: AbortSignal.timeout(20000),
@@ -69,12 +88,14 @@ export function OwlLetter({ token }: { token: string }) {
     <main className="owl-receiving">
       <section>
         <p className="eyebrow">INCANT · OWL POST</p>
-        <h1>An image has found you.</h1>
+        <span className="wax-seal" aria-hidden="true">
+          ✦
+        </span>
+        <h1>A small act of sorcery.</h1>
         {!image ? (
           <>
             <p>
-              Opening this letter lets its sender know the link was opened.
-              Anyone holding this link can view and reply.
+              Open the seal to reveal a scribble, its spell, and what it became.
             </p>
             <button
               className="owl-action"
@@ -83,6 +104,7 @@ export function OwlLetter({ token }: { token: string }) {
             >
               {pending ? "Opening…" : "Open letter"}
             </button>
+            <p className="owl-fine">Opening sends a receipt to the sender.</p>
           </>
         ) : (
           <>
@@ -94,6 +116,13 @@ export function OwlLetter({ token }: { token: string }) {
             <a href={image} download="incant-image.png">
               Save image
             </a>
+            {sketchImage && (
+              <figure className="owl-original">
+                <img src={sketchImage} alt="Original sketch" />
+                <figcaption>Where the magic began</figcaption>
+              </figure>
+            )}
+            {spell && <blockquote className="parcel-spell">{spell}</blockquote>}
             <h2>Send an image back</h2>
             <p>
               Your reply goes to the sender’s Incant room. Everyone with access
@@ -136,10 +165,14 @@ export function OwlLetter({ token }: { token: string }) {
           </>
         )}
         {error && <p role="alert">{error}</p>}
-        <p className="owl-fine">
-          This link expires after 30 days and can be closed by the sender.
-          Replies to the email or text itself don’t reach Incant—use this page.
-        </p>
+        <details className="owl-fine">
+          <summary>About this letter</summary>
+          <p>
+            Opening lets the sender know. Link holders can view and reply for 30
+            days. Replies here reach the sender’s room; replies in email or
+            Messages do not.
+          </p>
+        </details>
       </section>
     </main>
   );

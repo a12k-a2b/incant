@@ -27,6 +27,8 @@ type Letter = {
   expires: number;
   revoked: boolean;
   imageHash: string;
+  sketchHash?: string;
+  spell?: string;
   handedOff?: number;
   opened?: number;
   replies: { id: string; created: number; hash: string }[];
@@ -114,6 +116,8 @@ export function owlRouters(root?: string) {
     opened: r.opened,
     replies: r.replies.map(({ id, created }) => ({ id, created })),
     token: r.id + "." + r.key,
+    spell: r.spell,
+    hasSketch: !!r.sketchHash,
   });
   for (const router of [privateRouter, publicRouter])
     router.use((_q, s, n) => {
@@ -149,8 +153,17 @@ export function owlRouters(root?: string) {
       return;
     }
     let image: Buffer;
+    let sketch: Buffer | undefined;
+    if (
+      q.body.spell !== undefined &&
+      (typeof q.body.spell !== "string" || q.body.spell.length > 4000)
+    ) {
+      s.status(400).json({ error: "The spell is too long." });
+      return;
+    }
     try {
       image = png(q.body.image);
+      if (q.body.sketch) sketch = png(q.body.sketch);
     } catch (e) {
       s.status(400).json({ error: (e as Error).message });
       return;
@@ -164,7 +177,11 @@ export function owlRouters(root?: string) {
         if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
       }
       if (existing) {
-        if (existing.imageHash !== hash(image)) {
+        if (
+          existing.imageHash !== hash(image) ||
+          existing.sketchHash !== (sketch ? hash(sketch) : undefined) ||
+          (existing.spell || "") !== (q.body.spell || "")
+        ) {
           s.status(409).json({
             error: "This letter already holds another image.",
           });
@@ -195,9 +212,12 @@ export function owlRouters(root?: string) {
         expires: Date.now() + 30 * 86400000,
         revoked: false,
         imageHash: hash(image),
+        sketchHash: sketch ? hash(sketch) : undefined,
+        spell: q.body.spell || "",
         replies: [],
       };
       await atomic(id, "image.png", image);
+      if (sketch) await atomic(id, "sketch.png", sketch);
       await save(r);
       s.status(201).json(view(r));
     });
@@ -278,7 +298,7 @@ export function owlRouters(root?: string) {
       }
       r.opened ??= Date.now();
       await save(r);
-      s.json({ ok: true });
+      s.json({ ok: true, spell: r.spell || "", hasSketch: !!r.sketchHash });
     });
   });
   publicRouter.get("/image", async (_q, s) => {
@@ -288,6 +308,14 @@ export function owlRouters(root?: string) {
       return;
     }
     s.type("png").send(await readFile(path(r.id, "image.png")));
+  });
+  publicRouter.get("/sketch", async (_q, s) => {
+    const r = s.locals.letter as Letter;
+    if (!r.opened || !r.sketchHash) {
+      s.sendStatus(404);
+      return;
+    }
+    s.type("png").send(await readFile(path(r.id, "sketch.png")));
   });
   publicRouter.post("/reply", async (q, s) => {
     if (!uuid(q.body?.id)) {

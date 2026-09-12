@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-12T18:22:57.641Z",
+  "source": "Live OpenAI WebRTC; synthetic cottage sketch and synthesized speech streamed as microphone audio; no physical DC-1 audio tested",
+  "transcript": "A small stone cottage under the moon, drawn in storybook ink.",
+  "audioTrack": true,
+  "spoken": true,
+  "cast": "A small stone cottage drawn in storybook ink, with a square cottage body and a peaked roof matching the sketch’s proportions and placement, and a moon above, keeping the simple front-view composition and key elements.",
+  "error": "",
+  "tracksStopped": true,
+  "status": "PASS"
+}

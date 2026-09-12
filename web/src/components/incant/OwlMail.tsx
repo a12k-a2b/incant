@@ -11,9 +11,11 @@ import {
 export function OwlMail({
   active,
   busy,
+  mode,
 }: {
   active: Creation | null;
   busy: boolean;
+  mode: "direct" | "tray";
 }) {
   const activeRef = useRef(active);
   activeRef.current = active;
@@ -98,9 +100,12 @@ export function OwlMail({
       document.removeEventListener("visibilitychange", poll);
     };
   }, []);
+  useEffect(() => {
+    if (active && mode === "direct" && !busy) void prepare();
+  }, [active?.id, mode, busy]);
   async function prepare() {
-    if (!active || preparing.current) return;
-    const image = active;
+    if (!activeRef.current || preparing.current) return;
+    const image = activeRef.current;
     const cached = prepared.current.get(image.id);
     if (cached && !cached.revoked && cached.expires > Date.now()) {
       setReady(cached);
@@ -116,7 +121,15 @@ export function OwlMail({
         requestIds.current.set(image.id, id);
       }
       const png = await parchmentPNG(imageFile(image));
-      const letter = await owlRequest<OwlLetter>("", { id, image: png });
+      const sketch = image.sketch
+        ? await parchmentPNG(imageFile({ ...image, image: image.sketch }))
+        : undefined;
+      const letter = await owlRequest<OwlLetter>("", {
+        id,
+        image: png,
+        sketch,
+        spell: image.spell,
+      });
       prepared.current.set(image.id, letter);
       if (mounted.current) {
         if (activeRef.current?.id === image.id) setReady(letter);
@@ -126,7 +139,15 @@ export function OwlMail({
       if (mounted.current) setError((e as Error).message);
     } finally {
       preparing.current = false;
-      if (mounted.current) setPending(false);
+      if (mounted.current) {
+        setPending(false);
+        if (
+          activeRef.current &&
+          activeRef.current.id !== image.id &&
+          mode === "direct"
+        )
+          void prepare();
+      }
     }
   }
   function show() {
@@ -143,11 +164,23 @@ export function OwlMail({
     } catch {}
     setUnread(0);
     setError("");
+    const cached = active ? prepared.current.get(active.id) : null;
+    if (
+      mode === "direct" &&
+      cached &&
+      !cached.revoked &&
+      cached.expires > Date.now() &&
+      typeof navigator.share === "function"
+    ) {
+      void share(cached);
+      return;
+    }
     setReady(null);
     dialog.current?.showModal();
     void prepare();
   }
-  async function share() {
+  async function share(letter = ready) {
+    const ready = letter;
     if (!ready || ready.revoked || ready.expires < Date.now() || posting)
       return;
     setPosting(true);
@@ -160,12 +193,23 @@ export function OwlMail({
         );
       const file = active ? imageFile(active) : null;
       const data: ShareData = {
-        title: "An image carried by owl",
-        text: "Open this Incant image and send an image back.",
+        title: "A small act of sorcery",
+        text: `I drew it, muttered “${active?.spell || "abracadabra"}”, and the parchment got carried away.`,
         url,
       };
-      if (file && navigator.canShare?.({ ...data, files: [file] }))
-        data.files = [file];
+      const files = file
+        ? [new File([file], "incant-image.png", { type: file.type })]
+        : [];
+      if (active?.sketch) {
+        const source = imageFile({ ...active, image: active.sketch });
+        files.push(
+          new File([source], "incant-original-sketch.png", {
+            type: source.type,
+          }),
+        );
+      }
+      if (files.length && navigator.canShare?.({ ...data, files }))
+        data.files = files;
       await navigator.share(data);
       setNotice(
         "Handed to your sharing app. Finish sending there; Incant cannot confirm delivery.",
@@ -182,7 +226,10 @@ export function OwlMail({
     } catch (e) {
       if ((e as Error).name === "AbortError")
         setNotice("Sharing cancelled. Your image is still here.");
-      else setError((e as Error).message);
+      else {
+        setError((e as Error).message);
+        dialog.current?.showModal();
+      }
     } finally {
       setPosting(false);
     }
@@ -211,11 +258,12 @@ export function OwlMail({
         aria-label={unread ? `Owl post, ${unread} new updates` : "Owl post"}
         onClick={show}
         disabled={busy}
-      >
-        {unread > 0 && <span aria-hidden="true">✉</span>}
-      </button>
+      ></button>
       <dialog ref={dialog} className="owl-dialog" aria-label="Owl post">
         <header>
+          <span className="wax-seal" aria-hidden="true">
+            ✦
+          </span>
           <h2>Owl post</h2>
           <button
             aria-label="Close owl post"
@@ -224,7 +272,7 @@ export function OwlMail({
             ×
           </button>
         </header>
-        <p>Send an image by email, Messages, or another app.</p>
+        <p className="ink-note">A little magic, addressed to someone.</p>
         {active ? (
           <section className="owl-compose">
             <img src={active.image} alt="Image to share" draggable={false} />
@@ -263,11 +311,7 @@ export function OwlMail({
                   Prepare image
                 </button>
               )}
-              <small>
-                Anyone with the link can open this image and reply for 30 days.
-                No access to your other creations. Keep the link in your message
-                for opened receipts and replies.
-              </small>
+              <small>Image · original sketch · your spell</small>
             </div>
           </section>
         ) : (
@@ -293,12 +337,14 @@ export function OwlMail({
         </label>
         <h3>Letters & replies</h3>
         {inboxError && <p role="status">{inboxError}</p>}
-        <p className="owl-fine">
-          “Opened” means someone chose Open letter at your link. Email and SMS
-          apps do not report sending or reading back to Incant. Replies are from
-          link holders, not verified identities. This post belongs to everyone
-          using this room’s passphrase.
-        </p>
+        <details className="owl-fine">
+          <summary>About letters & receipts</summary>
+          <p>
+            A link holder can open this parcel and reply for 30 days. Opened
+            means they opened the link; delivery from your sharing app is
+            unconfirmed. Replies are shared with this room.
+          </p>
+        </details>
         {!letters.length && <p>No letters yet.</p>}
         {letters.map((l) => (
           <article className="owl-letter" key={l.id}>

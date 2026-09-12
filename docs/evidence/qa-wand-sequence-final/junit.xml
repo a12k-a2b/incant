@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="0" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="2.307"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1600 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-E7smf3WV.css   60.80 kB │ gzip: 14.14 kB
+dist/assets/index-BoW2-aSH.js   305.56 kB │ gzip: 96.74 kB
+✓ built in 800ms</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="3.797"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (7 tests) 22ms
+ ✓ tests/backup.test.ts (2 tests) 193ms
+ ✓ tests/owl.test.ts (3 tests) 399ms
+   ✓ owl capabilities isolate images; open and reply receipts are durable and retry-safe  310ms
+
+ Test Files  3 passed (3)
+      Tests  12 passed (12)
+   Start at  11:20:24
+   Duration  2.53s (transform 246ms, setup 0ms, collect 780ms, tests 615ms, environment 1ms, prepare 432ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="173.825"><system-out>  ✓  43 tests/native-interactions.e2e.ts:126:1 › barrel-first chord starts only at contact and stops at tip lift, with no hover trail (597ms)
+  ✓  44 tests/native-interactions.e2e.ts:169:1 › anomalous barrel button zero cannot ink; tip-first chord and cancel preserve real ink (1.3s)
+  ✓  45 tests/native-interactions.e2e.ts:213:1 › legacy tools dialog still scrolls and allows plain-text selection (1.6s)
+  ✓  46 tests/onboarding.e2e.ts:2:1 › first visit is skippable, stays dismissed across reload, and help replays it (1.5s)
+  ✓  47 tests/onboarding.e2e.ts:34:1 › four pages support back and completion without modifying the sketch (1.7s)
+  ✓  48 tests/onboarding.e2e.ts:73:3 › guide fits dc1-portrait and remains usable with reduced motion (3.4s)
+  ✓  49 tests/onboarding.e2e.ts:73:3 › guide fits dc1-landscape and remains usable with reduced motion (4.8s)
+  ✓  50 tests/onboarding.e2e.ts:73:3 › guide fits phone and remains usable with reduced motion (3.0s)
+  ✓  51 tests/onboarding.e2e.ts:73:3 › guide fits short and remains usable with reduced motion (1.6s)
+  ✓  52 tests/owl.e2e.ts:4:1 › owl sharing preserves activation, distinguishes cancellation, and announces an image reply once (17.9s)
+  ✓  53 tests/owl.e2e.ts:117:1 › recipient opens deliberately, sees no room gate, and retries the same reply safely (845ms)
+  ✓  54 tests/owl.e2e.ts:164:1 › missing cloud storage is recoverable and never opens a share sheet (1.0s)
+  ✓  55 tests/owl.e2e.ts:185:1 › painted owl directly shares both images and the spell from the original tap (3.8s)
+  ✓  56 tests/wand-feedback.e2e.ts:3:3 › wand acknowledges connection immediately and signals actual listening (3.7s)
+  ✓  57 tests/wand-feedback.e2e.ts:3:3 › wand acknowledges connection immediately and signals actual listening with reduced motion (1.7s)
+  ✓  58 tests/wand-sequence.e2e.ts:3:3 › first gesture over a result casts again with original sketch (tap) (6.7s)
+  ✓  59 tests/wand-sequence.e2e.ts:3:3 › first gesture over a result casts again with original sketch (hold) (7.2s)
+  ✓  60 tests/wand-sequence.e2e.ts:119:1 › dragon settings persist voice and owl choices without adding an owl icon (2.6s)
+
+  60 passed (2.9m)</system-out></testcase></testsuite>

@@ -15,6 +15,8 @@ export type IncantSettings = {
   chamber: boolean;
   quality: ImageQuality;
   model: ImageModel;
+  voiceMode: "dictation" | "conversation";
+  owlMode: "direct" | "tray";
 };
 
 export const DEFAULT_SETTINGS: IncantSettings = {
@@ -25,6 +27,8 @@ export const DEFAULT_SETTINGS: IncantSettings = {
   chamber: true,
   quality: "medium",
   model: "gpt-image-2.5-flare",
+  voiceMode: "dictation",
+  owlMode: "direct",
 };
 
 const STORAGE_KEY = "incant-grimoire-v1";
@@ -49,6 +53,8 @@ export function loadSettings(): IncantSettings {
       fourfold: Boolean(parsed.fourfold),
       livePaper: parsed.livePaper !== false,
       chamber: parsed.chamber !== false,
+      voiceMode: parsed.voiceMode === "conversation" ? "conversation" : "dictation",
+      owlMode: parsed.owlMode === "tray" ? "tray" : "direct",
     };
   } catch {
     return { ...DEFAULT_SETTINGS };

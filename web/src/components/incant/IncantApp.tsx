@@ -1,3 +1,4 @@
+import { RealtimeVoice } from "@/lib/realtime-voice";
 import { OwlMail } from "./OwlMail";
 import { useNativeInteractionGuard } from "@/lib/native-interactions";
 import { Onboarding, needsIntroduction } from "./Onboarding";
@@ -50,6 +51,9 @@ type Voice = {
   ctx?: AudioContext;
   proc?: ScriptProcessorNode;
   ready: boolean;
+  stopping?: boolean;
+  stopRequested?: boolean;
+  talk?: RealtimeVoice;
   timer?: ReturnType<typeof setTimeout>;
 };
 const describe = (err: unknown) =>
@@ -148,7 +152,14 @@ export function IncantApp({
   const voiceButton = useRef<HTMLButtonElement>(null);
   const voicePointer = useRef<number | null>(null);
   const voicePress = useRef({ started: 0, stopping: false });
-  const [handsFree, setHandsFree] = useState(false);
+  const [handsFree, setHandsFreeState] = useState(false);
+  const handsFreeRef = useRef(false);
+  const setHandsFree = (v: boolean) => {
+    handsFreeRef.current = v;
+    setHandsFreeState(v);
+  };
+  const [striking, setStriking] = useState(false);
+  const voiceSketch = useRef<string | null>(null);
   const sketch = useRef<SketchCanvasHandle>(null),
     voice = useRef<Voice | null>(null),
     operation = useRef<AbortController | null>(null),
@@ -166,6 +177,14 @@ export function IncantApp({
     [revision, setRevision] = useState(0),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
+  const [dragonAwake, setDragonAwake] = useState(false);
+  const dragonTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  useEffect(() => () => dragonTimers.current.forEach(clearTimeout), []);
+  const wakeDragon = () => {
+    setDragonAwake(true);
+    dragonTimers.current.push(setTimeout(() => setBook(true), 350));
+    dragonTimers.current.push(setTimeout(() => setDragonAwake(false), 1400));
+  };
   const [book, setBook] = useState(false),
     [help, setHelp] = useState(needsIntroduction),
     [creations, setCreations] = useState<Creation[]>([]),
@@ -264,6 +283,7 @@ export function IncantApp({
     s.stream?.getTracks().forEach((t) => t.stop());
     void s.ctx?.close().catch(() => {});
     s.live.disconnect();
+    s.talk?.close();
     if (voice.current === s) {
       voice.current = null;
       setHandsFree(false);
@@ -275,6 +295,9 @@ export function IncantApp({
     operation.current?.abort();
     operation.current = null;
     setRevealing(false);
+    setStriking(false);
+    voicePointer.current = null;
+    voiceSketch.current = null;
     setPhase("idle");
     setProgress("");
   };
@@ -282,6 +305,7 @@ export function IncantApp({
     const hidden = () => {
       if (document.hidden && voice.current) {
         closeVoice(voice.current);
+        voiceSketch.current = null;
         setPhase("idle");
         setNotice("Listening stopped when you left the desk.");
       }
@@ -295,9 +319,17 @@ export function IncantApp({
   }, []);
   async function cast(spell = words, again = false) {
     if (operation.current) return;
-    const png = again ? last?.sketch : sketch.current?.exportPng(),
+    const png = again
+        ? last?.sketch
+        : voiceSketch.current || active?.sketch || sketch.current?.exportPng(),
       text = (again ? last?.words : spell)?.trim();
-    if (!png || (!again && sketch.current?.isEmpty())) {
+    if (
+      !png ||
+      (!again &&
+        !voiceSketch.current &&
+        !active?.sketch &&
+        sketch.current?.isEmpty())
+    ) {
       setError("Draw something first. A few lines are enough.");
       return;
     }
@@ -315,7 +347,15 @@ export function IncantApp({
     setError("");
     setPanel(false);
     setRevealing(false);
+    setActive(null);
+    setStriking(true);
     setPhase("casting");
+    const strike = new Promise<void>((resolve) =>
+      setTimeout(() => {
+        if (id === serial.current) setStriking(false);
+        resolve();
+      }, 900),
+    );
     setProgress("Sending your sketch…");
     const timer = setTimeout(() => control.abort(), 180000);
     let successes = 0;
@@ -336,6 +376,7 @@ export function IncantApp({
             again ? creations.length : i,
             control.signal,
           );
+          await strike;
           if (id !== serial.current) return;
           const item = {
             id: crypto.randomUUID(),
@@ -384,6 +425,8 @@ export function IncantApp({
       clearTimeout(timer);
       if (id === serial.current) {
         operation.current = null;
+        voiceSketch.current = null;
+        setStriking(false);
         setPhase("idle");
         setProgress("");
       }
@@ -391,7 +434,7 @@ export function IncantApp({
   }
   async function beginVoice() {
     if (busy || voice.current || operation.current) return;
-    if (empty) {
+    if (empty && !active?.sketch) {
       setError("Draw a few lines first, then hold the wand and speak.");
       return;
     }
@@ -401,15 +444,57 @@ export function IncantApp({
       );
       return;
     }
+    voiceSketch.current = active?.sketch || sketch.current?.exportPng() || null;
+    setActive(null);
+    setRevealing(false);
     const s: Voice = {
       live: new GeminiLiveTranscribe(),
       controller: new AbortController(),
       ready: false,
     };
     voice.current = s;
+    setNotice("");
     setError("");
     setPhase("connecting");
     try {
+      if (settings.voiceMode === "conversation") {
+        s.talk = new RealtimeVoice(
+          (text) => {
+            if (voice.current === s) setWords(text);
+          },
+          (spell) => {
+            if (voice.current !== s) return;
+            closeVoice(s);
+            setPhase("idle");
+            setWords(spell);
+            void cast(spell);
+          },
+          (err) => {
+            if (voice.current === s) {
+              closeVoice(s);
+              voiceSketch.current = null;
+              setPhase("idle");
+              setError(err.message);
+            }
+          },
+        );
+        await s.talk.connect(settings.openaiKey, voiceSketch.current);
+        if (voice.current !== s) return;
+        s.ready = true;
+        setPhase("listening");
+        s.timer = setTimeout(() => {
+          if (voice.current === s) {
+            closeVoice(s);
+            voiceSketch.current = null;
+            setPhase("idle");
+            setNotice(
+              "The talking wand has rested after three minutes. Tap to begin again.",
+            );
+          }
+        }, 180000);
+        if (s.stopRequested) void endVoice();
+        return;
+      }
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           channelCount: 1,
@@ -422,6 +507,34 @@ export function IncantApp({
         return;
       }
       s.stream = stream;
+      const queued: Int16Array[] = [];
+      let queuedSamples = 0;
+      s.ctx = new AudioContext();
+      await s.ctx.resume();
+      if (voice.current !== s) {
+        void s.ctx.close();
+        return;
+      }
+      const source = s.ctx.createMediaStreamSource(stream),
+        proc = s.ctx.createScriptProcessor(2048, 1, 1);
+      s.proc = proc;
+      proc.onaudioprocess = (e) => {
+        if (s.stopRequested) return;
+        const pcm = downsampleTo16k(
+          e.inputBuffer.getChannelData(0),
+          s.ctx!.sampleRate,
+        );
+        if (s.ready) s.live.sendPcm16(pcm);
+        else if (queuedSamples < 16_000 * 15) {
+          queued.push(pcm);
+          queuedSamples += pcm.length;
+        }
+      };
+      const mute = s.ctx.createGain();
+      mute.gain.value = 0;
+      source.connect(proc);
+      proc.connect(mute);
+      mute.connect(s.ctx.destination);
       const response = await fetch("/api/gemini-token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -443,25 +556,9 @@ export function IncantApp({
       });
       if (voice.current !== s) return;
       s.live.startTurn();
-      s.ctx = new AudioContext();
-      await s.ctx.resume();
-      if (voice.current !== s) {
-        void s.ctx.close();
-        return;
-      }
-      const source = s.ctx.createMediaStreamSource(stream),
-        proc = s.ctx.createScriptProcessor(2048, 1, 1);
-      s.proc = proc;
-      proc.onaudioprocess = (e) =>
-        s.live.sendPcm16(
-          downsampleTo16k(e.inputBuffer.getChannelData(0), s.ctx!.sampleRate),
-        );
-      const mute = s.ctx.createGain();
-      mute.gain.value = 0;
-      source.connect(proc);
-      proc.connect(mute);
-      mute.connect(s.ctx.destination);
       s.ready = true;
+      for (const pcm of queued) s.live.sendPcm16(pcm);
+      queued.length = 0;
       s.timer = setTimeout(() => {
         if (voice.current === s) {
           closeVoice(s);
@@ -473,18 +570,26 @@ export function IncantApp({
       }, 60000);
       setWords("");
       setPhase("listening");
+      if (s.stopRequested) void endVoice();
     } catch (err) {
       if (voice.current === s) {
         closeVoice(s);
         setPhase("idle");
+        voiceSketch.current = null;
         setError(describe(err));
       }
     }
   }
   async function endVoice(cancelled = false) {
     const s = voice.current;
-    if (!s) return;
-    if (cancelled || !s.ready) {
+    if (!s || (!cancelled && s.stopping)) return;
+    if (!cancelled && !s.ready) {
+      s.stopRequested = true;
+      setNotice("Gathering your voice while the wand connects…");
+      return;
+    }
+    if (cancelled) {
+      voiceSketch.current = null;
       closeVoice(s);
       setPhase("idle");
       if (!cancelled)
@@ -493,7 +598,14 @@ export function IncantApp({
         );
       return;
     }
+    s.stopping = true;
+    setNotice("");
     s.ready = false;
+    if (s.talk) {
+      setPhase("finishing");
+      s.talk.finish();
+      return;
+    }
     s.proc?.disconnect();
     s.stream?.getTracks().forEach((t) => t.stop());
     setPhase("finishing");
@@ -503,6 +615,7 @@ export function IncantApp({
       closeVoice(s);
       setPhase("idle");
       if (!final.trim()) {
+        voiceSketch.current = null;
         setError("The wand heard no words. Try again, or type the spell.");
         return;
       }
@@ -512,6 +625,7 @@ export function IncantApp({
       if (voice.current === s) {
         closeVoice(s);
         setPhase("idle");
+        voiceSketch.current = null;
         setError(describe(err));
       }
     }
@@ -561,12 +675,42 @@ export function IncantApp({
   return (
     <main
       ref={room}
+      data-voice-mode={settings.voiceMode}
+      data-cast-stage={striking ? "strike" : revealing ? "reveal" : phase}
       data-native-interactions
       data-frame={frame}
       data-frame-layer={frameLayer}
       className={`drawing-room immersive-room ${turning ? "turning-moon" : ""} ${immersiveMode ? "immersive-mode" : ""} phase-${phase} ${revealing ? "is-revealing" : ""} ${settings.livePaper ? "live-paper" : ""}`}
     >
-      <OwlMail active={active} busy={busy} />
+      <OwlMail active={active} busy={busy} mode={settings.owlMode} />
+      <button
+        className={`dragon-key ${dragonAwake || book ? "dragon-awake" : ""}`}
+        aria-label="Dragon settings"
+        disabled={busy}
+        onClick={wakeDragon}
+      >
+        <span className="dragon-eye" aria-hidden="true" />
+      </button>
+      {dragonAwake && (
+        <svg
+          className="dragon-flame"
+          viewBox="0 0 1000 1000"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <radialGradient id="dragon-fire">
+              <stop stopColor="#fff1ad" />
+              <stop offset=".5" stopColor="#d89c49" />
+              <stop offset="1" stopColor="#a8592800" />
+            </radialGradient>
+          </defs>
+          <path
+            fill="url(#dragon-fire)"
+            d="M235 870 Q180 740 340 650 Q280 530 510 400 Q440 590 700 430 Q640 750 235 870Z"
+          />
+        </svg>
+      )}
       <section className="desk" aria-label="Wizard's drawing desk">
         <div className="drawing-area">
           <div className="paper-wrap">
@@ -620,8 +764,7 @@ export function IncantApp({
                   />
                 )}
               {turning && <div className="day-cycle" aria-hidden="true" />}
-              {(phase === "finishing" ||
-                phase === "casting" ||
+              {((phase === "casting" && !striking) ||
                 revealing ||
                 (!!active && loadedImage !== active.id)) && (
                 <div
@@ -685,19 +828,17 @@ export function IncantApp({
             aria-label={
               immersiveMode && (phase === "casting" || phase === "finishing")
                 ? "Stop spell"
-                : immersiveMode && active
-                  ? "Return to sketch"
-                  : phase === "connecting"
+                : phase === "connecting"
+                  ? handsFree
+                    ? "Connecting… tap to cancel"
+                    : "Connecting… keep holding"
+                  : phase === "listening"
                     ? handsFree
-                      ? "Connecting… tap to cancel"
-                      : "Connecting… keep holding"
-                    : phase === "listening"
-                      ? handsFree
-                        ? "Listening… tap to cast"
-                        : "Listening… release to cast"
-                      : phase === "finishing"
-                        ? "Finishing your spell…"
-                        : "Tap or hold to speak"
+                      ? "Listening… tap to cast"
+                      : "Listening… release to cast"
+                    : phase === "finishing"
+                      ? "Finishing your spell…"
+                      : "Tap or hold to speak"
             }
             aria-describedby="wand-status"
             className={`voice-wand ${phase === "listening" ? "listening" : ""}`}
@@ -715,19 +856,14 @@ export function IncantApp({
                 cancel();
                 return;
               }
-              if (immersiveMode && active) {
-                setActive(null);
-                setRevealing(false);
-                return;
-              }
               e.currentTarget.focus({ preventScroll: true });
               voicePointer.current = e.pointerId;
               voicePress.current = {
                 started: performance.now(),
-                stopping: handsFree,
+                stopping: handsFreeRef.current,
               };
               e.currentTarget.setPointerCapture(e.pointerId);
-              if (!handsFree) void beginVoice();
+              if (!handsFreeRef.current) void beginVoice();
             }}
             onPointerUp={(e) => {
               if (voicePointer.current !== e.pointerId) return;
@@ -768,11 +904,6 @@ export function IncantApp({
                   cancel();
                   return;
                 }
-                if (immersiveMode && active) {
-                  setActive(null);
-                  setRevealing(false);
-                  return;
-                }
                 void beginVoice();
               }
             }}
@@ -784,7 +915,7 @@ export function IncantApp({
             }}
             onBlur={() => {
               if (
-                !handsFree &&
+                !handsFreeRef.current &&
                 (voice.current?.ready || phase === "connecting")
               )
                 void endVoice(true);
@@ -803,9 +934,11 @@ export function IncantApp({
             {phase === "connecting"
               ? "Waking the wand…"
               : phase === "listening"
-                ? handsFree
-                  ? "Listening · tap to cast"
-                  : "Listening · speak your spell"
+                ? settings.voiceMode === "conversation"
+                  ? "Talk with the wand · tap to cast"
+                  : handsFree
+                    ? "Listening · tap to cast"
+                    : "Listening · speak your spell"
                 : phase === "finishing"
                   ? "Gathering your words…"
                   : phase === "casting"
@@ -883,7 +1016,12 @@ export function IncantApp({
         onClose={() => setLibraryOpen(false)}
       >
         <header>
-          <h2>Your spellbook</h2>
+          <h2>
+            <span className="wax-seal" aria-hidden="true">
+              ✦
+            </span>{" "}
+            Your spellbook
+          </h2>
           <button
             aria-label="Close saved spells"
             onClick={() => setLibraryOpen(false)}

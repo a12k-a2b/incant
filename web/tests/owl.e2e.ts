@@ -31,6 +31,10 @@ test("owl sharing preserves activation, distinguishes cancellation, and announce
   );
   await page.addInitScript(() => {
     localStorage.setItem("incant-introduction-v1", "seen");
+    localStorage.setItem(
+      "incant-grimoire-v1",
+      JSON.stringify({ owlMode: "tray" }),
+    );
     (window as any).cancelOwl = true;
     (window as any).hoots = 0;
     const original = AudioContext.prototype.createOscillator;
@@ -86,7 +90,7 @@ test("owl sharing preserves activation, distinguishes cancellation, and announce
   );
   expect(handoffs).toBe(1);
   expect(await page.evaluate(() => (window as any).owlShare)).toMatchObject({
-    files: 1,
+    files: 2,
     active: true,
   });
   expect(await page.evaluate(() => (window as any).owlShare.url)).toContain(
@@ -143,13 +147,11 @@ test("recipient opens deliberately, sees no room gate, and retries the same repl
   await expect(
     page.getByAltText("Image sent to you through Incant"),
   ).toBeVisible();
-  await page
-    .getByLabel("Choose an image")
-    .setInputFiles({
-      name: "reply.png",
-      mimeType: "image/png",
-      buffer: Buffer.from(tiny, "base64"),
-    });
+  await page.getByLabel("Choose an image").setInputFiles({
+    name: "reply.png",
+    mimeType: "image/png",
+    buffer: Buffer.from(tiny, "base64"),
+  });
   await page.getByRole("button", { name: "Send image reply" }).click();
   await expect(page.getByRole("alert")).toHaveText("Try again");
   await page.getByRole("button", { name: "Send image reply" }).click();
@@ -179,4 +181,71 @@ test("missing cloud storage is recoverable and never opens a share sheet", async
   await expect(
     page.getByRole("button", { name: "Choose where to send" }),
   ).toHaveCount(0);
+});
+test("painted owl directly shares both images and the spell from the original tap", async ({
+  page,
+}) => {
+  let parcel: any;
+  await page.route("**/api/owl", async (r) => {
+    if (r.request().method() === "GET") return r.fulfill({ json: [] });
+    parcel = r.request().postDataJSON();
+    await r.fulfill({
+      json: {
+        id: parcel.id,
+        token: parcel.id + "." + "b".repeat(64),
+        expires: Date.now() + 86400000,
+        replies: [],
+      },
+    });
+  });
+  await page.route("**/api/owl/*/handoff", (r) =>
+    r.fulfill({ json: { id: parcel.id, replies: [] } }),
+  );
+  await page.addInitScript(() => {
+    localStorage.setItem("incant-introduction-v1", "seen");
+    Object.defineProperty(navigator, "canShare", { value: () => true });
+    Object.defineProperty(navigator, "share", {
+      value: async (d: ShareData) => {
+        (window as any).parcelShare = {
+          text: d.text,
+          title: d.title,
+          files: d.files?.map((f) => f.name),
+          active: navigator.userActivation.isActive,
+        };
+      },
+    });
+  });
+  await page.goto("/");
+  const c = page.locator("canvas"),
+    b = (await c.boundingBox())!;
+  await page.mouse.move(b.x + b.width * 0.4, b.y + b.height * 0.5);
+  await page.mouse.down();
+  await page.mouse.move(b.x + b.width * 0.6, b.y + b.height * 0.4);
+  await page.mouse.up();
+  const original = await c.evaluate((c: HTMLCanvasElement) => c.toDataURL());
+  await page.route("**/api/cast", (r) =>
+    r.fulfill({ json: { ok: true, imageBase64: tiny } }),
+  );
+  await page.getByRole("button", { name: "Type a spell", exact: true }).click();
+  await page
+    .getByLabel("Type your spell", { exact: true })
+    .fill("A winter cottage");
+  await page.getByRole("button", { name: "Cast typed spell" }).click();
+  await expect.poll(() => parcel?.spell).toBe("A winter cottage");
+  expect(parcel.sketch).toBe(original);
+  expect(parcel.image).not.toBe(original);
+  await page.getByRole("button", { name: "Owl post", exact: true }).click();
+  await expect
+    .poll(() => page.evaluate(() => (window as any).parcelShare))
+    .toMatchObject({
+      active: true,
+      files: ["incant-image.png", "incant-original-sketch.png"],
+      title: "A small act of sorcery",
+    });
+  expect(await page.evaluate(() => (window as any).parcelShare.text)).toContain(
+    "A winter cottage",
+  );
+  await expect(
+    page.getByRole("dialog", { name: "Owl post" }),
+  ).not.toBeVisible();
 });

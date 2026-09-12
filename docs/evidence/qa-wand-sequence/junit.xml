@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="4.945"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1600 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:  0.42 kB
+dist/assets/index-C-E_QzRd.css   59.51 kB │ gzip: 13.86 kB
+dist/assets/index-CRgl-sDx.js   305.18 kB │ gzip: 96.68 kB
+✓ built in 1.36s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="2.533"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/contracts.test.ts (7 tests) 21ms
+ ✓ tests/backup.test.ts (2 tests) 250ms
+ ✓ tests/owl.test.ts (2 tests) 514ms
+   ✓ owl capabilities isolate images; open and reply receipts are durable and retry-safe  506ms
+
+ Test Files  3 passed (3)
+      Tests  11 passed (11)
+   Start at  11:11:17
+   Duration  1.52s (transform 303ms, setup 0ms, collect 782ms, tests 785ms, environment 1ms, prepare 533ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="240.019"><failure message="timed out after 240s">  ✓  10 tests/archive.e2e.ts:273:1 › foreground frame is 90 percent and See-through is a persistent rollback (336ms)
+  ✓  11 tests/archive.e2e.ts:298:1 › a session can cross midnight while sketches remain grouped by their local creation day (203ms)
+  ✓  12 tests/cast-recovery.e2e.ts:8:3 › immersive cast shows a readable error and preserves the sketch (1.2s)
+  ✓  13 tests/cast-recovery.e2e.ts:8:3 › immersive cast reveals and saves its image (4.3s)
+  ✓  14 tests/cloud-backup.e2e.ts:2:1 › offline retry backs up exact bytes, resumes idempotently and restores without replacing a draft (420ms)
+  ✘  15 tests/desk.e2e.ts:46:1 › immersive desk keeps tools tucked away and palm input ignored (30.0s)
+(node:37538) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  16 tests/desk.e2e.ts:79:1 › failed cast clears fog and preserves original sketch and retry (30.0s)
+(node:37672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  17 tests/desk.e2e.ts:96:1 › casting fog reveals a saved image and historical reroll keeps its source (30.0s)
+(node:37924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  18 tests/desk.e2e.ts:148:1 › cancelled spell cannot replace drawing with a late result (23.5s)
+  ✓  19 tests/desk.e2e.ts:182:3 › layout desktop (2.7s)
+  ✓  20 tests/desk.e2e.ts:182:3 › layout dc1-portrait (2.5s)
+  ✓  21 tests/desk.e2e.ts:182:3 › layout dc1-landscape (3.1s)
+  ✓  22 tests/desk.e2e.ts:182:3 › layout tablet-portrait (1.7s)
+  ✓  23 tests/desk.e2e.ts:182:3 › layout tablet-landscape (2.0s)</failure><system-out>  ✓  10 tests/archive.e2e.ts:273:1 › foreground frame is 90 percent and See-through is a persistent rollback (336ms)
+  ✓  11 tests/archive.e2e.ts:298:1 › a session can cross midnight while sketches remain grouped by their local creation day (203ms)
+  ✓  12 tests/cast-recovery.e2e.ts:8:3 › immersive cast shows a readable error and preserves the sketch (1.2s)
+  ✓  13 tests/cast-recovery.e2e.ts:8:3 › immersive cast reveals and saves its image (4.3s)
+  ✓  14 tests/cloud-backup.e2e.ts:2:1 › offline retry backs up exact bytes, resumes idempotently and restores without replacing a draft (420ms)
+  ✘  15 tests/desk.e2e.ts:46:1 › immersive desk keeps tools tucked away and palm input ignored (30.0s)
+(node:37538) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  16 tests/desk.e2e.ts:79:1 › failed cast clears fog and preserves original sketch and retry (30.0s)
+(node:37672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  17 tests/desk.e2e.ts:96:1 › casting fog reveals a saved image and historical reroll keeps its source (30.0s)
+(node:37924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  18 tests/desk.e2e.ts:148:1 › cancelled spell cannot replace drawing with a late result (23.5s)
+  ✓  19 tests/desk.e2e.ts:182:3 › layout desktop (2.7s)
+  ✓  20 tests/desk.e2e.ts:182:3 › layout dc1-portrait (2.5s)
+  ✓  21 tests/desk.e2e.ts:182:3 › layout dc1-landscape (3.1s)
+  ✓  22 tests/desk.e2e.ts:182:3 › layout tablet-portrait (1.7s)
+  ✓  23 tests/desk.e2e.ts:182:3 › layout tablet-landscape (2.0s)</system-out></testcase></testsuite>

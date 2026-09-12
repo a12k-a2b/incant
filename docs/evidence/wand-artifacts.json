@@ -1,0 +1,10 @@
+{
+  "deployment": "ead41fce-af53-4e85-bbb3-c4850bf3a902",
+  "kind": "Locally verified build; Railway rebuilds the same source",
+  "sha256": {
+    "web/dist/assets/index-BoW2-aSH.js": "08c8b74944393600f96404532172ff650348189764ea6406f8a6dc67209e19b5",
+    "web/dist/assets/index-E7smf3WV.css": "6a802ed52c6d2941a8c006d26a2a3a4b6012d000484119a50bb8b073129d0a7b",
+    "web/dist/sw.js": "09156ec0f51afedc04713c89a465620b845eec18604afe30860c69ce50f15a17",
+    "web/dist/fonts/IMFellEnglish.ttf": "fe9705bbde51af802719246d4608d08d37bde956ab99d9a590da996a5221a24c"
+  }
+}
