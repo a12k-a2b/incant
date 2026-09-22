@@ -9,3 +9,5 @@ Focused validation: seven onboarding cases pass, including legacy URL with a pre
 First complete profile: build and 15 unit tests PASS; 97/98 browser tests passed. Legacy keyboard hold test used 350ms, inside the existing 450ms tap window, and correctly entered hands-free mode rather than sending. Corrected that test to a 550ms hold; no product wand timing changed.
 
 Final profile PASS: production build, 15 unit/server tests, 98 browser tests. Evidence: docs/evidence/qa-onboarding-spotlight-verified.
+
+Railway deployment 20a3ade3-b653-4d16-90fe-968a2c6a179c succeeded for revision 49f7c94. Hosted verification PASS: old link opens guide rather than tools, actual wand/typewriter/moon highlights exist, dismissal survives reload, and deployed JavaScript matches the tested local build. No private artwork or provider calls used.

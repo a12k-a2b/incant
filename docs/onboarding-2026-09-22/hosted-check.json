@@ -1,0 +1,12 @@
+{
+  "time": "2026-09-22T15:42:03.171Z",
+  "kind": "Isolated browser; cloud and owl requests intercepted; no real artwork or provider calls",
+  "checks": {
+    "legacyLinkOpensGuide": true,
+    "actualObjectsHighlighted": true,
+    "dismissalPersists": true,
+    "testedJavaScript": true
+  },
+  "javascriptSha256": "21d128b1e4b4a09d763225ac57dc53ae3349edf90dc38033c99021a4539ec1cd",
+  "status": "PASS"
+}
