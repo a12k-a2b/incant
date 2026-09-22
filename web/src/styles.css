@@ -1456,8 +1456,8 @@ dialog::backdrop {
   bottom: max(0px, env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(150px, 23vw, 260px);
-  height: clamp(82px, 12dvh, 150px);
+  width: clamp(180px, 27.6vw, 312px);
+  height: clamp(98.4px, 14.4dvh, 180px);
 }
 .immersive-room .voice-wand {
   position: absolute;
@@ -1492,10 +1492,14 @@ dialog::backdrop {
   opacity: 1;
   animation: wand-breath 2.8s ease-in-out infinite alternate;
 }
-.phase-finishing .enchanted-wand,
-.phase-casting .enchanted-wand {
-  animation: wand-cast 0.75s ease-out both;
+[data-cast-stage="strike"] .enchanted-wand {
+  animation: wand-cast 0.9s ease-out both;
 }
+.wand-body { filter: drop-shadow(0 0 2px #b7ddf2) drop-shadow(0 0 4px #8abbe355); }
+.wand-magic { opacity: .65; pointer-events: none; }
+.phase-idle .wand-magic { animation: wand-magic-breathe 4s ease-in-out infinite; }
+@keyframes wand-magic-breathe { 0%,100% {opacity:.35;} 50% {opacity:.8;} }
+@media(prefers-reduced-motion:reduce) { .wand-magic {animation:none!important;} }
 .wand-status {
   position: absolute;
   bottom: 8%;
@@ -1701,8 +1705,8 @@ dialog::backdrop {
   0% {
     transform: rotate(-22deg);
   }
-  45% {
-    transform: rotate(9deg) translateY(-8px);
+  18%, 65% {
+    transform: rotate(-12deg) translateY(-8px);
   }
   100% {
     transform: rotate(0);
@@ -1780,7 +1784,7 @@ dialog::backdrop {
     inset: 10% 14%;
   }
   .wand-rest {
-    height: clamp(70px, 15dvh, 115px);
+    height: clamp(84px, 18dvh, 138px);
     width: 190px;
   }
 }
@@ -1809,7 +1813,7 @@ dialog::backdrop {
     background-image: url("/wizard-frame-landscape.png");
   }
   .wand-rest {
-    width: 240px;
+    width: 288px;
   }
 }
 /* Feather the manifestation into the engraved silhouettes, without cut-paper polygon seams. */

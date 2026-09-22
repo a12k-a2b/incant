@@ -314,6 +314,7 @@ test("semantic wand click starts and stops once while pointer click does not dou
     "Synthetic semantic cast verified",
   );
   expect(casts).toBe(1);
+  await expect(page.locator("main")).toHaveClass(/phase-idle/);
 
   await wand.focus();
   await page.keyboard.press("Enter");
@@ -399,7 +400,7 @@ test("silent dictation keeps the user's existing typed spell", async ({
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   await expect(page.locator("main")).toHaveClass(/phase-listening/);
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(550);
   await page.mouse.up();
   await expect(page.locator("main")).toHaveClass(/phase-idle/);
   await page.getByRole("button", { name: "Type a spell", exact: true }).click();

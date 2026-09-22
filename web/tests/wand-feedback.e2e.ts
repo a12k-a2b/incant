@@ -76,8 +76,8 @@ for (const reduced of [false, true])
       b = (await wand.boundingBox())!;
     await page.mouse.move(b.x + b.width * 0.5, b.y + b.height * 0.5);
     await page.mouse.down();
-    // Exercise a hold, not the intentional sub-300ms tap-to-listen gesture.
-    await page.waitForTimeout(350);
+    // Exercise a hold, not the intentional sub-450ms tap-to-listen gesture.
+    await page.waitForTimeout(550);
     await expect(page.locator("main")).toHaveClass(/phase-connecting/);
     await expect(page.locator(".wand-feedback")).toHaveCSS("opacity", "1");
     await expect(page.locator("#wand-status")).toHaveText("Waking the wand…");
@@ -108,7 +108,7 @@ for (const reduced of [false, true])
     await page.mouse.up();
     await expect(page.locator("main")).toHaveClass(/phase-finishing/);
     await expect(page.locator(".spell-fog")).toHaveCount(0);
-    await expect(page.locator(".spell-flight")).toHaveCount(0);
+    await expect(page.locator(".spell-flight")).toHaveCount(1);
     await expect(page.locator("main")).toHaveClass(/phase-idle/);
     await expect(page.getByRole("alert")).toHaveCSS("clip-path", "none");
     await expect(page.locator(".wand-feedback")).toHaveCSS("opacity", "0");

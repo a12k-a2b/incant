@@ -1,5 +1,8 @@
 import { test, expect, type Page } from "@playwright/test";
 async function draw(page: Page) {
+  await expect(
+    page.getByRole("button", { name: /^(Dragon settings|Open desk tools)$/ }),
+  ).toBeEnabled();
   const c = page.locator("canvas");
   const r = (await c.boundingBox())!;
   await page.mouse.move(r.x + r.width * 0.3, r.y + r.height * 0.6);

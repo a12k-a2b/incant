@@ -1,3 +1,8 @@
+import {
+  browserOwner,
+  newBrowserOwner,
+  ownerBackupRoot,
+} from "./src/lib/room-identity.server";
 import { realtimeRouter } from "./server/realtime";
 import { owlRouters } from "./server/owl";
 import { backupRouter } from "./server/backup";
@@ -13,8 +18,9 @@ const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 const secret = process.env.APP_ACCESS_KEY?.trim() || "";
-if (process.env.NODE_ENV === "production" && !secret)
-  throw new Error("APP_ACCESS_KEY must be configured for hosted Incant.");
+const privateRoom = process.env.INCANT_PRIVATE_ROOM === "true";
+if (privateRoom && !secret)
+  throw new Error("A private room needs APP_ACCESS_KEY.");
 const access = createAccess(secret);
 const attempts = new Map<string, { count: number; until: number }>();
 app.get("/.well-known/assetlinks.json", (_req, res) =>
@@ -49,7 +55,22 @@ app.use("/api", (req, res, next) => {
 });
 app.use(express.json({ limit: "12mb" }));
 app.get("/api/session", (req, res) => {
-  const unlocked = !secret || access.valid(req.get("cookie") || "");
+  const cookie = req.get("cookie") || "";
+  const legacy = !!secret && access.valid(cookie);
+  const unlocked = !privateRoom || legacy;
+  if (unlocked) {
+    // Existing owner sessions keep their archive and renew without a prompt.
+    const value = legacy
+      ? "incant_session=" + access.issue()
+      : "incant_browser=" + (browserOwner(cookie) || newBrowserOwner());
+    res.setHeader(
+      "Set-Cookie",
+      value +
+        "; HttpOnly; SameSite=Strict; Path=/; Max-Age=" +
+        (legacy ? 2592000 : 31536000) +
+        (process.env.NODE_ENV === "production" ? "; Secure" : ""),
+    );
+  }
   res.json({
     unlocked,
     imageReady: unlocked && Boolean(process.env.OPENAI_API_KEY),
@@ -96,22 +117,28 @@ const owl = owlRouters(
 );
 app.use("/api/owl-public", owl.publicRouter);
 app.use("/api", (req, res, next) => {
-  if (secret && !access.valid(req.get("cookie") || "")) {
+  const cookie = req.get("cookie") || "";
+  const legacy = !!secret && access.valid(cookie);
+  const guest = browserOwner(cookie);
+  if ((privateRoom && !legacy) || (!legacy && !guest)) {
     res
       .status(401)
       .json({ ok: false, error: "Please unlock the drawing room again." });
     return;
   }
+  res.locals.incantOwner = legacy ? "legacy" : guest || "legacy";
   next();
 });
 app.use("/api/realtime-token", realtimeRouter());
 app.use("/api/owl", owl.privateRouter);
-app.use(
-  "/api/backup",
-  backupRouter(
-    process.env.RAILWAY_VOLUME_MOUNT_PATH
-      ? `${process.env.RAILWAY_VOLUME_MOUNT_PATH}/incant-backup-v1`
-      : process.env.INCANT_BACKUP_PATH,
+const backupRoot = process.env.RAILWAY_VOLUME_MOUNT_PATH
+  ? `${process.env.RAILWAY_VOLUME_MOUNT_PATH}/incant-backup-v1`
+  : process.env.INCANT_BACKUP_PATH;
+app.use("/api/backup", (req, res, next) =>
+  backupRouter(ownerBackupRoot(backupRoot, res.locals.incantOwner))(
+    req,
+    res,
+    next,
   ),
 );
 let activeCasts = 0;

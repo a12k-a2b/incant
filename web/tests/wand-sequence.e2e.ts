@@ -1,8 +1,9 @@
 import { test, expect } from "@playwright/test";
-for (const hold of [false, true])
-  test(`first gesture over a result casts again with original sketch (${hold ? "hold" : "tap"})`, async ({
+for (const pressMs of [80, 360, 550])
+  test(`first gesture over a result casts again with original sketch (${pressMs}ms)`, async ({
     page,
   }) => {
+    const hold = pressMs >= 450;
     await page.addInitScript(() => {
       localStorage.setItem("incant-introduction-v1", "seen");
       const ctx = new AudioContext(),
@@ -92,12 +93,59 @@ for (const hold of [false, true])
     await expect(page.locator(".manifestation")).toHaveCount(0);
     await expect(page.locator(".manifestation")).toBeVisible();
     await expect(page.locator(".spell-fog")).toHaveCount(0, { timeout: 8000 });
+    await page.evaluate(() => {
+      (window as any).flights = 0;
+      new MutationObserver((records) => {
+        for (const record of records)
+          for (const node of record.addedNodes)
+            if (node instanceof Element && node.matches(".spell-flight"))
+              (window as any).flights++;
+      }).observe(document.querySelector("main")!, {
+        childList: true,
+        subtree: true,
+      });
+    });
     const wand = page.locator(".voice-wand");
     await wand.hover();
+    await page.evaluate(() =>
+      document.querySelector(".voice-wand")!.addEventListener(
+        "pointerdown",
+        (event) => {
+          (window as any).pressSample = {
+            stamp: event.timeStamp,
+            id: (event as PointerEvent).pointerId,
+          };
+        },
+        { once: true },
+      ),
+    );
     await page.mouse.down();
-    if (hold) await page.waitForTimeout(350);
+    if (pressMs === 360) {
+      // Preserve an exact physical-event duration despite test-runner transport
+      // delays. Quick-tap and hold variants still use real Chromium mouse up.
+      await page.evaluate(() => {
+        const sample = (window as any).pressSample;
+        const up = new PointerEvent("pointerup", {
+          bubbles: true,
+          pointerId: sample.id,
+          pointerType: "mouse",
+          button: 0,
+        });
+        Object.defineProperty(up, "timeStamp", { value: sample.stamp + 360 });
+        document.querySelector(".voice-wand")!.dispatchEvent(up);
+      });
+    } else await page.waitForTimeout(pressMs);
     await page.mouse.up();
-    await expect(page.locator("main")).toHaveClass(/phase-connecting/);
+    await expect(page.locator("main")).toHaveClass(
+      hold ? /phase-finishing/ : /phase-connecting/,
+    );
+    if (hold) {
+      await expect(page.locator(".spell-flight")).toHaveCount(1);
+      await expect(page.locator("main")).toHaveAttribute(
+        "data-cast-stage",
+        "strike",
+      );
+    }
     await expect(page.locator(".manifestation")).toHaveCount(0);
     // A short held recording can finish while the network is still connecting.
     tokenRelease();
@@ -115,6 +163,7 @@ for (const hold of [false, true])
     await expect(page.locator(".manifestation")).toBeVisible();
     await page.waitForTimeout(300);
     expect(casts).toHaveLength(2);
+    expect(await page.evaluate(() => (window as any).flights)).toBe(1);
   });
 test("dragon settings persist voice and owl choices without adding an owl icon", async ({
   page,

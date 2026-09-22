@@ -182,6 +182,24 @@ export function IncantApp({
     setHandsFreeState(v);
   };
   const [striking, setStriking] = useState(false);
+  const strikeRun = useRef<Promise<void> | null>(null);
+  const strikeEpoch = useRef(0);
+  const resetStrike = () => {
+    strikeEpoch.current++;
+    strikeRun.current = null;
+    setStriking(false);
+  };
+  const fireWand = () => {
+    if (strikeRun.current) return strikeRun.current;
+    const epoch = ++strikeEpoch.current;
+    setStriking(true);
+    return (strikeRun.current = new Promise<void>((resolve) => {
+      setTimeout(() => {
+        if (strikeEpoch.current === epoch) setStriking(false);
+        resolve();
+      }, 900);
+    }));
+  };
   const voiceSketch = useRef<string | null>(null);
   const voiceSource = useRef<Creation | null>(null);
   const sketch = useRef<SketchCanvasHandle>(null),
@@ -334,6 +352,7 @@ export function IncantApp({
     }
   };
   const clearVoiceSource = (restore = false) => {
+    if (restore) resetStrike();
     const source = voiceSource.current;
     voiceSketch.current = null;
     voiceSource.current = null;
@@ -345,7 +364,7 @@ export function IncantApp({
     operation.current?.abort();
     operation.current = null;
     setRevealing(false);
-    setStriking(false);
+    resetStrike();
     voicePointer.current = null;
     clearVoiceSource(true);
     setPhase("idle");
@@ -415,14 +434,10 @@ export function IncantApp({
     setPanel(false);
     setRevealing(false);
     setActive(null);
-    setStriking(true);
+    // Dictation has already fired on release. Typed/repeat casts fire here.
+    if (!voiceSketch.current) resetStrike();
+    const strike = fireWand();
     setPhase("casting");
-    const strike = new Promise<void>((resolve) =>
-      setTimeout(() => {
-        if (id === serial.current) setStriking(false);
-        resolve();
-      }, 900),
-    );
     setProgress("Sending your sketch…");
     const timer = setTimeout(() => control.abort(), 180000);
     let successes = 0;
@@ -518,6 +533,7 @@ export function IncantApp({
       );
       return;
     }
+    resetStrike();
     voiceSource.current = active;
     voiceSketch.current = active?.sketch || sketch.current?.exportPng() || null;
     setActive(null);
@@ -658,12 +674,17 @@ export function IncantApp({
   async function endVoice(cancelled = false) {
     const s = voice.current;
     if (!s || (!cancelled && s.stopping)) return;
+    if (!cancelled) {
+      void fireWand();
+      setPhase("finishing");
+    }
     if (!cancelled && !s.ready) {
       s.stopRequested = true;
       setNotice("Gathering your voice while the wand connects…");
       return;
     }
     if (cancelled) {
+      resetStrike();
       closeVoice(s);
       clearVoiceSource(true);
       setPhase("idle");
@@ -844,7 +865,7 @@ export function IncantApp({
                   />
                 )}
               {turning && <div className="day-cycle" aria-hidden="true" />}
-              {((phase === "casting" && !striking) ||
+              {(((phase === "casting" || phase === "finishing") && !striking) ||
                 revealing ||
                 (!!active && loadedImage !== active.id)) && (
                 <div
@@ -858,7 +879,7 @@ export function IncantApp({
               )}
             </div>
           </div>
-          {phase === "casting" && (
+          {(striking || phase === "finishing" || phase === "casting") && (
             <svg
               className="spell-flight"
               viewBox="0 0 1000 1000"
@@ -940,7 +961,7 @@ export function IncantApp({
               e.currentTarget.focus({ preventScroll: true });
               voicePointer.current = e.pointerId;
               voicePress.current = {
-                started: performance.now(),
+                started: e.timeStamp,
                 stopping: handsFreeRef.current,
               };
               e.currentTarget.setPointerCapture(e.pointerId);
@@ -952,7 +973,7 @@ export function IncantApp({
               voicePointer.current = null;
               if (
                 !voicePress.current.stopping &&
-                performance.now() - voicePress.current.started < 300 &&
+                e.timeStamp - voicePress.current.started < 450 &&
                 voice.current
               ) {
                 setHandsFree(true);
@@ -990,7 +1011,7 @@ export function IncantApp({
                   return;
                 }
                 voicePress.current = {
-                  started: performance.now(),
+                  started: e.timeStamp,
                   stopping: handsFreeRef.current,
                 };
                 if (!handsFreeRef.current) void beginVoice();
@@ -1002,7 +1023,7 @@ export function IncantApp({
                 suppressVoiceClickUntil.current = performance.now() + 500;
                 if (
                   !voicePress.current.stopping &&
-                  performance.now() - voicePress.current.started < 300 &&
+                  e.timeStamp - voicePress.current.started < 450 &&
                   voice.current
                 ) {
                   setHandsFree(true);
@@ -1477,6 +1498,16 @@ export function IncantApp({
 function Wand() {
   return (
     <svg className="enchanted-wand" viewBox="0 0 240 120" aria-hidden="true">
+      <g
+        className="wand-magic"
+        fill="none"
+        stroke="#86bde3"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+      >
+        <path d="M74 76l8-7-2 6 12-8 M112 56l9-8-2 6 10-6 M155 34l8-7-1 6 10-7" />
+        <path d="M97 89l7-6-1 5 9-6 M143 65l7-8-1 6 10-8 M186 17l4-5-1 5 5-3" />
+      </g>
       <g
         className="wand-body"
         stroke="#322a20"

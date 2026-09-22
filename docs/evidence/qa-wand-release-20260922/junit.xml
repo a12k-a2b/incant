@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="26.453"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1603 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.42 kB
+dist/assets/index-Cl7mrzbM.css   61.46 kB │ gzip:  14.29 kB
+dist/assets/index-BdDwl2O-.js   319.69 kB │ gzip: 100.85 kB
+✓ built in 9.23s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="15.085"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/realtime-voice.test.ts (2 tests) 120ms
+ ✓ tests/contracts.test.ts (7 tests) 123ms
+ ✓ tests/backup.test.ts (2 tests) 2229ms
+   ✓ durable immutable snapshots require complete, hash-verified objects and survive server restart  2197ms
+ ✓ tests/owl.test.ts (3 tests) 3320ms
+   ✓ owl capabilities isolate images; open and reply receipts are durable and retry-safe  2977ms
+   ✓ parcel persists exact source and spell; retries cannot substitute another prompt  317ms
+
+ Test Files  4 passed (4)
+      Tests  14 passed (14)
+   Start at  00:46:58
+   Duration  9.45s (transform 2.77s, setup 0ms, collect 6.47s, tests 5.79s, environment 1ms, prepare 5.00s)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="430.49"><failure message="command exited 1">          - unexpected value "drawing-room immersive-room  immersive-mode phase-finishing  live-paper"
+
+
+      111 |     await page.waitForTimeout(pressMs);
+      112 |     await page.mouse.up();
+    &gt; 113 |     await expect(page.locator("main")).toHaveClass(
+          |                                        ^
+      114 |       hold ? /phase-finishing/ : /phase-connecting/,
+      115 |     );
+      116 |     if (hold) {
+        at /Users/anjan/Documents/SolOS/incant/web/tests/wand-sequence.e2e.ts:113:40
+
+    Error Context: test-results/wand-sequence.e2e.ts-first-b8d66-with-original-sketch-360ms-/error-context.md
+
+  4 failed
+    tests/cast-recovery.e2e.ts:8:3 › immersive cast shows a readable error and preserves the sketch 
+    tests/cast-recovery.e2e.ts:8:3 › immersive cast reveals and saves its image ────────────────────
+    tests/desk.e2e.ts:495:1 › typewriter focuses the bubble, retains words, and casts once ─────────
+    tests/wand-sequence.e2e.ts:3:3 › first gesture over a result casts again with original sketch (360ms) 
+  93 passed (7.1m)</failure><system-out>          - unexpected value "drawing-room immersive-room  immersive-mode phase-finishing  live-paper"
+
+
+      111 |     await page.waitForTimeout(pressMs);
+      112 |     await page.mouse.up();
+    &gt; 113 |     await expect(page.locator("main")).toHaveClass(
+          |                                        ^
+      114 |       hold ? /phase-finishing/ : /phase-connecting/,
+      115 |     );
+      116 |     if (hold) {
+        at /Users/anjan/Documents/SolOS/incant/web/tests/wand-sequence.e2e.ts:113:40
+
+    Error Context: test-results/wand-sequence.e2e.ts-first-b8d66-with-original-sketch-360ms-/error-context.md
+
+  4 failed
+    tests/cast-recovery.e2e.ts:8:3 › immersive cast shows a readable error and preserves the sketch 
+    tests/cast-recovery.e2e.ts:8:3 › immersive cast reveals and saves its image ────────────────────
+    tests/desk.e2e.ts:495:1 › typewriter focuses the bubble, retains words, and casts once ─────────
+    tests/wand-sequence.e2e.ts:3:3 › first gesture over a result casts again with original sketch (360ms) 
+  93 passed (7.1m)</system-out></testcase></testsuite>

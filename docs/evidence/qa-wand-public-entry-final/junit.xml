@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="15.739"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1603 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.42 kB
+dist/assets/index-Cl7mrzbM.css   61.46 kB │ gzip:  14.29 kB
+dist/assets/index-D1j3790y.js   319.72 kB │ gzip: 100.86 kB
+✓ built in 4.74s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="7.544"><system-out>&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/realtime-voice.test.ts (2 tests) 82ms
+ ✓ tests/contracts.test.ts (7 tests) 47ms
+ ✓ tests/backup.test.ts (2 tests) 1015ms
+   ✓ durable immutable snapshots require complete, hash-verified objects and survive server restart  992ms
+ ✓ tests/public-room.test.ts (1 test) 2609ms
+   ✓ password-free entry isolates browser backups and owl mail while preserving the legacy room  2607ms
+ ✓ tests/owl.test.ts (3 tests) 2246ms
+   ✓ owl capabilities isolate images; open and reply receipts are durable and retry-safe  1963ms
+
+ Test Files  5 passed (5)
+      Tests  15 passed (15)
+   Start at  01:00:10
+   Duration  5.22s (transform 1.19s, setup 0ms, collect 2.96s, tests 6.00s, environment 1ms, prepare 2.33s)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="375.763"><failure message="command exited 1">      6 |   const c = page.locator("canvas");
+      7 |   const r = (await c.boundingBox())!;
+      8 |   await page.mouse.move(r.x + r.width * 0.3, r.y + r.height * 0.6);
+        at draw (/Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:5:5)
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:406:9
+
+    Error Context: test-results/desk.e2e.ts-early-voice-re-31519-rds-a-late-microphone-grant/error-context.md
+
+  10 failed
+    tests/desk.e2e.ts:49:1 › immersive desk keeps tools tucked away and palm input ignored ─────────
+    tests/desk.e2e.ts:82:1 › failed cast clears fog and preserves original sketch and retry ────────
+    tests/desk.e2e.ts:99:1 › casting fog reveals a saved image and historical reroll keeps its source 
+    tests/desk.e2e.ts:151:1 › cancelled spell cannot replace drawing with a late result ────────────
+    tests/desk.e2e.ts:205:1 › resize retains exact original drawing pixels ─────────────────────────
+    tests/desk.e2e.ts:214:1 › reduced motion disables fog motion and image reveal animation ────────
+    tests/desk.e2e.ts:240:3 › voice keyboard uses final speech rather than the previous typed spell 
+    tests/desk.e2e.ts:240:3 › voice touch-hold uses final speech rather than the previous typed spell 
+    tests/desk.e2e.ts:240:3 › voice tap uses final speech rather than the previous typed spell ─────
+    tests/desk.e2e.ts:376:1 › early voice release discards a late microphone grant ─────────────────
+  87 passed (6.2m)</failure><system-out>      6 |   const c = page.locator("canvas");
+      7 |   const r = (await c.boundingBox())!;
+      8 |   await page.mouse.move(r.x + r.width * 0.3, r.y + r.height * 0.6);
+        at draw (/Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:5:5)
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:406:9
+
+    Error Context: test-results/desk.e2e.ts-early-voice-re-31519-rds-a-late-microphone-grant/error-context.md
+
+  10 failed
+    tests/desk.e2e.ts:49:1 › immersive desk keeps tools tucked away and palm input ignored ─────────
+    tests/desk.e2e.ts:82:1 › failed cast clears fog and preserves original sketch and retry ────────
+    tests/desk.e2e.ts:99:1 › casting fog reveals a saved image and historical reroll keeps its source 
+    tests/desk.e2e.ts:151:1 › cancelled spell cannot replace drawing with a late result ────────────
+    tests/desk.e2e.ts:205:1 › resize retains exact original drawing pixels ─────────────────────────
+    tests/desk.e2e.ts:214:1 › reduced motion disables fog motion and image reveal animation ────────
+    tests/desk.e2e.ts:240:3 › voice keyboard uses final speech rather than the previous typed spell 
+    tests/desk.e2e.ts:240:3 › voice touch-hold uses final speech rather than the previous typed spell 
+    tests/desk.e2e.ts:240:3 › voice tap uses final speech rather than the previous typed spell ─────
+    tests/desk.e2e.ts:376:1 › early voice release discards a late microphone grant ─────────────────
+  87 passed (6.2m)</system-out></testcase></testsuite>

@@ -21,6 +21,7 @@ const uuid = (s: unknown): s is string =>
 const hash = (s: string | Buffer) =>
   createHash("sha256").update(s).digest("hex");
 type Letter = {
+  owner?: string;
   id: string;
   key: string;
   created: number;
@@ -142,7 +143,10 @@ export function owlRouters(root?: string) {
     );
     s.json(
       records
-        .filter((r): r is Letter => !!r)
+        .filter(
+          (r): r is Letter =>
+            !!r && (r.owner || "legacy") === (s.locals.incantOwner || "legacy"),
+        )
         .sort((a, b) => b.created - a.created)
         .map(view),
     );
@@ -178,6 +182,12 @@ export function owlRouters(root?: string) {
       }
       if (existing) {
         if (
+          (existing.owner || "legacy") !== (s.locals.incantOwner || "legacy")
+        ) {
+          s.sendStatus(404);
+          return;
+        }
+        if (
           existing.imageHash !== hash(image) ||
           existing.sketchHash !== (sketch ? hash(sketch) : undefined) ||
           (existing.spell || "") !== (q.body.spell || "")
@@ -206,6 +216,7 @@ export function owlRouters(root?: string) {
         return;
       }
       const r: Letter = {
+        owner: s.locals.incantOwner || "legacy",
         id,
         key: randomBytes(32).toString("hex"),
         created: Date.now(),
@@ -238,6 +249,10 @@ export function owlRouters(root?: string) {
         s.sendStatus(404);
         return;
       }
+      if ((r.owner || "legacy") !== (s.locals.incantOwner || "legacy")) {
+        s.sendStatus(404);
+        return;
+      }
       if (q.params.action === "revoke") r.revoked = true;
       else r.handedOff ??= Date.now();
       await save(r);
@@ -251,6 +266,8 @@ export function owlRouters(root?: string) {
     }
     try {
       const r = await read(q.params.id);
+      if ((r.owner || "legacy") !== (s.locals.incantOwner || "legacy"))
+        throw new Error();
       if (!r.replies.some((x) => x.id === q.params.reply)) throw new Error();
       s.type("png").send(
         await readFile(path(r.id, `reply-${q.params.reply}.png`)),
