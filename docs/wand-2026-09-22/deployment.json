@@ -1,0 +1,10 @@
+{
+  "time": "2026-09-22T08:20:33.783Z",
+  "deployment": "f17495ca-6dd3-4692-a8eb-0a177d91cd9a",
+  "revision": "7492641",
+  "passwordFree": true,
+  "cloudConfigured": true,
+  "freshArchiveEmpty": true,
+  "imageConfigured": true,
+  "voiceConfigured": true
+}

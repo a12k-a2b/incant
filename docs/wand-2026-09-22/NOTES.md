@@ -15,3 +15,5 @@ The first combined public-entry run passed build and 15 server/unit tests; 87 br
 Landscape wand overrides were also enlarged by 20% (240→288 px width and 115→138 px height cap), matching the portrait change. Hosted verification uses a fresh browser with cloud writes intercepted, no existing artwork, and no image-generation call.
 
 Final repository profile: PASS — production build, 15 unit/server tests, 97 browser tests. Physical DC-1 interaction remains a manual check.
+
+Deployment f17495ca-6dd3-4692-a8eb-0a177d91cd9a succeeded for revision 7492641. Hosted check PASS: automatic entry, enlarged wand, glow, synthetic ink endpoint, durable local revision, reload pixel preservation, and exact application-JavaScript match. Separate fresh-browser cloud status confirmed backup configured, empty isolated archive, and image/voice configuration present (no live generation/transcription invoked). Rollback tag: incant-before-wand-public-2026-09-22.
