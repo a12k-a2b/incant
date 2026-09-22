@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 export const TOUR_KEY = "incant-introduction-v1";
 export function needsIntroduction() {
+  if (new URLSearchParams(window.location.search).get("view") === "spellbook")
+    return true;
   try {
     return localStorage.getItem(TOUR_KEY) !== "seen";
   } catch {
@@ -29,9 +31,58 @@ const steps = [
     hint: "The owl shares your magic. The dragon keeps settings, undo, and a way back to your drawing.",
   },
 ];
+const targets = [
+  [".paper"],
+  [".wand-rest"],
+  [".typewriter-key"],
+  [".moon-key", ".spellbooks-key", ".owl-key", ".dragon-key"],
+];
+type Highlight = {
+  target: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
 export function Onboarding({ onClose }: { onClose: () => void }) {
   const [step, setStep] = useState(0),
     dialog = useRef<HTMLDialogElement>(null);
+  const [highlights, setHighlights] = useState<Highlight[]>([]);
+  useEffect(() => {
+    const measure = () =>
+      setHighlights(
+        targets[step].flatMap((target) => {
+          const element = document.querySelector(target);
+          if (!element) return [];
+          const r = element.getBoundingClientRect();
+          if (!r.width || !r.height) return [];
+          const x = Math.max(4, r.left - 5),
+            y = Math.max(4, r.top - 5);
+          return [
+            {
+              target,
+              x,
+              y,
+              width: Math.max(0, Math.min(innerWidth - 4, r.right + 5) - x),
+              height: Math.max(0, Math.min(innerHeight - 4, r.bottom + 5) - y),
+            },
+          ];
+        }),
+      );
+    measure();
+    const observer = new ResizeObserver(measure);
+    for (const target of targets[step]) {
+      const element = document.querySelector(target);
+      if (element) observer.observe(element);
+    }
+    window.addEventListener("resize", measure);
+    window.visualViewport?.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+      window.visualViewport?.removeEventListener("resize", measure);
+    };
+  }, [step]);
   const previousFocus = useRef<HTMLElement | null>(null);
   useEffect(() => {
     previousFocus.current = document.activeElement as HTMLElement;
@@ -58,36 +109,75 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         finish();
       }}
     >
-      <div className="introduction-top">
-        <span aria-label={`Step ${step + 1} of ${steps.length}`}>
-          {step + 1} <span aria-hidden="true">✦</span> {steps.length}
-        </span>
-        <button onClick={finish}>Skip</button>
-      </div>
-      <div className="introduction-page" key={step}>
-        <TourDrawing step={step} />
-        <div aria-live="polite" aria-atomic="true">
-          <h2>{steps[step].title}</h2>
-          <p>{steps[step].copy}</p>
-          <p className="introduction-hint">{steps[step].hint}</p>
+      <svg className="introduction-spotlights" aria-hidden="true">
+        <defs>
+          <mask id="incant-tour-shade">
+            <rect width="100%" height="100%" fill="white" />
+            {highlights.map((h) => (
+              <rect
+                key={h.target}
+                x={h.x}
+                y={h.y}
+                width={h.width}
+                height={h.height}
+                rx="18"
+                fill="black"
+              />
+            ))}
+          </mask>
+        </defs>
+        <rect
+          width="100%"
+          height="100%"
+          fill="#241d16"
+          fillOpacity=".42"
+          mask="url(#incant-tour-shade)"
+        />
+        {highlights.map((h) => (
+          <rect
+            className="introduction-glow"
+            data-tour-target={h.target}
+            key={h.target}
+            x={h.x}
+            y={h.y}
+            width={h.width}
+            height={h.height}
+            rx="18"
+          />
+        ))}
+      </svg>
+      <div className="introduction-card">
+        <div className="introduction-top">
+          <span aria-label={`Step ${step + 1} of ${steps.length}`}>
+            {step + 1} <span aria-hidden="true">✦</span> {steps.length}
+          </span>
+          <button onClick={finish}>Skip</button>
         </div>
+        <div className="introduction-page" key={step}>
+          <TourDrawing step={step} />
+          <div aria-live="polite" aria-atomic="true">
+            <h2>{steps[step].title}</h2>
+            <p>{steps[step].copy}</p>
+            <p className="introduction-hint">{steps[step].hint}</p>
+          </div>
+        </div>
+        <footer>
+          {step > 0 ? (
+            <button onClick={() => setStep(step - 1)}>Back</button>
+          ) : (
+            <span />
+          )}
+          <button
+            className="introduction-next"
+            onClick={() =>
+              step === steps.length - 1 ? finish() : setStep(step + 1)
+            }
+          >
+            {step === steps.length - 1 ? "Let’s make magic" : "Next"}{" "}
+            <span aria-hidden="true">✧</span>
+          </button>
+        </footer>
       </div>
-      <footer>
-        {step > 0 ? (
-          <button onClick={() => setStep(step - 1)}>Back</button>
-        ) : (
-          <span />
-        )}
-        <button
-          className="introduction-next"
-          onClick={() =>
-            step === steps.length - 1 ? finish() : setStep(step + 1)
-          }
-        >
-          {step === steps.length - 1 ? "Let’s make magic" : "Next"}{" "}
-          <span aria-hidden="true">✧</span>
-        </button>
-      </footer>
     </dialog>
   );
 }

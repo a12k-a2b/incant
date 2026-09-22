@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="1" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="3.736"><system-out>
+&gt; incant@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1603 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.42 kB
+dist/assets/index-CziIr7D4.css   62.60 kB │ gzip:  14.48 kB
+dist/assets/index-CVDgWiii.js   321.38 kB │ gzip: 101.40 kB
+✓ built in 1.04s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="1.785"><system-out>
+&gt; incant@1.1.0 test
+&gt; vitest run
+
+
+ RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web
+
+ ✓ tests/realtime-voice.test.ts (2 tests) 69ms
+ ✓ tests/contracts.test.ts (7 tests) 13ms
+ ✓ tests/backup.test.ts (2 tests) 186ms
+ ✓ tests/public-room.test.ts (1 test) 665ms
+   ✓ password-free entry isolates browser backups and owl mail while preserving the legacy room  664ms
+ ✓ tests/owl.test.ts (3 tests) 628ms
+   ✓ owl capabilities isolate images; open and reply receipts are durable and retry-safe  512ms
+
+ Test Files  5 passed (5)
+      Tests  15 passed (15)
+   Start at  08:29:55
+   Duration  1.18s (transform 287ms, setup 0ms, collect 640ms, tests 1.56s, environment 1ms, prepare 597ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="209.684"><failure message="command exited 1">
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 5000ms
+      - waiting for getByRole('alert')
+
+
+      370 |       await page.keyboard.up("Space");
+      371 |     }
+    &gt; 372 |     await expect(page.getByRole("alert")).toContainText("Synthetic stop");
+          |                                           ^
+      373 |     expect(sent).toBe("A final spoken dragon");
+      374 |   });
+      375 | }
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:372:43
+
+    Error Context: test-results/desk.e2e.ts-voice-keyboard-50396-an-the-previous-typed-spell/error-context.md
+
+  1 failed
+    tests/desk.e2e.ts:240:3 › voice keyboard uses final speech rather than the previous typed spell 
+  97 passed (3.5m)</failure><system-out>
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 5000ms
+      - waiting for getByRole('alert')
+
+
+      370 |       await page.keyboard.up("Space");
+      371 |     }
+    &gt; 372 |     await expect(page.getByRole("alert")).toContainText("Synthetic stop");
+          |                                           ^
+      373 |     expect(sent).toBe("A final spoken dragon");
+      374 |   });
+      375 | }
+        at /Users/anjan/Documents/SolOS/incant/web/tests/desk.e2e.ts:372:43
+
+    Error Context: test-results/desk.e2e.ts-voice-keyboard-50396-an-the-previous-typed-spell/error-context.md
+
+  1 failed
+    tests/desk.e2e.ts:240:3 › voice keyboard uses final speech rather than the previous typed spell 
+  97 passed (3.5m)</system-out></testcase></testsuite>

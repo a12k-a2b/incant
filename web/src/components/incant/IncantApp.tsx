@@ -136,10 +136,14 @@ export function IncantApp({
     if (libraryOpen) libraryDialog.current?.showModal();
     else libraryDialog.current?.close();
   }, [libraryOpen]);
-  const [panel, setPanel] = useState(
-    () =>
-      new URLSearchParams(window.location.search).get("view") === "spellbook",
-  );
+  const [panel, setPanel] = useState(false);
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("view") === "spellbook") {
+      url.searchParams.delete("view");
+      window.history.replaceState(window.history.state, "", url);
+    }
+  }, []);
   const panelRef = useRef<HTMLDialogElement>(null);
   const room = useRef<HTMLElement>(null);
   useNativeInteractionGuard(room);
@@ -1144,7 +1148,7 @@ export function IncantApp({
             className="room-help"
             aria-label="Show introduction"
             disabled={busy}
-            onClick={() => setHelp(true)}
+            onClick={() => { setPanel(false); setHelp(true); }}
           >
             <span aria-hidden="true">?</span>
           </button>
@@ -1205,7 +1209,7 @@ export function IncantApp({
             <Plus size={18} />
             New page
           </button>
-          <button className="plain-button" onClick={() => setHelp(true)}>
+          <button className="plain-button" onClick={() => { setPanel(false); setHelp(true); }}>
             How to cast
           </button>
           <button className="plain-button" onClick={() => setBook(true)}>

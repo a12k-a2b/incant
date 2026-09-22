@@ -366,7 +366,7 @@ for (const input of ["keyboard", "touch-hold", "tap"] as const) {
         .getByRole("button", { name: /Listening… tap to cast/ })
         .click();
     } else {
-      await page.waitForTimeout(350);
+      await page.waitForTimeout(550);
       await page.keyboard.up("Space");
     }
     await expect(page.getByRole("alert")).toContainText("Synthetic stop");
@@ -411,7 +411,7 @@ test("early voice release discards a late microphone grant", async ({
   await expect(
     page.getByRole("button", { name: /Connecting… keep holding/ }),
   ).toBeVisible();
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(550);
   await page.mouse.up();
   await expect
     .poll(() => page.evaluate(() => (window as any).__stopped))

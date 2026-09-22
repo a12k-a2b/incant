@@ -2104,3 +2104,14 @@ dialog::backdrop {
 .collection-strip .archive-generation>button{width:150px;background:#efdfbf;border:1px solid #ae946966;border-radius:2px;padding:7px;box-shadow:1px 3px 4px #4b331c20;}.collection-strip img{width:100%;height:150px;object-fit:contain;}.archive-file-actions button{background:none!important;font-family:inherit;font-size:16px!important;}
 .drawing-room:not(.immersive-mode) .dragon-key{display:none;}
 .dragon-key{width:32%;height:25%;}.dragon-eye{left:83%;top:65%;width:7px;height:2px;}
+
+/* The modal owns the viewport so highlights remain above its backdrop. */
+.incant-introduction {width:100%;height:100%;max-width:none;max-height:none;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:hidden;display:none;align-items:center;justify-content:center;}
+.incant-introduction[open] {display:flex;}
+.incant-introduction::backdrop {background:transparent;}
+.introduction-spotlights {position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.introduction-glow {fill:none;stroke:#f6d58c;stroke-width:3;filter:drop-shadow(0 0 4px #fff5d4) drop-shadow(0 0 10px #caa454);animation:tour-glow 2.4s ease-in-out infinite;}
+.introduction-card {position:relative;width:min(460px,calc(100vw - 48px));max-height:calc(100dvh - 32px);overflow:auto;box-sizing:border-box;border:1px solid #9d8963;border-radius:4px 13px 5px 16px;padding:22px 28px;background:#f8f0dc;color:#413422;box-shadow:0 0 0 5px #d9c9a266,0 12px 70px #251e1944;}
+@keyframes tour-glow {0%,100% {stroke-opacity:.75;}50% {stroke-opacity:1;}}
+@media(max-height:560px){.introduction-card{padding:12px 22px;}.introduction-picture{height:70px;}.typewriter-lesson img{height:55px;}}
+@media(prefers-reduced-motion:reduce){.introduction-glow{animation:none;}}

@@ -107,3 +107,47 @@ for (const [name, width, height] of [
     });
   });
 }
+
+test("old spellbook launch opens the guide and highlights real controls", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1184, height: 1584 });
+  await page.addInitScript(() =>
+    localStorage.setItem("incant-introduction-v1", "seen"),
+  );
+  await page.goto("/?view=spellbook");
+  const guide = page.getByRole("dialog", { name: "A little guide to Incant" });
+  await expect(guide).toBeVisible();
+  await expect(page.locator(".desk-drawer")).not.toBeVisible();
+  await expect(page).not.toHaveURL(/view=spellbook/);
+  for (const [index, target] of [
+    ".paper",
+    ".wand-rest",
+    ".typewriter-key",
+    ".moon-key",
+  ].entries()) {
+    if (index) await guide.getByRole("button", { name: "Next" }).click();
+    const glow = guide.locator(`[data-tour-target="${target}"]`);
+    await expect(glow).toHaveCount(1);
+    const actual = (await page.locator(target).boundingBox())!;
+    const outline = (await glow.boundingBox())!;
+    expect(outline.x).toBeLessThanOrEqual(actual.x + 5);
+    expect(outline.y).toBeLessThanOrEqual(actual.y + 5);
+    expect(outline.x + outline.width).toBeGreaterThanOrEqual(
+      actual.x + actual.width - 5,
+    );
+    expect(outline.y + outline.height).toBeGreaterThanOrEqual(
+      Math.min(page.viewportSize()!.height, actual.y + actual.height) - 5,
+    );
+    await expect(guide.locator(".introduction-page")).toHaveCSS("opacity", "1");
+    if (index === 2 || index === 3)
+      await page.screenshot({
+        path: `../docs/evidence/onboarding-highlight-${index}.png`,
+      });
+  }
+  await guide.getByRole("button", { name: "Skip", exact: true }).click();
+  await expect(page.locator(".introduction-glow")).toHaveCount(0);
+  await page.reload();
+  await expect(guide).toHaveCount(0);
+  await expect(page.locator(".desk-drawer")).not.toBeVisible();
+});
