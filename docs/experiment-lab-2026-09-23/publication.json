@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "run": "https://github.com/makedaylight/experiment-lab/actions/runs/35943389454",
+  "repository": "makedaylight/experiment-lab",
+  "commit": "e8d365a380f73145c52e352ea1d13e0ec9794d27",
+  "app": "a12k-a2b/incant",
+  "versionName": "26.9.24",
+  "versionCode": 1,
+  "uploaded": true,
+  "latestUpdated": true,
+  "downloadHome": "https://dcdemos.com",
+  "physicalDevice": "BLOCKED: not tested",
+  "publishedSignerFullscreen": "BLOCKED: new fingerprint not yet registered"
+}

@@ -1,0 +1,11 @@
+# Experiment Lab publication
+
+Imported the existing TWA wrapper into makedaylight/experiment-lab at apps/a12k-a2b/incant, commit e8d365a380f73145c52e352ea1d13e0ec9794d27. Followed create-app and publish-app repository skills. GitHub identity and active organization membership verified. No origin/remix marker present. Package app.incant.web and source version 1.0/code 1 preserved. No signing keys or provider credentials copied into the repository.
+
+Local JDK 21 / cached Gradle 8.13 / existing SDK: assembleDebug and testDebugUnitTest PASS (two launch policy tests). Full offline shared check/build BLOCKED by uncached androidx.core:core:1.10.0 Android test lint dependency; no lint/test waiver. CI is responsible for full gate before publication. Structure and staged diff checks PASS.
+
+Local APK SHA-256: acb3afd09e9b80e38f909deb98d45529dbc83d1fda968b4df15008ea2a7b3a87. Verified package app.incant.web, versionCode 1, versionName 1.0, minSdk 29, targetSdk 35. Signature verified; certificate SHA-256 541bcc05fc51ebc27510cc1a4e453d5b537a9a35ed462b8a700e3909fdf49e7a matches prior owner APK. Local artifact: android-web/app/build/outputs/apk/debug/incant-experiment-lab.apk.
+
+CI run: https://github.com/makedaylight/experiment-lab/actions/runs/35943389454. CI assigns date versions and a permanent per-app signing key separately from the original debug signer. The lab signer must be authorized in hosted assetlinks.json before claiming Chrome fullscreen verification. No device installation, uninstall, data clearing or signing-key replacement performed. Fresh physical DC-1 scenarios are BLOCKED/not run; source tests do not certify pen, mic or share-sheet behavior.
+
+Publication PASS: run 35943389454 concluded success including Android check/build, Gate and Publish APK. Published versionName 26.9.24 (UTC date), versionCode 1. Receipt: uploaded=true, latestUpdated=true, snapshot experiments/a12k-a2b/incant/builds/22-1/e8d365a380f73145c52e352ea1d13e0ec9794d27/build.json. DC Demos download path is owner a12k-a2b, app Incant, Download latest. Published signing fingerprint is not exposed by the CI receipt; full-screen authorization of the new signer is pending. The local APK retains the original signer already authorized on the hosted origin. No claim of newly verified physical hardware or new-signer fullscreen.
