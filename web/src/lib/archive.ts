@@ -433,7 +433,7 @@ export async function chooseArchiveFolder() {
         () =>
           reject(
             new Error(
-              "The folder picker did not respond. Download your pairs instead, or try opening Incant in Chrome.",
+              "The folder picker did not respond. Download your pairs instead, or try opening Sketch Magic in Chrome.",
             ),
           ),
         30000,
@@ -442,7 +442,7 @@ export async function chooseArchiveFolder() {
   ]).finally(() => clearTimeout(timeout));
   let namespace = await meta<string>("namespace");
   if (!namespace) {
-    namespace = "Incant-" + crypto.randomUUID().slice(0, 8);
+    namespace = "Sketch Magic-" + crypto.randomUUID().slice(0, 8);
     await putMeta("namespace", namespace);
   }
   const folder = await selected.getDirectoryHandle(namespace, { create: true });
@@ -508,7 +508,7 @@ export function syncArchive(pairId?: number) {
         (await folder.queryPermission({ mode: "readwrite" })) !== "granted"
       )
         throw new Error(
-          "Choose your Incant folder to save copies in Files. Your drawings remain saved in this browser.",
+          "Choose your Sketch Magic folder to save copies in Files. Your drawings remain saved in this browser.",
         );
       const pairs = pairId ? await readPair(pairId) : await allPairs();
       for (const pair of pairs) {
@@ -615,7 +615,7 @@ export async function downloadArchive() {
     url = URL.createObjectURL(blob),
     a = document.createElement("a");
   a.href = url;
-  a.download = "Incant-pairs.zip";
+  a.download = "Sketch Magic-pairs.zip";
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }

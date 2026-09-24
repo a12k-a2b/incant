@@ -190,7 +190,7 @@ private fun IncantScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column {
-                    Text("INCANT", color = Ink, fontSize = 13.sp, letterSpacing = 4.sp, fontFamily = FontFamily.Serif)
+                    Text("SKETCH MAGIC", color = Ink, fontSize = 13.sp, letterSpacing = 4.sp, fontFamily = FontFamily.Serif)
                     Text("A wizard's canvas", color = Ash, fontSize = 14.sp, fontStyle = FontStyle.Italic, fontFamily = FontFamily.Serif)
                 }
                 Row {
@@ -459,6 +459,6 @@ The parchment, against several laws of taste and at least one of physics, oblige
 
 If the owl looks smug, that is not my fault. Feed it a biscuit anyway.
 
-— dispatched from Incant, a wizard's canvas
+— dispatched from Sketch Magic, a wizard's canvas
     """.trimIndent()
 }

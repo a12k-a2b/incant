@@ -12,7 +12,7 @@ test("first visit is skippable, stays dismissed across reload, and help replays 
     return r.abort();
   });
   await page.goto("/");
-  const guide = page.getByRole("dialog", { name: "A little guide to Incant" });
+  const guide = page.getByRole("dialog", { name: "A little guide to Sketch Magic" });
   await expect(guide).toBeVisible();
   await expect(guide.getByRole("heading")).toHaveText("Begin with a scribble.");
   await guide.getByRole("button", { name: "Skip", exact: true }).click();
@@ -35,7 +35,7 @@ test("four pages support back and completion without modifying the sketch", asyn
   page,
 }) => {
   await page.goto("/");
-  const guide = page.getByRole("dialog", { name: "A little guide to Incant" });
+  const guide = page.getByRole("dialog", { name: "A little guide to Sketch Magic" });
   await guide.getByRole("button", { name: "Skip", exact: true }).click();
   const c = page.locator("canvas"),
     b = (await c.boundingBox())!;
@@ -77,7 +77,7 @@ for (const [name, width, height] of [
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     const guide = page.getByRole("dialog", {
-      name: "A little guide to Incant",
+      name: "A little guide to Sketch Magic",
     });
     await expect(guide).toBeVisible();
     await expect(guide.getByRole("button", { name: "Next" })).toBeInViewport();
@@ -116,7 +116,7 @@ test("old spellbook launch opens the guide and highlights real controls", async 
     localStorage.setItem("incant-introduction-v1", "seen"),
   );
   await page.goto("/?view=spellbook");
-  const guide = page.getByRole("dialog", { name: "A little guide to Incant" });
+  const guide = page.getByRole("dialog", { name: "A little guide to Sketch Magic" });
   await expect(guide).toBeVisible();
   await expect(page.locator(".desk-drawer")).not.toBeVisible();
   await expect(page).not.toHaveURL(/view=spellbook/);

@@ -179,7 +179,7 @@ test("recipient opens deliberately, sees no room gate, and retries the same repl
   await page.getByRole("button", { name: "Open letter" }).click();
   expect(opens).toBe(1);
   await expect(
-    page.getByAltText("Image sent to you through Incant"),
+    page.getByAltText("Image sent to you through Sketch Magic"),
   ).toBeVisible();
   await page.getByLabel("Choose an image").setInputFiles({
     name: "reply.png",
@@ -297,7 +297,7 @@ for (const outage of [
       .poll(() => page.evaluate(() => (window as any).parcelShare))
       .toMatchObject({
         active: true,
-        files: ["incant-image.png", "incant-original-sketch.png"],
+        files: ["sketch-magic-image.png", "sketch-magic-original-sketch.png"],
         title: "A small act of sorcery",
         url: undefined,
       });

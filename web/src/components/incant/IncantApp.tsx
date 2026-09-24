@@ -1251,7 +1251,7 @@ export function IncantApp({
             disabled={empty || busy}
             onClick={() => {
               const png = sketch.current?.exportPng();
-              if (png) download(png, "incant-sketch.png");
+              if (png) download(png, "sketch-magic-sketch.png");
             }}
           >
             <Download />
@@ -1276,7 +1276,7 @@ export function IncantApp({
             <button
               className="plain-button"
               onClick={() =>
-                download(active.image, "incant-" + active.created + ".png")
+                download(active.image, "sketch-magic-" + active.created + ".png")
               }
             >
               <Download size={16} /> Save image
@@ -1384,7 +1384,7 @@ export function IncantApp({
           {archiveError ? "Your sketch is still here" : "Export your spellbook"}
         </h2>
         <p>
-          Sketches and their generations save automatically inside Incant on
+          Sketches and their generations save automatically inside Sketch Magic on
           this device. Export a copy whenever you want.
         </p>
         {archiveError && (
@@ -1478,7 +1478,7 @@ export function IncantApp({
           !active && !empty && phase === "idle"
             ? () => {
                 const png = sketch.current?.exportPng();
-                if (png) download(png, "incant-sketch.png");
+                if (png) download(png, "sketch-magic-sketch.png");
                 setBook(false);
               }
             : undefined

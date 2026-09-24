@@ -137,7 +137,7 @@ test("when both draft stores fail the moon keeps the visible sketch downloadable
     .click();
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Save sketch", exact: true }).click();
-  expect((await download).suggestedFilename()).toBe("incant-sketch.png");
+  expect((await download).suggestedFilename()).toBe("sketch-magic-sketch.png");
   expect(
     await canvas.evaluate((node: HTMLCanvasElement) => node.toDataURL()),
   ).toBe(visible);

@@ -9,7 +9,7 @@ export function imageFile(c: Creation) {
   if (!match) throw new Error("This image is unavailable for sharing.");
   const raw = atob(match[2]),
     bytes = Uint8Array.from(raw, (ch) => ch.charCodeAt(0));
-  return new File([bytes], `incant-${c.id}.${imageExtension(match[1])}`, {
+  return new File([bytes], `sketch-magic-${c.id}.${imageExtension(match[1])}`, {
     type: match[1],
   });
 }
@@ -28,7 +28,7 @@ export async function shareImage(
   // Construct the file synchronously so Android receives the original tap activation.
   const rendered = imageFile(c);
   const files = [
-    new File([rendered], `incant-image.${imageExtension(rendered.type)}`, {
+    new File([rendered], `sketch-magic-image.${imageExtension(rendered.type)}`, {
       type: rendered.type,
     }),
   ];
@@ -37,7 +37,7 @@ export async function shareImage(
     files.push(
       new File(
         [sketch],
-        `incant-original-sketch.${imageExtension(sketch.type)}`,
+        `sketch-magic-original-sketch.${imageExtension(sketch.type)}`,
         { type: sketch.type },
       ),
     );

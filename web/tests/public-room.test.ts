@@ -43,7 +43,7 @@ test("password-free entry isolates browser backups and owl mail while preserving
         15000,
       );
       child.stdout.on("data", (chunk) => {
-        if (String(chunk).includes("Incant:")) {
+        if (String(chunk).includes("Sketch Magic:")) {
           clearTimeout(timer);
           resolve();
         }

@@ -34,7 +34,7 @@ export function composeOwlPost(incantation: string): OwlMissive {
     "",
     "If the owl looks smug, that is not my fault. Feed it a biscuit anyway.",
     "",
-    "— dispatched from Incant, a wizard's canvas",
+    "— dispatched from Sketch Magic, a wizard's canvas",
   ].join("\n");
   return { subject, text };
 }
@@ -45,7 +45,7 @@ async function srcToFile(src: string): Promise<File | null> {
     const blob = await res.blob();
     const type = blob.type || "image/png";
     const ext = type.includes("jpeg") ? "jpg" : "png";
-    return new File([blob], `incant-visage.${ext}`, { type });
+    return new File([blob], `sketch-magic-visage.${ext}`, { type });
   } catch {
     return null;
   }

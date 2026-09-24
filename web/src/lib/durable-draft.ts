@@ -104,7 +104,7 @@ function mirror(draft: DurableDraft) {
 let cancelMirror: (() => void) | undefined;
 let mirrorRevision = -1;
 export async function saveDurableDraft(draft: DurableDraft): Promise<void> {
-  if (!validDraft(draft)) throw new Error("Invalid Incant draft.");
+  if (!validDraft(draft)) throw new Error("Invalid Sketch Magic draft.");
   let durableError: unknown;
   let accepted = false;
   try {

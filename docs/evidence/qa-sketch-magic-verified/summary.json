@@ -1,0 +1,80 @@
+{
+  "counts": {
+    "BLOCKED": 0,
+    "FAIL": 2,
+    "PASS": 1,
+    "SKIP": 0
+  },
+  "generated_at": "2026-09-24T03:10:41Z",
+  "kind": "repository-checks",
+  "metadata": {
+    "dry_run": false,
+    "harness_version": "0.1.0",
+    "profile": "pr",
+    "revisions": {
+      "incant-web": "afb6ca46dbef6d81aeec743a519149981dc07774"
+    }
+  },
+  "results": [
+    {
+      "check": "production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "incant/web",
+      "description": "TypeScript and production PWA build",
+      "duration_seconds": 9.917,
+      "exit_code": 0,
+      "id": "incant-web/production-build",
+      "log": "logs/incant-web_production-build.log",
+      "output_tail": "\n> sketch-magic@1.1.0 build\n> tsc --noEmit && vite build && node scripts/build-sw.mjs\n\nvite v7.3.6 building client environment for production...\ntransforming...\n\u2713 1603 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.71 kB \u2502 gzip:   0.43 kB\ndist/assets/index-D2gXdkik.css   62.41 kB \u2502 gzip:  14.43 kB\ndist/assets/index-DXXoJU_S.js   321.39 kB \u2502 gzip: 101.40 kB\n\u2713 built in 3.58s",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-24T03:03:38Z",
+      "status": "PASS"
+    },
+    {
+      "check": "unit-contracts",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "incant/web",
+      "description": "Malformed image/network handling and room authentication negative controls",
+      "duration_seconds": 17.731,
+      "exit_code": 1,
+      "id": "incant-web/unit-contracts",
+      "log": "logs/incant-web_unit-contracts.log",
+      "output_tail": "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  tests/public-room.test.ts > password-free entry isolates browser backups and owl mail while preserving the legacy room\nError: Test server did not start\n \u276f Timeout.<anonymous> tests/public-room.test.ts:42:22\n     40|     await new Promise<void>((resolve, reject) => {\n     41|       const timer = setTimeout(\n     42|         () => reject(new Error(\"Test server did not start\")),\n       |                      ^\n     43|         15000,\n     44|       );\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed | 4 passed (5)\n      Tests  1 failed | 14 passed (15)\n   Start at  20:03:49\n   Duration  15.98s (transform 477ms, setup 0ms, collect 1.13s, tests 17.28s, environment 1ms, prepare 961ms)\n",
+      "project": "incant-web",
+      "reason": "command exited 1",
+      "required": true,
+      "started_at": "2026-09-24T03:03:48Z",
+      "status": "FAIL"
+    },
+    {
+      "check": "browser-flows",
+      "command": [
+        "npm",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "incant/web",
+      "description": "Synthetic browser ink, recovery, cast, voice-race, dialog and responsive checks; requires local server on port5173",
+      "duration_seconds": 395.24,
+      "exit_code": 1,
+      "id": "incant-web/browser-flows",
+      "log": "logs/incant-web_browser-flows.log",
+      "output_tail": "\n    Call log:\n      - Expect \"toBeVisible\" getByAltText('Image sent to you through Incant') with timeout 5000ms\n      - waiting for getByAltText('Image sent to you through Incant')\n\n\n      181 |   await expect(\n      182 |     page.getByAltText(\"Image sent to you through Incant\"),\n    > 183 |   ).toBeVisible();\n          |     ^\n      184 |   await page.getByLabel(\"Choose an image\").setInputFiles({\n      185 |     name: \"reply.png\",\n      186 |     mimeType: \"image/png\",\n        at /Users/anjan/Documents/SolOS/incant/web/tests/owl.e2e.ts:183:5\n\n    Error Context: test-results/owl.e2e.ts-recipient-opens-5bf73-tries-the-same-reply-safely/error-context.md\n\n  1 failed\n    tests/owl.e2e.ts:151:1 \u203a recipient opens deliberately, sees no room gate, and retries the same reply safely \n  98 passed (6.6m)",
+      "project": "incant-web",
+      "reason": "command exited 1",
+      "required": true,
+      "started_at": "2026-09-24T03:04:06Z",
+      "status": "FAIL"
+    }
+  ],
+  "schema_version": 1,
+  "status": "FAIL"
+}

@@ -57,9 +57,9 @@ for (const [mime, extension] of [
       { mime, extension },
     );
     expect(result.files).toEqual([
-      { name: `incant-image.${extension}`, type: mime, bytes: result.expected },
+      { name: `sketch-magic-image.${extension}`, type: mime, bytes: result.expected },
       {
-        name: `incant-original-sketch.${extension}`,
+        name: `sketch-magic-original-sketch.${extension}`,
         type: mime,
         bytes: result.expected,
       },

@@ -87,7 +87,7 @@ export function OwlLetter({ token }: { token: string }) {
   return (
     <main className="owl-receiving">
       <section>
-        <p className="eyebrow">INCANT · OWL POST</p>
+        <p className="eyebrow">SKETCH MAGIC · OWL POST</p>
         <span className="wax-seal" aria-hidden="true">
           ✦
         </span>
@@ -111,9 +111,9 @@ export function OwlLetter({ token }: { token: string }) {
             <img
               className="owl-received-image"
               src={image}
-              alt="Image sent to you through Incant"
+              alt="Image sent to you through Sketch Magic"
             />
-            <a href={image} download="incant-image.png">
+            <a href={image} download="sketch-magic-image.png">
               Save image
             </a>
             {sketchImage && (
@@ -125,7 +125,7 @@ export function OwlLetter({ token }: { token: string }) {
             {spell && <blockquote className="parcel-spell">{spell}</blockquote>}
             <h2>Send an image back</h2>
             <p>
-              Your reply goes to the sender’s Incant room. Everyone with access
+              Your reply goes to the sender’s Sketch Magic room. Everyone with access
               to that room can see it.
             </p>
             <label className="owl-upload">

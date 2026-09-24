@@ -60,7 +60,7 @@ export function AccessGate() {
     <main className="entry-room">
       <form onSubmit={(e) => void unlock(e)}>
         <Sigil />
-        <p className="eyebrow">INCANT · YOUR PRIVATE DRAWING ROOM</p>
+        <p className="eyebrow">SKETCH MAGIC · YOUR PRIVATE DRAWING ROOM</p>
         <h1>
           A little door to
           <br />

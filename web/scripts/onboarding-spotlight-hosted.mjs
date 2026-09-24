@@ -8,7 +8,7 @@ try {
  const page=await browser.newPage({viewport:{width:1184,height:1584}});
  for(const url of ['**/api/backup/**','**/api/owl**','**/api/cast','**/api/gemini-token']) await page.route(url,r=>r.fulfill({status:503,json:{error:'Isolated onboarding verification'}}));
  await page.goto(base+'/?view=spellbook');
- const guide=page.getByRole('dialog',{name:'A little guide to Incant'});
+ const guide=page.getByRole('dialog',{name:'A little guide to Sketch Magic'});
  await expect(guide).toBeVisible();
  await expect(page.locator('.desk-drawer')).not.toBeVisible();
  await expect(page).not.toHaveURL(/view=spellbook/);

@@ -1,4 +1,4 @@
-# Incant for Android (Daylight DC-1)
+# Sketch Magic for Android (Daylight DC-1)
 
 Native Kotlin + Jetpack Compose app.
 

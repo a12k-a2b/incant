@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite name="daylight-qa-repository-checks" tests="3" failures="2" skipped="0"><testcase classname="incant-web" name="incant-web/production-build" time="9.917"><system-out>
+&gt; sketch-magic@1.1.0 build
+&gt; tsc --noEmit &amp;&amp; vite build &amp;&amp; node scripts/build-sw.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1603 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.71 kB │ gzip:   0.43 kB
+dist/assets/index-D2gXdkik.css   62.41 kB │ gzip:  14.43 kB
+dist/assets/index-DXXoJU_S.js   321.39 kB │ gzip: 101.40 kB
+✓ built in 3.58s</system-out></testcase><testcase classname="incant-web" name="incant-web/unit-contracts" time="17.731"><failure message="command exited 1">⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/public-room.test.ts &gt; password-free entry isolates browser backups and owl mail while preserving the legacy room
+Error: Test server did not start
+ ❯ Timeout.&lt;anonymous&gt; tests/public-room.test.ts:42:22
+     40|     await new Promise&lt;void&gt;((resolve, reject) =&gt; {
+     41|       const timer = setTimeout(
+     42|         () =&gt; reject(new Error("Test server did not start")),
+       |                      ^
+     43|         15000,
+     44|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 14 passed (15)
+   Start at  20:03:49
+   Duration  15.98s (transform 477ms, setup 0ms, collect 1.13s, tests 17.28s, environment 1ms, prepare 961ms)
+</failure><system-out>⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/public-room.test.ts &gt; password-free entry isolates browser backups and owl mail while preserving the legacy room
+Error: Test server did not start
+ ❯ Timeout.&lt;anonymous&gt; tests/public-room.test.ts:42:22
+     40|     await new Promise&lt;void&gt;((resolve, reject) =&gt; {
+     41|       const timer = setTimeout(
+     42|         () =&gt; reject(new Error("Test server did not start")),
+       |                      ^
+     43|         15000,
+     44|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 14 passed (15)
+   Start at  20:03:49
+   Duration  15.98s (transform 477ms, setup 0ms, collect 1.13s, tests 17.28s, environment 1ms, prepare 961ms)
+</system-out></testcase><testcase classname="incant-web" name="incant-web/browser-flows" time="395.24"><failure message="command exited 1">
+    Call log:
+      - Expect "toBeVisible" getByAltText('Image sent to you through Incant') with timeout 5000ms
+      - waiting for getByAltText('Image sent to you through Incant')
+
+
+      181 |   await expect(
+      182 |     page.getByAltText("Image sent to you through Incant"),
+    &gt; 183 |   ).toBeVisible();
+          |     ^
+      184 |   await page.getByLabel("Choose an image").setInputFiles({
+      185 |     name: "reply.png",
+      186 |     mimeType: "image/png",
+        at /Users/anjan/Documents/SolOS/incant/web/tests/owl.e2e.ts:183:5
+
+    Error Context: test-results/owl.e2e.ts-recipient-opens-5bf73-tries-the-same-reply-safely/error-context.md
+
+  1 failed
+    tests/owl.e2e.ts:151:1 › recipient opens deliberately, sees no room gate, and retries the same reply safely
+  98 passed (6.6m)</failure><system-out>
+    Call log:
+      - Expect "toBeVisible" getByAltText('Image sent to you through Incant') with timeout 5000ms
+      - waiting for getByAltText('Image sent to you through Incant')
+
+
+      181 |   await expect(
+      182 |     page.getByAltText("Image sent to you through Incant"),
+    &gt; 183 |   ).toBeVisible();
+          |     ^
+      184 |   await page.getByLabel("Choose an image").setInputFiles({
+      185 |     name: "reply.png",
+      186 |     mimeType: "image/png",
+        at /Users/anjan/Documents/SolOS/incant/web/tests/owl.e2e.ts:183:5
+
+    Error Context: test-results/owl.e2e.ts-recipient-opens-5bf73-tries-the-same-reply-safely/error-context.md
+
+  1 failed
+    tests/owl.e2e.ts:151:1 › recipient opens deliberately, sees no room gate, and retries the same reply safely
+  98 passed (6.6m)</system-out></testcase></testsuite>

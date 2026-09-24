@@ -207,7 +207,7 @@ export function OwlMail({
       setNotice(
         result === "cancelled"
           ? "Sharing cancelled. Your image is still here."
-          : "Handed to your sharing app. Finish sending there; Incant cannot confirm delivery.",
+          : "Handed to your sharing app. Finish sending there; Sketch Magic cannot confirm delivery.",
       );
     } catch (e) {
       setError((e as Error).message);
@@ -247,7 +247,7 @@ export function OwlMail({
         return;
       }
       setNotice(
-        "Handed to your sharing app. Finish sending there; Incant cannot confirm delivery.",
+        "Handed to your sharing app. Finish sending there; Sketch Magic cannot confirm delivery.",
       );
       try {
         const r = await owlRequest<OwlLetter>(
@@ -381,7 +381,7 @@ export function OwlMail({
               if (e.target.checked) hoot();
             }}
           />{" "}
-          Hoot for image replies while Incant is open
+          Hoot for image replies while Sketch Magic is open
         </label>
         <h3>Letters & replies</h3>
         {inboxError && <p role="status">{inboxError}</p>}

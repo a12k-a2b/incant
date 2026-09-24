@@ -103,7 +103,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     <dialog
       ref={dialog}
       className="incant-introduction"
-      aria-label="A little guide to Incant"
+      aria-label="A little guide to Sketch Magic"
       onCancel={(e) => {
         e.preventDefault();
         finish();

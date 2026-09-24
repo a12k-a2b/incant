@@ -2091,9 +2091,9 @@ dialog::backdrop {
 .saved-spells-dialog .collection{border-top:1px solid #9d82506b;padding-top:16px;}
 .immersive-mode.phase-finishing .wand-status{display:block;position:absolute;width:max-content;height:auto;max-width:260%;left:50%;transform:translateX(-50%);bottom:2px;margin:0;padding:3px 9px;overflow:visible;clip-path:none;background:#e8d7b4;color:#35291b;font-size:14px;border-radius:6px;}
 @media(prefers-reduced-motion:reduce){.dragon-flame{animation:none;opacity:.25;}.dragon-eye{transition:none;}}
-@font-face{font-family:'Incant Ink';src:url('/fonts/IMFellEnglish.ttf') format('truetype');font-display:swap;}
-.owl-dialog,.saved-spells-dialog,.spellbook-dialog,.desk-drawer,.owl-receiving>section{font-family:'Incant Ink',Georgia,serif;font-size:18px;}
-.owl-dialog h2,.saved-spells-dialog h2,.spellbook-dialog h2,.desk-drawer h2,.owl-receiving h1{font-family:'Incant Ink',Georgia,serif;font-style:normal;}
+@font-face{font-family:'Sketch Magic Ink';src:url('/fonts/IMFellEnglish.ttf') format('truetype');font-display:swap;}
+.owl-dialog,.saved-spells-dialog,.spellbook-dialog,.desk-drawer,.owl-receiving>section{font-family:'Sketch Magic Ink',Georgia,serif;font-size:18px;}
+.owl-dialog h2,.saved-spells-dialog h2,.spellbook-dialog h2,.desk-drawer h2,.owl-receiving h1{font-family:'Sketch Magic Ink',Georgia,serif;font-style:normal;}
 .archive-library h3{font-size:26px;font-weight:400;margin:28px 0 12px;border-bottom:1px solid #a58a5c;padding-bottom:8px;}.archive-library h4{font-size:17px;font-weight:400;font-style:italic;color:#70583c;}
 .archive-library article{padding:18px 0;border-bottom:1px solid #a58a5c66;}.archive-cloud-actions{display:flex;gap:12px;flex-wrap:wrap;}.archive-cloud-actions button{border:1px solid #ae9469;background:#dbc59e;color:#44301e;padding:8px 12px;border-radius:3px;min-height:44px;font-family:inherit;}
 .collection-strip .archive-generation>button{width:150px;background:#efdfbf;border:1px solid #ae946966;border-radius:2px;padding:7px;box-shadow:1px 3px 4px #4b331c20;}.collection-strip img{width:100%;height:150px;object-fit:contain;}.archive-file-actions button{background:none!important;font-family:inherit;font-size:16px!important;}

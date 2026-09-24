@@ -95,7 +95,7 @@ test("illustrated books expose saved creations and share exact image bytes", asy
   await page
     .getByRole("button", { name: "Save image: A synthetic spell", exact: true })
     .click();
-  expect((await download).suggestedFilename()).toMatch(/^incant-.*\.png$/);
+  expect((await download).suggestedFilename()).toMatch(/^sketch-magic-.*\.png$/);
 });
 test("hourglass cancels late image and respects reduced motion", async ({
   page,

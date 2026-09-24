@@ -75,7 +75,7 @@ test("moon saves automatically without a popup; file export is optional", async 
     const root = await navigator.storage.getDirectory();
     const result: any = {};
     for await (const [name, handle] of (root as any).entries()) {
-      if (name.startsWith("Incant-"))
+      if (name.startsWith("Sketch Magic-"))
         for await (const [file, h] of handle.entries()) {
           result[file] = Array.from(
             new Uint8Array(await (await h.getFile()).arrayBuffer()),
@@ -134,7 +134,7 @@ test("an uncast moon sketch can be viewed and downloaded without replacing the n
   const download = page.waitForEvent("download");
   await archivedArticle.getByRole("button", { name: "Save sketch" }).click();
   expect((await download).suggestedFilename()).toMatch(
-    /^incant-sketch-.*\.png$/,
+    /^sketch-magic-sketch-.*\.png$/,
   );
   expect(
     await page.evaluate(async () => {

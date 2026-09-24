@@ -47,7 +47,7 @@ app.use("/api", (req, res, next) => {
     } catch {
       res
         .status(403)
-        .json({ ok: false, error: "Please cast from the Incant page." });
+        .json({ ok: false, error: "Please cast from the Sketch Magic page." });
       return;
     }
   }
@@ -237,5 +237,5 @@ app.use(
 app.listen(
   Number(process.env.PORT || 5173),
   process.env.HOST || "127.0.0.1",
-  () => console.log("Incant: http://localhost:" + (process.env.PORT || 5173)),
+  () => console.log("Sketch Magic: http://localhost:" + (process.env.PORT || 5173)),
 );

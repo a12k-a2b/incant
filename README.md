@@ -1,12 +1,12 @@
-# Incant — the drawing room
+# Sketch Magic — the drawing room
 
 A little ink. A few words. A world of your own.
 
-Incant turns **your sketch** into a finished image. The drawing fixes composition, placement and proportions; your spoken or typed spell supplies material, atmosphere and detail. A wizard’s parchment, a quill, and a small act of transformation.
+Sketch Magic turns **your sketch** into a finished image. The drawing fixes composition, placement and proportions; your spoken or typed spell supplies material, atmosphere and detail. A wizard’s parchment, a quill, and a small act of transformation.
 
 ## Open on Daylight
 
-The private PWA is hosted at **https://incant-web-production.up.railway.app**. Use the room passphrase supplied separately. On DC-1, open it in a current browser, then choose **Install app** or **Add to Home screen**. No provider key is needed on the device when the hosted server is configured.
+The PWA is hosted at **https://incant-web-production.up.railway.app**. Drawing and casting are password-free. On DC-1, open it in a current browser, then choose **Install app** or **Add to Home screen**. No provider key is needed on the device when the hosted server is configured.
 
 1. Draw with a stylus (or mouse). Finger strokes are ignored.
 2. Hold **Hold to speak**, wait for **Listening**, and describe what the drawing should become. Release to cast. Keyboard users can hold Space or Enter on the same button.
@@ -49,7 +49,7 @@ Within SolOS, the common harness is:
 
 ## How the keys and requests travel
 
-Daylight → Incant on Railway → OpenAI image edits → Daylight.
+Daylight → Sketch Magic on Railway → OpenAI image edits → Daylight.
 
 Railway keeps `OPENAI_API_KEY`, `GEMINI_API_KEY` and `APP_ACCESS_KEY` in service variables. For voice, Railway issues a one-use short-lived Gemini token; microphone audio streams from the device to Gemini. It does not pass through Railway. In local bring-your-own-key mode, keys entered in the Spellbook are stored in the browser and sent through your app server to the relevant provider. Use only an app server you trust.
 
