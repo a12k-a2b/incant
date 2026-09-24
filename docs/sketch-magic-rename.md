@@ -37,3 +37,8 @@ Retained first-run evidence is in `docs/evidence/qa-sketch-magic-verified/`;
 rerun logs are `sketch-magic-unit-check.log` and `sketch-magic-owl-recheck.log`.
 An earlier sandboxed attempt could not open local test ports; it is not a product
 failure. QA doctor passed with local networking/device access enabled.
+
+Railway deployment `14b67321-9500-4993-b7f1-9ccdcffde2e4` succeeded. The isolated
+hosted check PASS: Sketch Magic page title/onboarding, manifest name with preserved
+identity, and JavaScript bytes identical to the locally built artifact. See
+`docs/evidence/sketch-magic-hosted.json`. No real artwork/provider calls were made.

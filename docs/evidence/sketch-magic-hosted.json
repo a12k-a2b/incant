@@ -1,0 +1,12 @@
+{
+  "time": "2026-09-24T03:15:32.326Z",
+  "scope": "Isolated hosted browser; cloud, owl and provider writes blocked",
+  "checks": {
+    "titleAndOnboarding": true,
+    "manifestName": true,
+    "manifestIdentity": true,
+    "testedJavaScript": true
+  },
+  "javascriptSha256": "f1e8167276d46c798587f59aa264b066bd509daaf01a2f4f54c02d8dd0904e12",
+  "status": "PASS"
+}
