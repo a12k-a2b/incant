@@ -1,0 +1,10 @@
+{
+  "time": "2026-09-24T02:05:35.268Z",
+  "kind": "Synthetic isolated hosted keyboard viewport; no Android IME or provider call",
+  "checks": {
+    "stableTopAndVisibleHeight": true,
+    "reopenFocusAndEscape": true,
+    "testedJavaScript": true
+  },
+  "status": "PASS"
+}

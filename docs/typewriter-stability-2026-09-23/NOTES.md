@@ -7,3 +7,5 @@ Two GPT-6 Luna subagents split scoped product implementation and regression test
 Focused Chromium tests: five passed. New regression exercises 500/420/360/200px viewport heights, stable top edge and visible bottom, reachable cast button, exact canvas dimensions/pixels after restoration, reopen focus and subsequent wand connecting. Existing tests cover one focus event, retained text, one typed cast and Escape. Keeper inspected synthetic phone screenshot. Full profile is qa-typewriter-stability-20260923. Browser viewport simulation is not a physical Android IME recording; actual keyboard animation smoothness remains a user/device confirmation.
 
 Full profile PASS: production build, 15 server/unit tests, 99 browser tests. No physical keyboard animation certification.
+
+Railway deployment de530e88-a67c-46bc-bbcc-bcd31af2ab2c succeeded (product revision 4a90cba). Hosted isolated verification PASS: stable top through simulated 600/450/330/200/844px keyboard viewports, reachable dialog bounds, reopen focus, Escape close, and exact tested JavaScript match.
