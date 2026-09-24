@@ -556,6 +556,100 @@ test("typewriter bubble fits narrow keyboard-sized viewport", async ({
   await expect(page.locator(".type-bubble")).not.toBeVisible();
 });
 
+test("typewriter stays stable through keyboard viewport changes and restores wand flow", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 900, height: 700 });
+  await page.addInitScript(() => {
+    let height = window.innerHeight;
+    const viewport = new EventTarget() as EventTarget & {
+      height: number;
+      offsetTop: number;
+      scale: number;
+    };
+    Object.defineProperties(viewport, {
+      height: { get: () => height },
+      offsetTop: { value: 0 },
+      scale: { value: 1 },
+    });
+    Object.defineProperty(window, "visualViewport", {
+      configurable: true,
+      value: viewport,
+    });
+    (window as any).simulateKeyboardViewport = (nextHeight: number) => {
+      height = nextHeight;
+      viewport.dispatchEvent(new Event("resize"));
+    };
+  });
+  await page.goto("/");
+  await draw(page);
+  const canvas = page.locator("canvas");
+  const before = await canvas.evaluate((node: HTMLCanvasElement) => ({
+    width: node.width,
+    height: node.height,
+    pixels: node.toDataURL(),
+  }));
+  await page.getByRole("button", { name: "Type a spell", exact: true }).click();
+  const field = page.getByRole("textbox", { name: "Type your spell", exact: true });
+  await expect(field).toBeFocused();
+  const bubble = page.locator(".type-bubble");
+  const beforeRect = await bubble.boundingBox();
+  expect(beforeRect).not.toBeNull();
+  for (const height of [500, 420, 360, 200]) {
+    await page.setViewportSize({ width: height === 200 ? 700 : 900, height });
+    await page.evaluate(
+      (nextHeight) => (window as any).simulateKeyboardViewport(nextHeight),
+      height,
+    );
+    const dialogRect = await bubble.boundingBox();
+    expect(dialogRect).not.toBeNull();
+    expect(Math.abs(dialogRect!.y - beforeRect!.y)).toBeLessThanOrEqual(1);
+    expect(dialogRect!.y + dialogRect!.height).toBeLessThanOrEqual(height + 1);
+    await expect(bubble).toBeInViewport();
+    const castButton = page.getByRole("button", {
+      name: "Cast typed spell",
+      exact: true,
+    });
+    await castButton.scrollIntoViewIfNeeded();
+    await expect(castButton).toBeInViewport();
+  }
+  expect(
+    await canvas.evaluate((node: HTMLCanvasElement) => ({
+      width: node.width,
+      height: node.height,
+      pixels: node.toDataURL(),
+    })),
+  ).toEqual(before);
+
+  await page.getByRole("button", { name: "Close typed spell", exact: true }).click();
+  await expect(bubble).not.toBeVisible();
+  await page.setViewportSize({ width: 900, height: 700 });
+  await page.evaluate(() =>
+    (window as any).simulateKeyboardViewport(window.innerHeight),
+  );
+  expect(
+    await canvas.evaluate((node: HTMLCanvasElement) => ({
+      width: node.width,
+      height: node.height,
+      pixels: node.toDataURL(),
+    })),
+  ).toEqual(before);
+  await page.getByRole("button", { name: "Type a spell", exact: true }).click();
+  await expect(field).toBeFocused();
+  await page.getByRole("button", { name: "Close typed spell", exact: true }).click();
+  await page.evaluate(() => {
+    Object.defineProperty(navigator.mediaDevices, "getUserMedia", {
+      configurable: true,
+      value: () => new Promise(() => {}),
+    });
+  });
+  await page.locator(".voice-wand").click();
+  await expect(page.locator("main")).toHaveClass(/phase-connecting/);
+  expect(
+    await canvas.evaluate((node: HTMLCanvasElement) => node.toDataURL()),
+  ).toBe(before.pixels);
+});
+
 test("immersive mode keeps the wand and illustrated typewriter, including while casting", async ({
   page,
 }) => {

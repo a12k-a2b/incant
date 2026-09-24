@@ -151,18 +151,14 @@ export function IncantApp({
   const typeField = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     const viewport = window.visualViewport;
-    const fitKeyboard = () =>
+    const fitVisibleHeight = () =>
       typeDialog.current?.style.setProperty(
-        "--keyboard-inset",
-        `${Math.max(0, window.innerHeight - (viewport?.height ?? window.innerHeight) - (viewport?.offsetTop ?? 0))}px`,
+        "--visible-height",
+        `${viewport?.height ?? window.innerHeight}px`,
       );
-    fitKeyboard();
-    viewport?.addEventListener("resize", fitKeyboard);
-    viewport?.addEventListener("scroll", fitKeyboard);
-    return () => {
-      viewport?.removeEventListener("resize", fitKeyboard);
-      viewport?.removeEventListener("scroll", fitKeyboard);
-    };
+    fitVisibleHeight();
+    viewport?.addEventListener("resize", fitVisibleHeight);
+    return () => viewport?.removeEventListener("resize", fitVisibleHeight);
   }, []);
   const [loadedImage, setLoadedImage] = useState<string | null>(null);
   const [revealing, setRevealing] = useState(false);

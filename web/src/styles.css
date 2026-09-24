@@ -1837,16 +1837,15 @@ dialog::backdrop {
 }
 .typewriter-key { position: absolute; z-index: 8; bottom: max(9px, env(safe-area-inset-bottom)); right: 18px; width: clamp(88px, 12vw, 145px); min-height: 70px; background: none; padding: 0; }
 .typewriter-key img { display: block; width: 100%; pointer-events: none; filter: drop-shadow(0 2px 2px #241a1144); }
-.type-bubble { position: fixed; inset: auto 20px max(115px, calc(var(--keyboard-inset, 0px) + 20px)) auto; margin: 0; width: min(440px, calc(100vw - 40px)); max-height: calc(100dvh - 45px); overflow: visible; padding: 24px 22px 18px; border: 2px solid #514632; border-radius: 36% 24% 30% 20% / 14% 20% 17% 15%; background: #fff9eb; color: #392f23; box-shadow: 0 5px 20px #21190e33; }
+.type-bubble { position: fixed; inset: max(12px, env(safe-area-inset-top)) 20px auto auto; margin: 0; width: min(440px, calc(100vw - 40px)); max-height: min(300px, calc(var(--visible-height, 100vh) - 24px - env(safe-area-inset-top))); overflow: auto; padding: 18px 22px 14px; border: 2px solid #514632; border-radius: 36% 24% 30% 20% / 14% 20% 17% 15%; background: #fff9eb; color: #392f23; box-shadow: 0 5px 20px #21190e33; }
 .type-bubble::after { content: ''; position: absolute; bottom: -17px; right: 42px; width: 28px; height: 28px; background: #fff9eb; border-right: 2px solid #514632; border-bottom: 2px solid #514632; transform: skewY(30deg) rotate(20deg); }
 .type-bubble::backdrop { background: #211b0f18; }
 .type-bubble form { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
 .type-bubble label { font-size: 18px; font-style: italic; align-self: center; }
-.type-bubble textarea { grid-column: 1/-1; min-height: 90px; max-height: 30dvh; resize: vertical; width: 100%; padding: 10px; background: transparent; border: 0; border-bottom: 1px solid #a99a7e; font-size: 18px; line-height: 1.5; }
+.type-bubble textarea { grid-column: 1/-1; min-height: 90px; max-height: 120px; resize: vertical; width: 100%; padding: 10px; background: transparent; border: 0; border-bottom: 1px solid #a99a7e; font-size: 18px; line-height: 1.5; }
 .bubble-close { background: none; width: 44px; height: 44px; }
 .bubble-cast { grid-column: 2; width: 48px; height: 44px; background: transparent; color: #4a3921; }
 .immersive-room .ritual-cancel { right: max(170px, 16vw); }
-@media (max-height: 500px) { .type-bubble { bottom: max(20px, var(--keyboard-inset, 0px)); padding: 12px 18px; } .type-bubble textarea { min-height: 50px; } }
 /* Immersive mode: the frame, parchment and wand are the entire visible interface. */
 .immersive-mode .desk-latch,
 .immersive-mode .ritual-cancel,
@@ -1894,10 +1893,6 @@ dialog::backdrop {
 /* Let night dissolve into the parchment edges instead of appearing as a hard panel. */
 .day-cycle { mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent),linear-gradient(to bottom,transparent,#000 6%,#000 94%,transparent); mask-composite:intersect; }
 .moon-orbit { clip-path:none; mask-image:radial-gradient(ellipse at center,#000 48%,transparent 72%); }
-
-/* One keyboard entrance: keep the desk still and ease the bubble above the IME. */
-.type-bubble { transition:bottom 180ms ease-out; }
-@media(prefers-reduced-motion:reduce) { .type-bubble {transition:none;} }
 
 .archive-library h3 {margin:20px 0 8px;font-size:21px;}
 .archive-library h4 {margin:12px 0;font-size:15px;font-weight:normal;}

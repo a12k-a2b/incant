@@ -1,0 +1,78 @@
+{
+  "counts": {
+    "BLOCKED": 0,
+    "FAIL": 0,
+    "PASS": 3,
+    "SKIP": 0
+  },
+  "generated_at": "2026-09-24T02:02:33Z",
+  "kind": "repository-checks",
+  "metadata": {
+    "dry_run": false,
+    "harness_version": "0.1.0",
+    "profile": "pr",
+    "revisions": {
+      "incant-web": "4be927a9871c6d968ed5b9aa47a231f2827fc558"
+    }
+  },
+  "results": [
+    {
+      "check": "production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "incant/web",
+      "description": "TypeScript and production PWA build",
+      "duration_seconds": 22.101,
+      "exit_code": 0,
+      "id": "incant-web/production-build",
+      "log": "logs/incant-web_production-build.log",
+      "output_tail": "\n> incant@1.1.0 build\n> tsc --noEmit && vite build && node scripts/build-sw.mjs\n\nvite v7.3.6 building client environment for production...\ntransforming...\n\u2713 1603 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.70 kB \u2502 gzip:   0.42 kB\ndist/assets/index-DxJeJOnz.css   62.39 kB \u2502 gzip:  14.43 kB\ndist/assets/index-CgJBP61j.js   321.26 kB \u2502 gzip: 101.36 kB\n\u2713 built in 7.53s",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-24T01:54:06Z",
+      "status": "PASS"
+    },
+    {
+      "check": "unit-contracts",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "incant/web",
+      "description": "Malformed image/network handling and room authentication negative controls",
+      "duration_seconds": 7.082,
+      "exit_code": 0,
+      "id": "incant-web/unit-contracts",
+      "log": "logs/incant-web_unit-contracts.log",
+      "output_tail": "> vitest run\n\n\n RUN  v3.2.7 /Users/anjan/Documents/SolOS/incant/web\n\n \u2713 tests/realtime-voice.test.ts (2 tests) 180ms\n \u2713 tests/contracts.test.ts (7 tests) 62ms\n \u2713 tests/backup.test.ts (2 tests) 1019ms\n   \u2713 durable immutable snapshots require complete, hash-verified objects and survive server restart  1000ms\n \u2713 tests/public-room.test.ts (1 test) 2911ms\n   \u2713 password-free entry isolates browser backups and owl mail while preserving the legacy room  2908ms\n \u2713 tests/owl.test.ts (3 tests) 2041ms\n   \u2713 owl capabilities isolate images; open and reply receipts are durable and retry-safe  1525ms\n   \u2713 parcel persists exact source and spell; retries cannot substitute another prompt  423ms\n\n Test Files  5 passed (5)\n      Tests  15 passed (15)\n   Start at  18:54:31\n   Duration  4.34s (transform 963ms, setup 0ms, collect 3.45s, tests 6.21s, environment 2ms, prepare 1.06s)\n",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-24T01:54:28Z",
+      "status": "PASS"
+    },
+    {
+      "check": "browser-flows",
+      "command": [
+        "npm",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "incant/web",
+      "description": "Synthetic browser ink, recovery, cast, voice-race, dialog and responsive checks; requires local server on port5173",
+      "duration_seconds": 476.922,
+      "exit_code": 0,
+      "id": "incant-web/browser-flows",
+      "log": "logs/incant-web_browser-flows.log",
+      "output_tail": "  \u2713  82 tests/onboarding.e2e.ts:73:3 \u203a guide fits phone and remains usable with reduced motion (2.2s)\n  \u2713  83 tests/onboarding.e2e.ts:73:3 \u203a guide fits short and remains usable with reduced motion (1.9s)\n  \u2713  84 tests/onboarding.e2e.ts:111:1 \u203a old spellbook launch opens the guide and highlights real controls (7.3s)\n  \u2713  85 tests/owl.e2e.ts:4:1 \u203a owl sharing preserves activation, distinguishes cancellation, and announces an image reply once (17.9s)\n  \u2713  86 tests/owl.e2e.ts:151:1 \u203a recipient opens deliberately, sees no room gate, and retries the same reply safely (2.0s)\n  \u2713  87 tests/owl.e2e.ts:198:1 \u203a missing cloud storage is recoverable and never opens a share sheet (2.3s)\n  \u2713  88 tests/owl.e2e.ts:223:3 \u203a painted owl shares exact local parcel without cloud at 503 (7.4s)\n  \u2713  89 tests/owl.e2e.ts:223:3 \u203a painted owl shares exact local parcel without cloud at 429 (5.9s)\n  \u2713  90 tests/owl.e2e.ts:364:1 \u203a a delayed reply-link preparation cannot attach old files or spell to a new active cast (15.3s)\n  \u2713  91 tests/share-image.e2e.ts:8:3 \u203a native png parcel keeps matching names, MIME, and exact bytes (910ms)\n  \u2713  92 tests/share-image.e2e.ts:8:3 \u203a native jpg parcel keeps matching names, MIME, and exact bytes (1.1s)\n  \u2713  93 tests/share-image.e2e.ts:8:3 \u203a native webp parcel keeps matching names, MIME, and exact bytes (1.2s)\n  \u2713  94 tests/wand-feedback.e2e.ts:3:3 \u203a wand acknowledges connection immediately and signals actual listening (6.2s)\n  \u2713  95 tests/wand-feedback.e2e.ts:3:3 \u203a wand acknowledges connection immediately and signals actual listening with reduced motion (3.3s)\n  \u2713  96 tests/wand-sequence.e2e.ts:3:3 \u203a first gesture over a result casts again with original sketch (80ms) (7.5s)\n  \u2713  97 tests/wand-sequence.e2e.ts:3:3 \u203a first gesture over a result casts again with original sketch (360ms) (8.2s)\n  \u2713  98 tests/wand-sequence.e2e.ts:3:3 \u203a first gesture over a result casts again with original sketch (550ms) (8.0s)\n  \u2713  99 tests/wand-sequence.e2e.ts:168:1 \u203a dragon settings persist voice and owl choices without adding an owl icon (3.5s)\n\n  99 passed (7.9m)",
+      "project": "incant-web",
+      "required": true,
+      "started_at": "2026-09-24T01:54:36Z",
+      "status": "PASS"
+    }
+  ],
+  "schema_version": 1,
+  "status": "PASS"
+}
